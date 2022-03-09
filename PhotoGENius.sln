@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoGENius", "PhotoGENius\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PGENLib", "PGENLib\PGENLib.csproj", "{A42C79F5-C1A4-4C01-A215-9ABD9534E283}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PGENLib.Tests", "PGENLib.Tests\PGENLib.Tests.csproj", "{70BE53AE-FDDE-44A6-8E21-7BF90EFB5800}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,5 +21,9 @@ Global
 		{A42C79F5-C1A4-4C01-A215-9ABD9534E283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A42C79F5-C1A4-4C01-A215-9ABD9534E283}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A42C79F5-C1A4-4C01-A215-9ABD9534E283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70BE53AE-FDDE-44A6-8E21-7BF90EFB5800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70BE53AE-FDDE-44A6-8E21-7BF90EFB5800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70BE53AE-FDDE-44A6-8E21-7BF90EFB5800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70BE53AE-FDDE-44A6-8E21-7BF90EFB5800}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
