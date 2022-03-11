@@ -1,17 +1,31 @@
-﻿namespace PGENLib
+﻿using System.Numerics;
+using System.Security.Cryptography;
+
+namespace PGENLib
 {
     public struct Color
-    { 
+    {
+        public float r;
+        public float g;
+        public float b;
 
-        public Color(double r, double g, double b) //Costruttore
+        public Color(float r, float g, float b) //Costruttore
         {
-            this.r = 0;
-            this.g = 0;
-            this.b = 0;
+            this.r = r;
+            this.g = g;
+            this.b = b;
         }
-        public double r { get; }
-        public double g { get; }
-        public double b { get; }
-        public override string ToString() => $"({r}, {g}, {b})";
-    }
+
+        public override string ToString()
+        {
+            return $"({r}, {g}, {b})";
+        }
+    };
+
+    //Somma 
+    //public static add operator +(add c1, add c2)
+    //{
+    //return new add(c1.r + c2.r, c1.g + c2.g, c1.b + c2.b);
+    //};
+
 }
