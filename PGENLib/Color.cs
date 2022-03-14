@@ -1,5 +1,5 @@
-﻿namespace PGENLib
-{
+﻿//namespace PGENLib //martin: ho tolto questa dichiarazione perchè Color viene invocata da HdrImage
+//{
     public struct Color
     { 
 
@@ -14,4 +14,4 @@
         public double b { get; }
         public override string ToString() => $"({r}, {g}, {b})";
     }
-}
+//}
