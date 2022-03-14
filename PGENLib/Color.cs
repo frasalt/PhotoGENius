@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+
 
 namespace PGENLib
 {
@@ -29,17 +31,74 @@ namespace PGENLib
         {
             return $"({r}, {g}, {b})";
         }
-
-        public static Color operator +(Color c1, Color c2)
+        //sum
+        public static Color operator +(Color col1, Color col2)
         {
-            Color c = new Color();
-            c.r = c1.r + c2.r;
-            c.g = c1.g + c2.g;
-            c.b = c1.b + c2.b;
-            return c;
+            Color col3 = new Color();
+            col3.r = col1.r + col2.r;
+            col3.g = col1.g + col2.g;
+            col3.b = col1.b + col2.b;
+            return col3;
+        }
+        public static Color operator -(Color col1, Color col2)
+        {
+            Color col3 = new Color();
+            col3.r = col1.r - col2.r;
+            col3.g = col1.g - col2.g;
+            col3.b = col1.b - col2.b;
+            return col3;
         }
         
+        //scalar*color
+        public Color mult_Cs(Color col1, float s) 
+        {
+            Color col2;
+            col2.r = col1.r*s;
+            col2.g = col1.g*s;
+            col2.b = col1.b*s;
+            return col2;
+        }
+        public static Color operator *(Color col1, float s)
+        {
+            Color col2;
+            col2.r = col1.r*s;
+            col2.g = col1.g*s;
+            col2.b = col1.b*s;
+            return col2;
+        }
+        //color*color
+        public Color mult_CC(Color col1, Color col2)
+        {
+            Color col3;
+            col3.r = col1.r * col2.r;
+            col3.g = col1.g * col2.g;
+            col3.b = col1.b * col2.b;
+            return col3;
+        }
+        public static Color operator *(Color col1, Color col2)
+        {
+            Color col3;
+            col3.r = col1.r * col2.r;
+            col3.g = col1.g * col2.g;
+            col3.b = col1.b * col2.b;
+            return col3;
+        }
+
+        public static bool are_close(Color p, Color q)
+        {
+            double epsilon = 1E-5;
+            if (Math.Abs(p.r-q.r) < epsilon & Math.Abs(p.g-q.g) < epsilon & Math.Abs(p.b-q.b) < epsilon)
+            {
+                return true;
+            } 
+            else
+            {
+                return false;
+            }
+        }
 
     };
+}
 
-    
+//Dubbi:
+//Così implementate somma sottrazione e prodotto possono sforare il range
