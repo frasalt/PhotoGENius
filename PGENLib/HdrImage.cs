@@ -33,7 +33,7 @@ internal class Color
         }
 
         /// <summary>
-        /// Data una coppia di coordinate, restituisce la posizione del pixel nel vettore di memorizzazione
+        /// Data una coppia di coordinate, restituisce la posizione del pixel nel vettore di memorizzazione.
         /// </summary>
         private int PixelOffset(int x, int y)
         {
