@@ -1,7 +1,4 @@
-namespace PGENLib;
-
-internal class Color
-
+namespace PGENLib
 {
     public class HdrImage
     {

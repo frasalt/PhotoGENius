@@ -1,9 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using PGENLib;
-
 using System.Runtime.CompilerServices;
-using PGENLib;
-using static PGENLib.Color;
+//using static PGENLib.Color;
+
 class Program
 {
     static void Main()
@@ -44,9 +43,5 @@ class Program
         {
             Console.WriteLine("I colori sono diversi");
         }
-        
-        
-        
-        
     }
 }
