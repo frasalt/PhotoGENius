@@ -1,17 +1,108 @@
-﻿//namespace PGENLib //martin: ho tolto questa dichiarazione perchè Color viene invocata da HdrImage
+//namespace PGENLib //martin: ho tolto questa dichiarazione perchè Color viene invocata da HdrImage
 //{
-    public struct Color
-    { 
+public struct Color
+{
+    private float r;
+    private float g;
+    private float b;
 
-        public Color(double r, double g, double b) //Costruttore
-        {
-            this.r = 0;
-            this.g = 0;
-            this.b = 0;
-        }
-        public double r { get; }
-        public double g { get; }
-        public double b { get; }
-        public override string ToString() => $"({r}, {g}, {b})";
+    /// <summary>
+    /// Costruttore vuoto
+    /// </summary>
+    public Color()
+    {
+        this.r = 0;
+        this.g = 0;
+        this.b = 0;
     }
-//}
+    /// <summary>
+    /// Costruttore non vuoto, chiede tre float per RGB
+    /// </summary>
+    public Color(float r, float g, float b)
+    {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
+
+    //Metodi-------------------------------------
+    
+    /// <summary>
+    /// Restituisce i valori di r,g,b in forma di stringa
+    /// </summary>
+    public override string ToString()
+    {
+        return $"({r}, {g}, {b})";
+    }
+        
+    //sum
+    public static Color operator +(Color col1, Color col2)
+    {
+        Color col3 = new Color();
+        col3.r = col1.r + col2.r;
+        col3.g = col1.g + col2.g;
+        col3.b = col1.b + col2.b;
+        return col3;
+    }
+    public static Color operator -(Color col1, Color col2)
+    {
+        Color col3 = new Color();
+        col3.r = col1.r - col2.r;
+        col3.g = col1.g - col2.g;
+        col3.b = col1.b - col2.b;
+        return col3;
+    }
+        
+    //scalar*color
+    public Color mult_Cs(Color col1, float s) 
+    {
+        Color col2;
+        col2.r = col1.r*s;
+        col2.g = col1.g*s;
+        col2.b = col1.b*s;
+        return col2;
+    }
+    public static Color operator *(Color col1, float s)
+    {
+        Color col2;
+        col2.r = col1.r*s;
+        col2.g = col1.g*s;
+        col2.b = col1.b*s;
+        return col2;
+    }
+    //color*color
+    public Color mult_CC(Color col1, Color col2)
+    {
+        Color col3;
+        col3.r = col1.r * col2.r;
+        col3.g = col1.g * col2.g;
+        col3.b = col1.b * col2.b;
+        return col3;
+    }
+    public static Color operator *(Color col1, Color col2)
+    {
+        Color col3;
+        col3.r = col1.r * col2.r;
+        col3.g = col1.g * col2.g;
+        col3.b = col1.b * col2.b;
+        return col3;
+    }
+
+    public static bool are_close(Color p, Color q)
+    {
+        double epsilon = 1E-5;
+        if (Math.Abs(p.r-q.r) < epsilon & Math.Abs(p.g-q.g) < epsilon & Math.Abs(p.b-q.b) < epsilon)
+        {
+            return true;
+        } 
+        else
+        {
+            return false;
+        }
+    }
+}
+
+
+
+//Dubbi:
+//Così implementate somma sottrazione e prodotto possono sforare il range
