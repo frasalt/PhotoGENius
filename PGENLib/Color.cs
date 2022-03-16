@@ -108,7 +108,3 @@ namespace PGENLib
     }
 }
 
-
-
-//Dubbi:
-//Così implementate somma sottrazione e prodotto possono sforare il range

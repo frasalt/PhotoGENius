@@ -1,3 +1,7 @@
+using System.Diagnostics;
+using System;
+using System.Text;
+
 namespace PGENLib
 {
     public class HdrImage
@@ -20,7 +24,7 @@ namespace PGENLib
                 this.pixels[i] = col;
             }
         }
-
+        
         /// <summary>
         /// Verifica che date coordinate abbiano valori sensati, ovvero compresi tra 0 e il numero di righe/colonne
         /// </summary>
@@ -34,7 +38,7 @@ namespace PGENLib
         /// </summary>
         private int PixelOffset(int x, int y)
         {
-            //assert (this.ValidCoord(x, y)) ;
+            Debug.Assert(this.ValidCoord(x, y)) ;
             return y * width + x;
         }
         
@@ -43,7 +47,7 @@ namespace PGENLib
         /// </summary>
         private void SetPixel(int x, int y, Color new_col)
         {
-            //assert (this.ValidCoord(x, y));
+            Debug.Assert(this.ValidCoord(x, y));
             this.pixels[this.PixelOffset(x, y)] = new_col;
         }
         /// <summary>
@@ -51,26 +55,9 @@ namespace PGENLib
         /// </summary>
         private Color GetPixel(int x, int y)
         {
-            // assert (this.ValidCoord(x, y)) ;
+            Debug.Assert(this.ValidCoord(x, y)) ;
             return this.pixels[this.PixelOffset(x,y)];
         }
     }
-} 
-/*    
-}public class HdrImage
-{
-    public static int width;
-    public static int height;
-    public static Color[] pixels;
-    public HdrImage(int width_constr=0, int height_constr=0)
-    {
-        width = width_constr;
-        height = height_constr;
-        // create an empty image
-        for (int i = 0; i < HdrImage.width * HdrImage.height; i++)
-        {
-            HdrImage.pixels[i] = Color(0,0,0);
-        }
-    }
+    
 }
-*/
