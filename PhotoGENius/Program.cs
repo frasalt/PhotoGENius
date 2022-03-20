@@ -22,14 +22,14 @@ class Program
         // prova col*scal
         Color mul = new Color();
         float a = 5;
-        mul = mul.mult_Cs(green, a);
+        //mul = mul.mult_Cs(green, a);
         Color mulb = green * a;
         Console.WriteLine("Moltiplicazione con scalare:" + mul);
         Console.WriteLine("Moltiplicazione con scalare (overloading*):" + mulb);
         
         // prova col*col
         Color mul2 = new Color();
-        mul2 = mul2.mult_CC(green, red);
+        //mul2 = mul2.mult_CC(green, red);
         Color mul2B = green * red;
         Console.WriteLine("Moltiplicazione con colore:" + mul2);
         Console.WriteLine("Moltiplicazione con colore (overloading*):" + mul2B);
@@ -44,5 +44,16 @@ class Program
         {
             Console.WriteLine("I colori sono diversi");
         }
+        //prova endianness
+        double endianness = 78;
+        int testEndian = PfmImage.ParseEndianness(endianness);
+        /*if (testEndian == 0)
+        {
+            Console.WriteLine("Error! Invalid number for endianness: cannot be 0");
+        }
+        else
+        {*/
+            Console.WriteLine("L'endian di test a partire da " + endianness + " è: " + testEndian);
+        //}
     }
 }

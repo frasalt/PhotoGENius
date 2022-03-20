@@ -36,7 +36,9 @@ namespace PGENLib
             return $"({r}, {g}, {b})";
         }
 
-        //sum
+        /// <summary>
+        ///  Restituisce il colore somma (sulle varie componenti) 
+        /// </summary>
         public static Color operator +(Color col1, Color col2)
         {
             Color col3 = new Color();
@@ -46,6 +48,9 @@ namespace PGENLib
             return col3;
         }
 
+        /// <summary>
+        ///  Restituisce il colore differenza (sulle varie componenti) 
+        /// </summary>
         public static Color operator -(Color col1, Color col2)
         {
             Color col3 = new Color();
@@ -55,16 +60,9 @@ namespace PGENLib
             return col3;
         }
 
-        //scalar*color
-        public Color mult_Cs(Color col1, float s)
-        {
-            Color col2;
-            col2.r = col1.r * s;
-            col2.g = col1.g * s;
-            col2.b = col1.b * s;
-            return col2;
-        }
-
+        /// <summary>
+        ///  Restituisce il colore moltiplicato per uno scalare (sulle varie componenti) 
+        /// </summary>
         public static Color operator *(Color col1, float s)
         {
             Color col2;
@@ -73,17 +71,10 @@ namespace PGENLib
             col2.b = col1.b * s;
             return col2;
         }
-
-        //color*color
-        public Color mult_CC(Color col1, Color col2)
-        {
-            Color col3;
-            col3.r = col1.r * col2.r;
-            col3.g = col1.g * col2.g;
-            col3.b = col1.b * col2.b;
-            return col3;
-        }
-
+        
+        /// <summary>
+        ///  Restituisce il prodotto tra due colori (sulle varie componenti) 
+        /// </summary>
         public static Color operator *(Color col1, Color col2)
         {
             Color col3;
