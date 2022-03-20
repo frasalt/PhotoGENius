@@ -35,10 +35,8 @@ namespace PGENLib
         {
             return $"({r}, {g}, {b})";
         }
-        
-        /// <summary>
-        /// Restituisce il colore somma (sommando ciascuna componente).
-        /// </summary>
+
+        //sum
         public static Color operator +(Color col1, Color col2)
         {
             Color col3 = new Color();
@@ -47,10 +45,7 @@ namespace PGENLib
             col3.b = col1.b + col2.b;
             return col3;
         }
-        
-        /// <summary>
-        /// Restituisce il colore differenza (sottraendo ciascuna componente).
-        /// </summary>
+
         public static Color operator -(Color col1, Color col2)
         {
             Color col3 = new Color();
@@ -60,9 +55,16 @@ namespace PGENLib
             return col3;
         }
 
-        /// <summary>
-        /// Restituisce il colore moltiplicato per uno scalare.
-        /// </summary>
+        //scalar*color
+        public Color mult_Cs(Color col1, float s)
+        {
+            Color col2;
+            col2.r = col1.r * s;
+            col2.g = col1.g * s;
+            col2.b = col1.b * s;
+            return col2;
+        }
+
         public static Color operator *(Color col1, float s)
         {
             Color col2;
@@ -72,9 +74,16 @@ namespace PGENLib
             return col2;
         }
 
-        /// <summary>
-        /// Restituisce il colore risultante dal prodotto tra due colori.
-        /// </summary>
+        //color*color
+        public Color mult_CC(Color col1, Color col2)
+        {
+            Color col3;
+            col3.r = col1.r * col2.r;
+            col3.g = col1.g * col2.g;
+            col3.b = col1.b * col2.b;
+            return col3;
+        }
+
         public static Color operator *(Color col1, Color col2)
         {
             Color col3;
@@ -83,10 +92,7 @@ namespace PGENLib
             col3.b = col1.b * col2.b;
             return col3;
         }
-        
-        /// <summary>
-        /// Restituisce se i due colori sono simili o meno.
-        /// </summary>
+
         public static bool are_close(Color p, Color q)
         {
             double epsilon = 1E-5;
@@ -101,3 +107,4 @@ namespace PGENLib
         }
     }
 }
+
