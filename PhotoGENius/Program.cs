@@ -1,7 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using PGENLib;
 using System.Runtime.CompilerServices;
-//using static PGENLib.Color;
 
 class Program
 {
