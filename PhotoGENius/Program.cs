@@ -45,7 +45,7 @@ class Program
         }
         //prova endianness
         double endianness = 78;
-        int testEndian = PfmImage.ParseEndianness(endianness);
+        int testEndian = HdrImage.ParseEndianness(endianness);
         /*if (testEndian == 0)
         {
             Console.WriteLine("Error! Invalid number for endianness: cannot be 0");

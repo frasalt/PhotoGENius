@@ -3,7 +3,7 @@ using System;
 //using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace PGENLib
+/*namespace PGENLib
 {
     public class PfmImage
     {
@@ -17,21 +17,21 @@ namespace PGENLib
             //bfloat = [ 0x00, 0x10, 0x20, 0x30];
             float ffloat = BitConverter.ToSingle(bfloat, 0);
 
-            /*
-            for (int i = 0; i < 4; i++)
-            {
-                float ffloat = ToSingle(byte[], 0);
-            }
-            */
+            
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    float ffloat = ToSingle(byte[], 0);
+            //}
+            
             return ffloat;
         }
 
         // funzione di lettura di byte fino a \n - MARTINO
-        /*private string ReadLine(Stream str)
-        {
-            byte[] result = Encoding.ASCII.GetBytes(str);
-        }
-        */
+        //private string ReadLine(Stream str)
+        //{
+        //    byte[] result = Encoding.ASCII.GetBytes(str);
+        //}
+        
 
         // funzione lettura dim img - FRA
         // private ParseImgSize()
@@ -61,4 +61,5 @@ namespace PGENLib
         }
     }
 }
+*/
 
