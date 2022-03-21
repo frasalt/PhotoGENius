@@ -58,7 +58,8 @@ namespace PGENLib
             Debug.Assert(this.ValidCoord(x, y)) ;
             return this.pixels[this.PixelOffset(x,y)];
         }
-        // =============== seguono funzioni per la lettura di file ============
+        
+        // =============== SEGUONO FUNZIONI PER LA LETTURA DA FILE ============
         
         // funzione grossa che legge i file ed è composta da 4 funzioncine
         // public void ReadPFMFile();
@@ -84,20 +85,22 @@ namespace PGENLib
         /// <summary>
         /// funzione di lettura di byte fino a \n - MARTINO
         /// </summary>
-        /// private string ReadLine(Stream str)
-        //{
-        //    byte[] result = Encoding.ASCII.GetBytes(str);
-        //}
-
-        // funzione lettura dimensioni img - FRA
-        // private ParseImgSize()
+        private string ReadLine(Stream str)
+        {
+            byte[] result = Encoding.ASCII.GetBytes(str);
+        }
+        
+        /// <summary>
+        /// funzione lettura dimensioni img - FRA
+        /// </summary>
+        private ParseImgSize()
+        {
+            return 0;
+        }
         
         /// <summary>
         ///  Funzione che legge l'endianness e restituisce se è little o big.
         /// </summary>
-        
-        // DUBBIO: HO TRASFORMATO DA PRIVATE A PUBLIC PER VEDERE DAL MAIN SE FUNZIONA LA MIA PARTE
-        // LA TERREI COMUNQUE PUBLIC.
         public static int ParseEndianness(double endianness)
         {
             int littleEnd = -1;
@@ -114,6 +117,8 @@ namespace PGENLib
             }
             else return 0;
         }
+        // DUBBIO: HO TRASFORMATO DA PRIVATE A PUBLIC PER VEDERE DAL MAIN SE FUNZIONA LA MIA PARTE
+        // LA TERREI COMUNQUE PUBLIC.
     }
 
 } 
