@@ -1,5 +1,4 @@
 # PhotoGENius
+### A program for generating photorealistic images
 
-![](logo.png)
-![](logo2.png)
 ![](logo1.png)
