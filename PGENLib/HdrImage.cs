@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace PGENLib
@@ -50,6 +51,7 @@ namespace PGENLib
             Debug.Assert(this.ValidCoord(x, y));
             this.pixels[this.PixelOffset(x, y)] = new_col;
         }
+        
         /// <summary>
         /// Data una coppia di coordinate, restituisce il colore del pixel corrispondente
         /// </summary>
@@ -62,18 +64,17 @@ namespace PGENLib
         // =============== SEGUONO FUNZIONI PER LA LETTURA DA FILE ============
         
         // funzione grossa che legge i file ed è composta da 4 funzioncine
-        // public void ReadPFMFile();
+        // private void ReadPFMFile(*uno stream, o un puntatore: std:istream & stream*);
 
         /// <summary>
         /// funzione lettura di sequenza di 4 byte - CHI FINISCE PER PRIMO
         /// </summary>
-        private float ReadFloat(Stream instr, double endianness)
+        private float ReadFloat(Stream str, double endianness)
         {
             byte[] bfloat = new byte[4] {0x00, 0x10, 0x20, 0x30};
             //bfloat = [ 0x00, 0x10, 0x20, 0x30];
             float ffloat = BitConverter.ToSingle(bfloat, 0);
 
-            
             //for (int i = 0; i < 4; i++)
             //{
             //    float ffloat = ToSingle(byte[], 0);
@@ -83,17 +84,17 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// funzione di lettura di byte fino a \n - MARTINO
+        /// funzione di lettura di linea come byte fino a \n - MARTINO
         /// </summary>
-        private string ReadLine(Stream str)
+        private IEnumerable<string> ReadLine(string filename) // cosa vuol diret IEnum.. ?
         {
-            byte[] result = Encoding.ASCII.GetBytes(str);
+             return File.ReadLines(filename); // ma probabilmente non è corretto
         }
-        
+
         /// <summary>
         /// funzione lettura dimensioni img - FRA
         /// </summary>
-        private ParseImgSize()
+        private double ParseImgSize()
         {
             return 0;
         }
@@ -116,6 +117,10 @@ namespace PGENLib
                 return littleEnd;
             }
             else return 0;
+            /* // più sinteticamente:
+            Debug.Assert(endianness != 0); // il debug mi fa uscire il messaggio di errore solo se falsa.
+            return endianness/Math.Abs(endianness); // endiannes = +/- 1
+            */
         }
         // DUBBIO: HO TRASFORMATO DA PRIVATE A PUBLIC PER VEDERE DAL MAIN SE FUNZIONA LA MIA PARTE
         // LA TERREI COMUNQUE PUBLIC.
