@@ -12,7 +12,10 @@ namespace PGENLib
         public static int height;
         public Color[] pixels; // un vettore di tipo Color che contiene tutti i pixel
 
-        // Costruttore: 
+        // Costruttori: 
+        /// <summary>
+        /// Costruttore con pixel noti
+        /// </summary>
         public HdrImage(int width_constr, int height_constr, Color[] pixels)
         {
             width = width_constr;
@@ -69,7 +72,7 @@ namespace PGENLib
         /// <summary>
         /// funzione lettura di sequenza di 4 byte - CHI FINISCE PER PRIMO
         /// </summary>
-        private float ReadFloat(Stream input, double endianness)
+        public float ReadFloat(Stream input, double endianness)
         {
             // devo dividere in due step: stream to byte ...
             MemoryStream ms = new MemoryStream();
@@ -87,7 +90,7 @@ namespace PGENLib
         /// <summary>
         /// funzione di lettura di linea fino a \n - MARTINO
         /// </summary>
-        private string ReadLine(Stream str)
+        public string ReadLine(Stream str)
         {
             StreamReader reader = new StreamReader(str);
             return reader.ReadLine();

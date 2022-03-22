@@ -1,13 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using PGENLib;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 class Program
 {
     static void Main()
     {
-        Console.WriteLine("Hello, World!");
-        
+        /*
         // Prova colore
         Color red = new Color(255,0,0);
         Console.WriteLine("Rosso:" + red);
@@ -43,16 +43,29 @@ class Program
         {
             Console.WriteLine("I colori sono diversi");
         }
+        */
         //prova endianness
+        /*
         double endianness = 78;
         int testEndian = HdrImage.ParseEndianness(endianness);
-        /*if (testEndian == 0)
+        // if (testEndian == 0)
+        // {
+        //    Console.WriteLine("Error! Invalid number for endianness: cannot be 0");
+        // }
+        // else
+        Console.WriteLine("L'endian di test a partire da " + endianness + " è: " + testEndian);
+        */
+        
+        // prova lettura da stream
+        Color[] colore = new Color[6];
+        var img = new HdrImage(3, 2, colore);
+        
+        using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_le.pfm"))
         {
-            Console.WriteLine("Error! Invalid number for endianness: cannot be 0");
+            Console.WriteLine(img.ReadLine(fileStream));
+            Console.WriteLine(img.ReadLine(fileStream)); // dopo la prima linea, le altre le vede vuote :(
+            Console.WriteLine(img.ReadLine(fileStream));
+            //Console.WriteLine(img.ReadFloat(fileStream, 1)); // non funziona
         }
-        else
-        {*/
-            Console.WriteLine("L'endian di test a partire da " + endianness + " è: " + testEndian);
-        //}
     }
 }
