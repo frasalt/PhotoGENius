@@ -53,7 +53,7 @@ namespace PGENLib
         /// </summary>
         private bool ValidCoord(int x, int y)
         {
-            return (x > 0 && y > 0 && x < width && y < width);
+            return (x > 0 && y > 0 && x <= width && y <= width); //dev'esserci anche l'uguale o no?
         }
 
         /// <summary>
@@ -102,19 +102,21 @@ namespace PGENLib
             int end = ParseEndianness(endianness);
             Console.WriteLine(end);                  // commentabile
             
-            //Color[] colori = new Color[dim[0]*dim[1]];
             // infine la lettura della seq di 4 bytes
             // che deve scrivere il vettore dei colori
             input.Position = reader.BaseStream.Position; // impunto lo stream alla stessa posizione a cui ero
                                                          // con lo StreamReader.  
 
             HdrImage myimg = new HdrImage(dim[0], dim[1]);
-            for (int y = height -1; y >=0; y--)
+            for (int y = height-1; y >= 0; y--)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    //(r, g, b) =  [ReadFloat(stream, endianness) for i in range(3)]
-                    //result.set_pixel(x, y, Color(r, g, b))
+                    float r = ReadFloat(input, end);
+                    float g = ReadFloat(input, end);
+                    float b = ReadFloat(input, end);
+                    Color newcol = new Color(r, g, b);
+                    myimg.SetPixel(x, y, newcol);
                 }
             }
 
@@ -172,7 +174,7 @@ namespace PGENLib
         /// <returns> Float value corresponding to 4-byte sequence</returns>
         public static float ReadFloat(Stream input, int end)
         {
-            byte[] bytes = new byte[4];
+            byte[] bytes = new byte[4]; 
 
             try
             {
@@ -187,7 +189,8 @@ namespace PGENLib
             }
 
             if (end == -1) Array.Reverse(bytes);
-            return BitConverter.ToSingle(bytes, 0);
+            return BitConverter.ToSingle(bytes, 0); // il dubbio rimane: la funzione ToSingle prende la
+                                                            // endianness dal sistema operativo su cui sto eseguendo
         }
 
         /// <summary>
