@@ -64,31 +64,27 @@ namespace PGENLib
         // =============== SEGUONO FUNZIONI PER LA LETTURA DA FILE ============
         
         // funzione grossa che legge i file ed è composta da 4 funzioncine
-        // private void ReadPFMFile(*uno stream, o un puntatore: std:istream & stream*);
+        // private/public void ReadPFMFile(*uno stream, o un puntatore: std:istream & stream*);
 
         /// <summary>
         /// funzione lettura di sequenza di 4 byte - CHI FINISCE PER PRIMO
         /// </summary>
-        private float ReadFloat(Stream str, double endianness)
+        private float ReadFloat(Stream input, double endianness)
         {
-            byte[] bfloat = new byte[4] {0x00, 0x10, 0x20, 0x30};
-            //bfloat = [ 0x00, 0x10, 0x20, 0x30];
-            float ffloat = BitConverter.ToSingle(bfloat, 0);
-
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    float ffloat = ToSingle(byte[], 0);
-            //}
-            
-            return ffloat;
+            // devo dividere in due step: stream to byte ...
+            MemoryStream ms = new MemoryStream();
+            input.CopyTo(ms);
+            byte[] bytes = ms.ToArray();
+            // ... poi usando la corretta endianness: byte to float
         }
 
         /// <summary>
-        /// funzione di lettura di linea come byte fino a \n - MARTINO
+        /// funzione di lettura di linea fino a \n - MARTINO
         /// </summary>
-        private IEnumerable<string> ReadLine(string filename) // cosa vuol diret IEnum.. ?
+        private string ReadLine(Stream str)
         {
-             return File.ReadLines(filename); // ma probabilmente non è corretto
+            StreamReader reader = new StreamReader(str);
+            return reader.ReadLine();
         }
 
         /// <summary>
