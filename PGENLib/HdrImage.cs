@@ -73,20 +73,21 @@ namespace PGENLib
             StreamReader reader = new StreamReader(input);
             
             string magic = reader.ReadLine();
-            Console.WriteLine(magic);
+            Console.WriteLine(magic);                // commentabile
             
             string imgsize = reader.ReadLine();
             int[] dim = ParseImgSize(imgsize);
-            Console.WriteLine($"{dim[0]} {dim[1]}");
+            Console.WriteLine($"{dim[0]} {dim[1]}"); // commentabile
 
             string endianness = reader.ReadLine();
             int end = ParseEndianness(endianness);
-            Console.WriteLine(end);
+            Console.WriteLine(end);                  // commentabile
             
             Color[] colori = new Color[dim[0]*dim[1]];
             // infine la lettura della seq di 4 bytes
             // che deve scrivere il vettore dei colori
-            input.Position = reader.BaseStream.Position;
+            input.Position = reader.BaseStream.Position; // impunto lo stream alla stessa posizione a cui sono arrivata
+                                                         // con lo StreamReader.   
 
             HdrImage myimg = new HdrImage(dim[0], dim[1], colori);
 
