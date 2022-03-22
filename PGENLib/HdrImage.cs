@@ -99,10 +99,21 @@ namespace PGENLib
         /// <summary>
         /// funzione lettura dimensioni img - FRA
         /// </summary>
-        private double ParseImgSize()
+
+        //Va fatto meglio inserendo dei try per sollevare eccezioni
+        private float[] ParseImgSize(Stream str)
         {
-            return 0;
+            string line = ReadLine(str);
+            string[] sub = line.Split();
+            float[] dim = new float[2];
+            
+            dim[0] = float.Parse(sub[0]); 
+            dim[1] = float.Parse(sub[1]);
+            return dim;
+
         }
+        
+           
         
         /// <summary>
         ///  Funzione che legge l'endianness e restituisce se è little o big.
