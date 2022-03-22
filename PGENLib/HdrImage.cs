@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System;
+using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
@@ -66,60 +67,89 @@ namespace PGENLib
         
         // =============== SEGUONO FUNZIONI PER LA LETTURA DA FILE ============
         
-        // funzione grossa che legge i file ed è composta da 4 funzioncine
-        // private/public void ReadPFMFile(*uno stream, o un puntatore: std:istream & stream*);
+        // funzione grossa che legge un file e lo scrive in una nuova HDR image
+        public HdrImage ReadPFMFile(Stream input)
+        {
+            StreamReader reader = new StreamReader(input);
+            
+            string magic = reader.ReadLine();
+            Console.WriteLine(magic);
+            
+            string imgsize = reader.ReadLine();
+            int[] dim = ParseImgSize(imgsize);
+            Console.WriteLine($"{dim[0]} {dim[1]}");
+
+            string endianness = reader.ReadLine();
+            int end = ParseEndianness(endianness);
+            Console.WriteLine(end);
+            
+            Color[] colori = new Color[dim[0]*dim[1]];
+            // infine la lettura della seq di 4 bytes
+            // che deve scrivere il vettore dei colori
+            input.Position = reader.BaseStream.Position;
+
+            HdrImage myimg = new HdrImage(dim[0], dim[1], colori);
+
+            return myimg;
+        }
 
         /// <summary>
         /// funzione lettura di sequenza di 4 byte - CHI FINISCE PER PRIMO
         /// </summary>
-        public float ReadFloat(Stream input, double endianness)
+        public float ReadFloat(Stream input, int endianness)
         {
-            // devo dividere in due step: stream to byte ...
-            MemoryStream ms = new MemoryStream();
+            float num = 0; // che dovrò ritornare alla fine
+            
+            UInt32 x = 0; // variabile di appoggio per salvare il flusso grezzo
+            
+            // un po' di giri per avere un vettore di byte a partire dall'input
+            MemoryStream ms;
+            ms = new MemoryStream();
             input.CopyTo(ms);
             byte[] bytes = ms.ToArray();
-
-            // ... poi usando la corretta endianness: byte to float
-            //while(/*lo stream è aperto*/)
-            //{
-            return /*float*/ System.BitConverter.ToSingle(bytes, 0);
-            //}
-            // MA COSì NON HO USATO LA INFO SULLA ENDIANNESS
-        }
-
-        /// <summary>
-        /// funzione di lettura di linea fino a \n - MARTINO
-        /// </summary>
-        public string ReadLine(Stream str)
-        {
-            StreamReader reader = new StreamReader(str);
-            return reader.ReadLine();
+            
+            // registro nell'int i bytes nell'ordine in cui mi sono arrivati con lo stream
+            x = BitConverter.ToUInt32(bytes, 0);
+            
+            if (endianness == 1) // voglio trasformare l'int in float con big-endianness
+            {
+                // PROBLEMA: IN VERITà LA ENDIANNESS VIENE USATA NEL METODO ToUInt32 (https://referencesource.microsoft.com/#mscorlib/system/bitconverter.cs
+                // righe 206-233), MA PRENDENDOLA DALLA CODIFICA CHE USA IL SISTEMA SU CUI SI STA OPERANDO (IsLittleEndian, riga 225).
+                // Quindi qui è già tardi per settare la endianness corretta, e in generale a meno di sovrascrivere il metodo, non possiamo seguire
+                // proprio questa strada :(
+                // >> una cosa che si può pensare di fare è copiare da riga 220 a 231, modificando la condizione sulla endianness
+                
+                //num = BitConverter.ToSingle(bytes, 0); // converte direttamete in float, senza passare dall'UInt32
+            }
+            if (endianness == -1) // qui voglio trasformare l'int in float con little-endianness
+            {
+            }
+            
+            return num;
         }
 
         /// <summary>
         /// funzione lettura dimensioni img - FRA
         /// </summary>
-
-        //Va fatto meglio inserendo dei try per sollevare eccezioni
-        private float[] ParseImgSize(Stream str)
+        public int[] ParseImgSize(string str)
         {
-            string line = ReadLine(str);
-            string[] sub = line.Split();
-            float[] dim = new float[2];
+            string[] sub = str.Split();
+            int[] dim = new int[2];
             
-            dim[0] = float.Parse(sub[0]); 
-            dim[1] = float.Parse(sub[1]);
+            dim[0] = int.Parse(sub[0]); 
+            dim[1] = int.Parse(sub[1]);
             return dim;
-
         }
-        
-           
-        
+        // Va fatto meglio inserendo dei try per sollevare eccezioni
+
         /// <summary>
         ///  Funzione che legge l'endianness e restituisce se è little o big.
         /// </summary>
-        public static int ParseEndianness(double endianness)
+        public int ParseEndianness(string input)
         {
+            double endianness = Convert.ToDouble(input);
+            
+            /*
             int littleEnd = -1;
             int bigEnd = 1;
             Debug.Assert(endianness != 0); // il debug mi fa uscire il messaggio di errore solo se falsa.
@@ -133,10 +163,12 @@ namespace PGENLib
                 return littleEnd;
             }
             else return 0;
-            /* // più sinteticamente:
-            Debug.Assert(endianness != 0); // il debug mi fa uscire il messaggio di errore solo se falsa.
-            return endianness/Math.Abs(endianness); // endiannes = +/- 1
             */
+            
+            // più sinteticamente:
+            Debug.Assert(endianness != 0); // il debug mi fa uscire il messaggio di errore solo se falsa.
+            double norm_end = endianness / Math.Abs(endianness); // normalization
+            return (int)norm_end;
         }
         // DUBBIO: HO TRASFORMATO DA PRIVATE A PUBLIC PER VEDERE DAL MAIN SE FUNZIONA LA MIA PARTE
         // LA TERREI COMUNQUE PUBLIC.

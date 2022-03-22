@@ -62,10 +62,7 @@ class Program
         
         using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_le.pfm"))
         {
-            Console.WriteLine(img.ReadLine(fileStream));
-            Console.WriteLine(img.ReadLine(fileStream)); // dopo la prima linea, le altre le vede vuote :(
-            Console.WriteLine(img.ReadLine(fileStream));
-            //Console.WriteLine(img.ReadFloat(fileStream, 1)); // non funziona
+            HdrImage prova = img.ReadPFMFile(fileStream);
         }
     }
 }
