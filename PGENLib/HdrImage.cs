@@ -13,7 +13,8 @@ namespace PGENLib
         public static int height;
         public Color[] pixels; // un vettore di tipo Color che contiene tutti i pixel
 
-        // Costruttori: 
+        // Costruttori:
+        
         /// <summary>
         /// Costruttore con pixel noti
         /// </summary>
@@ -21,6 +22,23 @@ namespace PGENLib
         {
             width = width_constr;
             height = height_constr;
+            this.pixels = pixels;
+            Color col = new Color();
+            // create an empty image
+            for (int i = 0; i < width * height; i++)
+            {
+                this.pixels[i] = col;
+            }
+        }
+        
+        /// <summary>
+        /// Costruttore con pixel neri
+        /// </summary>
+        public HdrImage(int width_constr, int height_constr)
+        {
+            width = width_constr;
+            height = height_constr;
+            Color[] pixels = new Color[width*height];
             this.pixels = pixels;
             Color col = new Color();
             // create an empty image
@@ -73,6 +91,7 @@ namespace PGENLib
             StreamReader reader = new StreamReader(input);
             
             string magic = reader.ReadLine();
+            Debug.Assert(magic == "PF"); /*InvalidPfmFileFormat*/  
             Console.WriteLine(magic);                // commentabile
             
             string imgsize = reader.ReadLine();
@@ -83,13 +102,21 @@ namespace PGENLib
             int end = ParseEndianness(endianness);
             Console.WriteLine(end);                  // commentabile
             
-            Color[] colori = new Color[dim[0]*dim[1]];
+            //Color[] colori = new Color[dim[0]*dim[1]];
             // infine la lettura della seq di 4 bytes
             // che deve scrivere il vettore dei colori
-            input.Position = reader.BaseStream.Position; // impunto lo stream alla stessa posizione a cui sono arrivata
-                                                         // con lo StreamReader.   
+            input.Position = reader.BaseStream.Position; // impunto lo stream alla stessa posizione a cui ero
+                                                         // con lo StreamReader.  
 
-            HdrImage myimg = new HdrImage(dim[0], dim[1], colori);
+            HdrImage myimg = new HdrImage(dim[0], dim[1]);
+            for (int y = height -1; y >=0; y--)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    //(r, g, b) =  [ReadFloat(stream, endianness) for i in range(3)]
+                    //result.set_pixel(x, y, Color(r, g, b))
+                }
+            }
 
             return myimg;
         }
@@ -97,36 +124,70 @@ namespace PGENLib
         /// <summary>
         /// funzione lettura di sequenza di 4 byte - CHI FINISCE PER PRIMO
         /// </summary>
-        public float ReadFloat(Stream input, int endianness)
+        /*public float ReadFloat(Stream input, int endianness)
         {
-            float num = 0; // che dovrò ritornare alla fine
-            
-            UInt32 x = 0; // variabile di appoggio per salvare il flusso grezzo
-            
-            // un po' di giri per avere un vettore di byte a partire dall'input
-            MemoryStream ms;
-            ms = new MemoryStream();
-            input.CopyTo(ms);
-            byte[] bytes = ms.ToArray();
-            
-            // registro nell'int i bytes nell'ordine in cui mi sono arrivati con lo stream
-            x = BitConverter.ToUInt32(bytes, 0);
-            
-            if (endianness == 1) // voglio trasformare l'int in float con big-endianness
+            unsafe
             {
+                float num = 0; // che dovrò ritornare alla fine
+            
+                Int32 x = 0; // variabile di appoggio in cui mettere i 32 bit di stream  
+            
+                // un po' di giri per avere un vettore di byte a partire dall'input
+                MemoryStream ms;
+                ms = new MemoryStream();
+                input.CopyTo(ms);
+                byte[] bytes = ms.ToArray(); // problema: in questo modo non prende solo 32 bit, bensì tutti
+                //Console.WriteLine(bytes[0]);
+
                 // PROBLEMA: IN VERITà LA ENDIANNESS VIENE USATA NEL METODO ToUInt32 (https://referencesource.microsoft.com/#mscorlib/system/bitconverter.cs
                 // righe 206-233), MA PRENDENDOLA DALLA CODIFICA CHE USA IL SISTEMA SU CUI SI STA OPERANDO (IsLittleEndian, riga 225).
                 // Quindi qui è già tardi per settare la endianness corretta, e in generale a meno di sovrascrivere il metodo, non possiamo seguire
                 // proprio questa strada :(
                 // >> una cosa che si può pensare di fare è copiare da riga 220 a 231, modificando la condizione sulla endianness
                 
-                //num = BitConverter.ToSingle(bytes, 0); // converte direttamete in float, senza passare dall'UInt32
+                // per byte* ho dovuto fare ALLOW UNSAFE CONTENT IN THIS PROJECT, cosa significa? ci va bene?
+                fixed(byte * pbyte = & bytes[0])
+                {
+                        if (endianness == -1)
+                        {
+                            x = (*pbyte) | (*(pbyte + 1) << 8) | (*(pbyte + 2) << 16) | (*(pbyte + 3) << 24);
+                        }
+                        else if (endianness == 1){
+                            x = (*pbyte << 24) | (*(pbyte + 1) << 16)  | (*(pbyte + 2) << 8) | (*(pbyte + 3));                        
+                        }
+                }
+
+                num = *(float*) & x; // cfr riga 332
+                return num;
             }
-            if (endianness == -1) // qui voglio trasformare l'int in float con little-endianness
+        }*/
+        
+        // per esaurimento sono andato a prendere la funzione da colleghi dell'anno scorso:
+        // https://github.com/andreasala98/NM4PIG/blob/master/Trace/HdrImage.cs
+        /// <summary>
+        /// Read a 32bit sequence from a stream and convert it to floating-point number.
+        /// </summary>
+        /// <param name="input"> The input stream </param>
+        /// <param name="end"> -1 if the image is little-endian, -1 if big-endian </param>
+        /// <returns> Float value corresponding to 4-byte sequence</returns>
+        public static float ReadFloat(Stream input, int end)
+        {
+            byte[] bytes = new byte[4];
+
+            try
             {
+                bytes[0] = (byte)input.ReadByte();
+                bytes[1] = (byte)input.ReadByte();
+                bytes[2] = (byte)input.ReadByte();
+                bytes[3] = (byte)input.ReadByte();
             }
-            
-            return num;
+            catch
+            {
+            //    throw new InvalidPfmFileFormat("Unable to read float!");
+            }
+
+            if (end == -1) Array.Reverse(bytes);
+            return BitConverter.ToSingle(bytes, 0);
         }
 
         /// <summary>
