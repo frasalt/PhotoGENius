@@ -75,7 +75,13 @@ namespace PGENLib
             MemoryStream ms = new MemoryStream();
             input.CopyTo(ms);
             byte[] bytes = ms.ToArray();
+
             // ... poi usando la corretta endianness: byte to float
+            //while(/*lo stream è aperto*/)
+            //{
+            return /*float*/ System.BitConverter.ToSingle(bytes, 0);
+            //}
+            // MA COSì NON HO USATO LA INFO SULLA ENDIANNESS
         }
 
         /// <summary>
