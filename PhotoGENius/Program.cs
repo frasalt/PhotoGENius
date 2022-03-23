@@ -8,14 +8,6 @@ class Program
     static void Main()
     {
         // prova lettura da stream
-        var img = new HdrImage(3, 2);
-        HdrImage prova;
-        
-        using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_le.pfm"))
-        {
-            prova = img.ReadPFMFile(fileStream);
-        }
-
         /*
         HdrImage img2 = new HdrImage(3, 2);
 
@@ -33,15 +25,31 @@ class Program
         img2.SetPixel(2, 1, col);
         */
         
-        using (Stream outFileStream = File.OpenWrite("file_be.pfm"))
-        {
-            prova.WritePFMFile(outFileStream, Endianness.BigEndian);
-        }
+        var img = new HdrImage(3, 2);
         
-        using (Stream outFileStream2 = File.OpenWrite("file_le.pfm"))
-        {
-            prova.WritePFMFile(outFileStream2, Endianness.LittleEndian);
-        }
+        // prova con BigEndianness
+        HdrImage prova_be;
+        
+        using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_be.pfm"))
+        { prova_be = img.ReadPFMFile(fileStream); }
+
+        using (Stream outFileStream = File.OpenWrite("file_BB.pfm"))
+        { prova_be.WritePFMFile(outFileStream, Endianness.BigEndian); }
+        
+        using (Stream outFileStream2 = File.OpenWrite("file_BL.pfm"))
+        { prova_be.WritePFMFile(outFileStream2, Endianness.LittleEndian); }
+        
+        // prova con BigEndianness
+        HdrImage prova_le;
+        
+        using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_le.pfm"))
+        { prova_be = img.ReadPFMFile(fileStream); }
+
+        using (Stream outFileStream = File.OpenWrite("file_LB.pfm"))
+        { prova_be.WritePFMFile(outFileStream, Endianness.BigEndian); }
+        
+        using (Stream outFileStream2 = File.OpenWrite("file_LL.pfm"))
+        { prova_be.WritePFMFile(outFileStream2, Endianness.LittleEndian); }
         
     }
 }
