@@ -76,8 +76,9 @@ namespace PGENLib
         /// </summary>
         public void SetPixel(int x, int y, Color new_col)
         {
-            Debug.Assert(this.ValidCoord(x, y));
-            this.pixels[this.PixelOffset(x, y)] = new_col;
+            Debug.Assert(ValidCoord(x, y));
+            pixels[PixelOffset(x, y)] = new_col;
+            //Console.WriteLine($"PixelOffset: {PixelOffset(x, y)} ");
         }
         
         /// <summary>
@@ -94,32 +95,20 @@ namespace PGENLib
         // funzione grossa che legge un file e lo scrive in una nuova HDR image
         public HdrImage ReadPFMFile(Stream input)
         {
-            StreamReader reader = new StreamReader(input);
+            string magic = ReadLine(input);
+            Debug.Assert(magic == "PF");  
+            Console.WriteLine(magic);
             
-            string magic = reader.ReadLine();
-            Debug.Assert(magic == "PF"); /*InvalidPfmFileFormat*/  
-            Console.WriteLine(magic);                // commentabile
-            
-            string imgsize = reader.ReadLine();
+            string imgsize = ReadLine(input);
             int[] dim = ParseImgSize(imgsize);
-            Console.WriteLine($"{dim[0]} {dim[1]}"); // commentabile
+            Console.WriteLine($"{dim[0]} {dim[1]}");
 
-            string endianness = reader.ReadLine();
-            int end = ParseEndianness(endianness);
-            Console.WriteLine(end);                  // commentabile
-            
-            // infine la lettura della seq di 4 bytes
-            // che deve scrivere il vettore dei colori
-            input.Position = 0*reader.BaseStream.Position; // impunto lo stream alla stessa posizione a cui ero
-                                                         // con lo StreamReader. 
-            // NOTA: C'è UN PROBLEMA CON LA POSIZIONE DELLO STREAM: SE LO FACCIAMO RIPARTIRE DA ZERO SI VEDONO COSE
+            string endianness = ReadLine(input);
+            int endi = ParseEndianness(endianness);
+            Endianness end = Endianness.BigEndian;
+            if (endi == -1) end = Endianness.LittleEndian;
+            Console.WriteLine(endi);
 
-            // dobbiamo provare a stampare a video i bite che legge, per capire che cosa sta leggendo
-            for (int i = 0; i < 4 * 3 * 2; i++)
-            {
-                Console.WriteLine(input.ReadByte()); // RESTITUISCE -1 SE è FINITO LO STREAM
-            }
-            
             HdrImage myimg = new HdrImage(dim[0], dim[1]);
             for (int y = height-1; y >= 0; y--)
             {
@@ -128,12 +117,36 @@ namespace PGENLib
                     float r = ReadFloat(input, end);
                     float g = ReadFloat(input, end);
                     float b = ReadFloat(input, end);
+                        
                     Color newcol = new Color(r, g, b);
+                    //Console.WriteLine($"    red {newcol.GetR()}     green {newcol.GetG()}       blue {newcol.GetB()}");
+                    
                     myimg.SetPixel(x, y, newcol);
                 }
             }
 
             return myimg;
+        }
+
+        /// <summary>
+        /// funzione che legge un byte e ne fa un carattere ascii
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public string ReadLine(Stream input)
+        {
+            string str = "";
+            byte[] mybyte = new byte[1];
+            
+            while (Encoding.ASCII.GetString(mybyte) != "\n")
+            {
+                mybyte[0] = (byte)input.ReadByte();
+                if (Encoding.ASCII.GetString(mybyte) != "\n")
+                {
+                    str += Encoding.ASCII.GetString(mybyte);
+                }
+            }
+            return str;
         }
         
         // per esaurimento sono andato a prendere la funzione da colleghi dell'anno scorso:
@@ -144,29 +157,32 @@ namespace PGENLib
         /// <param name="input"> The input stream </param>
         /// <param name="end"> -1 if the image is little-endian, -1 if big-endian </param>
         /// <returns> Float value corresponding to 4-byte sequence</returns>
-        public static float ReadFloat(Stream input, int end)
+        public static float ReadFloat(Stream input, Endianness end)
         {
-            Debug.Assert(input.CanRead); // mi assicuro che possa leggere
-            
             byte[] bytes = new byte[4]; 
 
             try
             {
-                // l'errore è qui dentro ?
                 bytes[0] = (byte)input.ReadByte();
                 bytes[1] = (byte)input.ReadByte();
                 bytes[2] = (byte)input.ReadByte();
                 bytes[3] = (byte)input.ReadByte();
+                
+                /*
+                Console.Write($"{bytes[0]} ");
+                Console.Write($"{bytes[1]} ");
+                Console.Write($"{bytes[2]} ");
+                Console.Write($"{bytes[3]} ");
+                */
             }
             catch
             {
-                Console.WriteLine("non ce lho fatta");
+                Console.WriteLine("ReadFloat: non ce lho fatta");
             //    throw new InvalidPfmFileFormat("Unable to read float!");
             }
 
-            if (end == -1) Array.Reverse(bytes);
-            
-            Console.WriteLine(BitConverter.ToSingle(bytes, 0));
+            //if (end == Endianness.LittleEndian) Array.Reverse(bytes);
+            if (end == Endianness.BigEndian) Array.Reverse(bytes); // al contrario??
             return BitConverter.ToSingle(bytes, 0); // il dubbio rimane: la funzione ToSingle prende la
                                                             // endianness dal sistema operativo su cui sto eseguendo
         }

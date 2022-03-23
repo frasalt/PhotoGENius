@@ -9,12 +9,14 @@ class Program
     {
         // prova lettura da stream
         var img = new HdrImage(3, 2);
+        HdrImage prova;
         
         using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_le.pfm"))
         {
-            HdrImage prova = img.ReadPFMFile(fileStream);
+            prova = img.ReadPFMFile(fileStream);
         }
 
+        /*
         HdrImage img2 = new HdrImage(3, 2);
 
         var col = new Color((float)1.0e1, (float)2.0e1, (float)3.0e1);
@@ -29,15 +31,16 @@ class Program
         img2.SetPixel(1, 1, col);
         col = new Color((float)7.0e2, (float)8.0e2, (float)9.0e2);
         img2.SetPixel(2, 1, col);
+        */
         
         using (Stream outFileStream = File.OpenWrite("file.pfm"))
         {
-            img2.WritePFMFile(outFileStream, Endianness.BigEndian);
+            prova.WritePFMFile(outFileStream, Endianness.BigEndian);
         }
         
         using (Stream outFileStream2 = File.OpenWrite("file2.pfm"))
         {
-            img2.WritePFMFile(outFileStream2, Endianness.LittleEndian);
+            prova.WritePFMFile(outFileStream2, Endianness.LittleEndian);
         }
         
     }
