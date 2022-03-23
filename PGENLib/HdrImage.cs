@@ -6,6 +6,12 @@ using System.Text;
 
 namespace PGENLib
 {
+    public enum Endianness
+    {
+        LittleEndian,
+        BigEndian,
+    }
+
     public class HdrImage
     {
         // attributi dell'immagine
@@ -53,7 +59,7 @@ namespace PGENLib
         /// </summary>
         private bool ValidCoord(int x, int y)
         {
-            return (x > 0 && y > 0 && x <= width && y <= width); //dev'esserci anche l'uguale o no?
+            return (x >= 0 && y >= 0 && x < width && y < height);
         }
 
         /// <summary>
@@ -122,47 +128,6 @@ namespace PGENLib
 
             return myimg;
         }
-
-        /// <summary>
-        /// funzione lettura di sequenza di 4 byte - CHI FINISCE PER PRIMO
-        /// </summary>
-        /*public float ReadFloat(Stream input, int endianness)
-        {
-            unsafe
-            {
-                float num = 0; // che dovrò ritornare alla fine
-            
-                Int32 x = 0; // variabile di appoggio in cui mettere i 32 bit di stream  
-            
-                // un po' di giri per avere un vettore di byte a partire dall'input
-                MemoryStream ms;
-                ms = new MemoryStream();
-                input.CopyTo(ms);
-                byte[] bytes = ms.ToArray(); // problema: in questo modo non prende solo 32 bit, bensì tutti
-                //Console.WriteLine(bytes[0]);
-
-                // PROBLEMA: IN VERITà LA ENDIANNESS VIENE USATA NEL METODO ToUInt32 (https://referencesource.microsoft.com/#mscorlib/system/bitconverter.cs
-                // righe 206-233), MA PRENDENDOLA DALLA CODIFICA CHE USA IL SISTEMA SU CUI SI STA OPERANDO (IsLittleEndian, riga 225).
-                // Quindi qui è già tardi per settare la endianness corretta, e in generale a meno di sovrascrivere il metodo, non possiamo seguire
-                // proprio questa strada :(
-                // >> una cosa che si può pensare di fare è copiare da riga 220 a 231, modificando la condizione sulla endianness
-                
-                // per byte* ho dovuto fare ALLOW UNSAFE CONTENT IN THIS PROJECT, cosa significa? ci va bene?
-                fixed(byte * pbyte = & bytes[0])
-                {
-                        if (endianness == -1)
-                        {
-                            x = (*pbyte) | (*(pbyte + 1) << 8) | (*(pbyte + 2) << 16) | (*(pbyte + 3) << 24);
-                        }
-                        else if (endianness == 1){
-                            x = (*pbyte << 24) | (*(pbyte + 1) << 16)  | (*(pbyte + 2) << 8) | (*(pbyte + 3));                        
-                        }
-                }
-
-                num = *(float*) & x; // cfr riga 332
-                return num;
-            }
-        }*/
         
         // per esaurimento sono andato a prendere la funzione da colleghi dell'anno scorso:
         // https://github.com/andreasala98/NM4PIG/blob/master/Trace/HdrImage.cs
@@ -214,29 +179,53 @@ namespace PGENLib
         {
             double endianness = Convert.ToDouble(input);
             
-            /*
-            int littleEnd = -1;
-            int bigEnd = 1;
-            Debug.Assert(endianness != 0); // il debug mi fa uscire il messaggio di errore solo se falsa.
-            double End = endianness / Math.Abs(endianness); // endiannes = +/- 1
-            if (End > 0)
-            {
-                return bigEnd;
-            }
-            else if (End < 0)
-            {
-                return littleEnd;
-            }
-            else return 0;
-            */
-            
-            // più sinteticamente:
-            Debug.Assert(endianness != 0); // il debug mi fa uscire il messaggio di errore solo se falsa.
-            double norm_end = endianness / Math.Abs(endianness); // normalization
+            Debug.Assert(endianness != 0); 
+            double norm_end = endianness / Math.Abs(endianness); 
             return (int)norm_end;
         }
         // DUBBIO: HO TRASFORMATO DA PRIVATE A PUBLIC PER VEDERE DAL MAIN SE FUNZIONA LA MIA PARTE
         // LA TERREI COMUNQUE PUBLIC.
+        
+        // =============== SEGUONO FUNZIONI PER LA SCRITTURA SU FILE ============
+
+        public void WritePFMFile(Stream output, Endianness endian)
+        {
+            Debug.Assert(endian == Endianness.LittleEndian || endian == Endianness.BigEndian);
+
+            double end = 0;
+            if (endian == Endianness.LittleEndian) end = -1.0;
+            else end = 1.0;
+            
+            // convert header into sequence of bytes
+            var header = Encoding.ASCII.GetBytes($"PF\n{width} {height}\n{end}\n");
+            output.Write(header);
+            
+            // write the image
+            for (int y = height - 1; y >= 0; y--)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Color color = GetPixel(x, y);
+                    WriteFloat(output, color.GetR(), endian); 
+                    WriteFloat(output, color.GetG(), endian);
+                    WriteFloat(output, color.GetB(), endian);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// metodo di scrittura di un numero floating-point a 32 bit in binario
+        /// </summary>
+        /// <param name="outputStream"></param>
+        /// <param name="value"></param>
+        private static void WriteFloat(Stream outputStream, float value, Endianness end)
+        {
+            var seq = BitConverter.GetBytes(value);
+            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) Array.Reverse(seq);
+            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) Array.Reverse(seq);
+            outputStream.Write(seq, 0, seq.Length);
+        }
+
     }
 
 } 

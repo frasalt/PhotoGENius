@@ -28,6 +28,19 @@ namespace PGENLib
 
         //Metodi-------------------------------------
 
+        public float GetR()
+        {
+            return r;
+        }
+        public float GetG()
+        {
+            return g;
+        }
+        public float GetB()
+        {
+            return b;
+        }
+
         /// <summary>
         /// Restituisce i valori di r,g,b in forma di stringa
         /// </summary>
