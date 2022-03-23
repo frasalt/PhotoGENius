@@ -179,7 +179,11 @@ namespace PGENLib
             }
 
             //if (end == Endianness.LittleEndian) Array.Reverse(bytes);
-            if (end == Endianness.BigEndian) Array.Reverse(bytes); // così funziona, ma non è al contrario??
+            if (end == Endianness.BigEndian) Array.Reverse(bytes); // così funzionicchia, ma non è al contrario??
+            
+            // oppure chiedo se il sistema operativo è allineato con la mia endianness. se NO, ribalto i byte.
+            //if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            //if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) Array.Reverse(bytes);
             return BitConverter.ToSingle(bytes, 0); // il dubbio rimane: la funzione ToSingle prende la
                                                             // endianness dal sistema operativo su cui sto eseguendo
         }
@@ -214,9 +218,14 @@ namespace PGENLib
         
         // =============== SEGUONO FUNZIONI PER LA SCRITTURA SU FILE ============
 
+        /// <summary>
+        /// funzione che scrive un file PFM a partire da una HDR image
+        /// </summary>
+        /// <param name="output"></param>
+        /// <param name="endian"></param>
         public void WritePFMFile(Stream output, Endianness endian)
         {
-            Debug.Assert(endian == Endianness.LittleEndian || endian == Endianness.BigEndian);
+            Debug.Assert(endian is Endianness.LittleEndian or Endianness.BigEndian);
 
             double end = 0;
             if (endian == Endianness.LittleEndian) end = -1.0;
@@ -226,7 +235,7 @@ namespace PGENLib
             var header = Encoding.ASCII.GetBytes($"PF\n{Width} {Height}\n{end}.0\n");
             output.Write(header);
             
-            // write the image
+            // write the image pixels
             for (int y = Height - 1; y >= 0; y--)
             {
                 for (int x = 0; x < Width; x++)
