@@ -74,7 +74,7 @@ namespace PGENLib
         /// <summary>
         /// Imposta il colore di un pixel di date coordinate
         /// </summary>
-        private void SetPixel(int x, int y, Color new_col)
+        public void SetPixel(int x, int y, Color new_col)
         {
             Debug.Assert(this.ValidCoord(x, y));
             this.pixels[this.PixelOffset(x, y)] = new_col;
@@ -110,9 +110,16 @@ namespace PGENLib
             
             // infine la lettura della seq di 4 bytes
             // che deve scrivere il vettore dei colori
-            input.Position = reader.BaseStream.Position; // impunto lo stream alla stessa posizione a cui ero
-                                                         // con lo StreamReader.  
+            input.Position = 0*reader.BaseStream.Position; // impunto lo stream alla stessa posizione a cui ero
+                                                         // con lo StreamReader. 
+            // NOTA: C'è UN PROBLEMA CON LA POSIZIONE DELLO STREAM: SE LO FACCIAMO RIPARTIRE DA ZERO SI VEDONO COSE
 
+            // dobbiamo provare a stampare a video i bite che legge, per capire che cosa sta leggendo
+            for (int i = 0; i < 4 * 3 * 2; i++)
+            {
+                Console.WriteLine(input.ReadByte()); // RESTITUISCE -1 SE è FINITO LO STREAM
+            }
+            
             HdrImage myimg = new HdrImage(dim[0], dim[1]);
             for (int y = height-1; y >= 0; y--)
             {
@@ -139,10 +146,13 @@ namespace PGENLib
         /// <returns> Float value corresponding to 4-byte sequence</returns>
         public static float ReadFloat(Stream input, int end)
         {
+            Debug.Assert(input.CanRead); // mi assicuro che possa leggere
+            
             byte[] bytes = new byte[4]; 
 
             try
             {
+                // l'errore è qui dentro ?
                 bytes[0] = (byte)input.ReadByte();
                 bytes[1] = (byte)input.ReadByte();
                 bytes[2] = (byte)input.ReadByte();
@@ -150,10 +160,13 @@ namespace PGENLib
             }
             catch
             {
+                Console.WriteLine("non ce lho fatta");
             //    throw new InvalidPfmFileFormat("Unable to read float!");
             }
 
             if (end == -1) Array.Reverse(bytes);
+            
+            Console.WriteLine(BitConverter.ToSingle(bytes, 0));
             return BitConverter.ToSingle(bytes, 0); // il dubbio rimane: la funzione ToSingle prende la
                                                             // endianness dal sistema operativo su cui sto eseguendo
         }
@@ -197,7 +210,7 @@ namespace PGENLib
             else end = 1.0;
             
             // convert header into sequence of bytes
-            var header = Encoding.ASCII.GetBytes($"PF\n{width} {height}\n{end}\n");
+            var header = Encoding.ASCII.GetBytes($"PF\n{width} {height}\n{end}.0\n");
             output.Write(header);
             
             // write the image
