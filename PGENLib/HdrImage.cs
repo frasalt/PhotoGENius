@@ -177,15 +177,12 @@ namespace PGENLib
                 Console.WriteLine("ReadFloat: non ce lho fatta");
             //    throw new InvalidPfmFileFormat("Unable to read float!");
             }
-
-            //if (end == Endianness.LittleEndian) {Array.Reverse(bytes);} //Console.WriteLine("LE: revert");}
-            //if (end == Endianness.BigEndian) Array.Reverse(bytes); // così funzionicchia, ma non è al contrario??
             
-            // oppure chiedo se il sistema operativo è allineato con la mia endianness. se NO, ribalto i byte.
-            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) {Array.Reverse(bytes); Console.WriteLine("BE vs LE: Revert");}
-            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) {Array.Reverse(bytes); Console.WriteLine("LE vs BE: Revert");}
-            return BitConverter.ToSingle(bytes, 0); // il dubbio rimane: la funzione ToSingle prende la
-                                                            // endianness dal sistema operativo su cui sto eseguendo
+            // chiedo se il sistema operativo è allineato con la mia endianness. se NO, ribalto i byte.
+            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            
+            return BitConverter.ToSingle(bytes, 0);
         }
 
         /// <summary>
@@ -257,7 +254,7 @@ namespace PGENLib
         {
             var seq = BitConverter.GetBytes(value);
             if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) Array.Reverse(seq);
-            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) Array.Reverse(seq);
+            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) Array.Reverse(seq); 
             outputStream.Write(seq, 0, seq.Length);
         }
 
