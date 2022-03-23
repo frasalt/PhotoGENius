@@ -15,42 +15,44 @@ namespace PGENLib
     public class HdrImage
     {
         // attributi dell'immagine
-        public static int width;
-        public static int height;
-        public Color[] pixels; // un vettore di tipo Color che contiene tutti i pixel
+        public static int Width;
+        public static int Height;
+        public Color[] Pixels; // un vettore di tipo Color che contiene tutti i pixel
 
         // Costruttori:
         
         /// <summary>
         /// Costruttore con pixel noti
         /// </summary>
-        public HdrImage(int width_constr, int height_constr, Color[] pixels)
+        public HdrImage(int WidthConstr, int HeightConstr, Color[] pixels)
         {
-            width = width_constr;
-            height = height_constr;
-            this.pixels = pixels;
+            Width = WidthConstr;
+            Height = HeightConstr;
+            this.Pixels = pixels;
             Color col = new Color();
+            
             // create an empty image
-            for (int i = 0; i < width * height; i++)
+            for (int i = 0; i < Width * Height; i++)
             {
-                this.pixels[i] = col;
+                this.Pixels[i] = col;
             }
         }
         
         /// <summary>
         /// Costruttore con pixel neri
         /// </summary>
-        public HdrImage(int width_constr, int height_constr)
+        public HdrImage(int WidthConstr, int WeightConstr)
         {
-            width = width_constr;
-            height = height_constr;
-            Color[] pixels = new Color[width*height];
-            this.pixels = pixels;
+            Width = WidthConstr;
+            Height = WeightConstr;
+            Color[] pixels = new Color[Width*Height];
+            this.Pixels = pixels;
             Color col = new Color();
+            
             // create an empty image
-            for (int i = 0; i < width * height; i++)
+            for (int i = 0; i < Width * Height; i++)
             {
-                this.pixels[i] = col;
+                this.Pixels[i] = col;
             }
         }
         
@@ -59,7 +61,7 @@ namespace PGENLib
         /// </summary>
         private bool ValidCoord(int x, int y)
         {
-            return (x >= 0 && y >= 0 && x < width && y < height);
+            return (x >= 0 && y >= 0 && x < Width && y < Height);
         }
 
         /// <summary>
@@ -68,17 +70,16 @@ namespace PGENLib
         private int PixelOffset(int x, int y)
         {
             Debug.Assert(this.ValidCoord(x, y)) ;
-            return y * width + x;
+            return y * Width + x;
         }
         
         /// <summary>
         /// Imposta il colore di un pixel di date coordinate
         /// </summary>
-        public void SetPixel(int x, int y, Color new_col)
+        public void SetPixel(int x, int y, Color newCol)
         {
             Debug.Assert(ValidCoord(x, y));
-            pixels[PixelOffset(x, y)] = new_col;
-            //Console.WriteLine($"PixelOffset: {PixelOffset(x, y)} ");
+            Pixels[PixelOffset(x, y)] = newCol;
         }
         
         /// <summary>
@@ -87,32 +88,35 @@ namespace PGENLib
         private Color GetPixel(int x, int y)
         {
             Debug.Assert(this.ValidCoord(x, y)) ;
-            return this.pixels[this.PixelOffset(x,y)];
+            return this.Pixels[this.PixelOffset(x,y)];
         }
         
         // =============== SEGUONO FUNZIONI PER LA LETTURA DA FILE ============
         
-        // funzione grossa che legge un file e lo scrive in una nuova HDR image
+        /// <summary>
+        /// funzione che legge un file PFM e scrive il contenuto in una nuova HDR image
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public HdrImage ReadPFMFile(Stream input)
         {
             string magic = ReadLine(input);
             Debug.Assert(magic == "PF");  
-            Console.WriteLine(magic);
             
             string imgsize = ReadLine(input);
             int[] dim = ParseImgSize(imgsize);
-            Console.WriteLine($"{dim[0]} {dim[1]}");
+            Width = dim[0];
+            Height = dim[1];
 
             string endianness = ReadLine(input);
             int endi = ParseEndianness(endianness);
             Endianness end = Endianness.BigEndian;
             if (endi == -1) end = Endianness.LittleEndian;
-            Console.WriteLine(endi);
 
-            HdrImage myimg = new HdrImage(dim[0], dim[1]);
-            for (int y = height-1; y >= 0; y--)
+            HdrImage myimg = new HdrImage(Width, Height);
+            for (int y = Height-1; y >= 0; y--)
             {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     float r = ReadFloat(input, end);
                     float g = ReadFloat(input, end);
@@ -167,13 +171,6 @@ namespace PGENLib
                 bytes[1] = (byte)input.ReadByte();
                 bytes[2] = (byte)input.ReadByte();
                 bytes[3] = (byte)input.ReadByte();
-                
-                /*
-                Console.Write($"{bytes[0]} ");
-                Console.Write($"{bytes[1]} ");
-                Console.Write($"{bytes[2]} ");
-                Console.Write($"{bytes[3]} ");
-                */
             }
             catch
             {
@@ -182,7 +179,7 @@ namespace PGENLib
             }
 
             //if (end == Endianness.LittleEndian) Array.Reverse(bytes);
-            if (end == Endianness.BigEndian) Array.Reverse(bytes); // al contrario??
+            if (end == Endianness.BigEndian) Array.Reverse(bytes); // così funziona, ma non è al contrario??
             return BitConverter.ToSingle(bytes, 0); // il dubbio rimane: la funzione ToSingle prende la
                                                             // endianness dal sistema operativo su cui sto eseguendo
         }
@@ -209,11 +206,11 @@ namespace PGENLib
             double endianness = Convert.ToDouble(input);
             
             Debug.Assert(endianness != 0); 
-            double norm_end = endianness / Math.Abs(endianness); 
-            return (int)norm_end;
+            double normEnd = endianness / Math.Abs(endianness); 
+            return (int)normEnd;
         }
-        // DUBBIO: HO TRASFORMATO DA PRIVATE A PUBLIC PER VEDERE DAL MAIN SE FUNZIONA LA MIA PARTE
-        // LA TERREI COMUNQUE PUBLIC.
+        
+        // RICORDIAMO: RAGIONARE SUL TENERE TUTTI QUESTI METODI PUBLIC
         
         // =============== SEGUONO FUNZIONI PER LA SCRITTURA SU FILE ============
 
@@ -226,13 +223,13 @@ namespace PGENLib
             else end = 1.0;
             
             // convert header into sequence of bytes
-            var header = Encoding.ASCII.GetBytes($"PF\n{width} {height}\n{end}.0\n");
+            var header = Encoding.ASCII.GetBytes($"PF\n{Width} {Height}\n{end}.0\n");
             output.Write(header);
             
             // write the image
-            for (int y = height - 1; y >= 0; y--)
+            for (int y = Height - 1; y >= 0; y--)
             {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     Color color = GetPixel(x, y);
                     WriteFloat(output, color.GetR(), endian); 

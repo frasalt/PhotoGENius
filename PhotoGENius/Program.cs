@@ -33,12 +33,12 @@ class Program
         img2.SetPixel(2, 1, col);
         */
         
-        using (Stream outFileStream = File.OpenWrite("file.pfm"))
+        using (Stream outFileStream = File.OpenWrite("file_be.pfm"))
         {
             prova.WritePFMFile(outFileStream, Endianness.BigEndian);
         }
         
-        using (Stream outFileStream2 = File.OpenWrite("file2.pfm"))
+        using (Stream outFileStream2 = File.OpenWrite("file_le.pfm"))
         {
             prova.WritePFMFile(outFileStream2, Endianness.LittleEndian);
         }
