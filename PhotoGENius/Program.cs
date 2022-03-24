@@ -1,4 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
+
+using System.IO.Compression;
 using PGENLib;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -8,8 +10,7 @@ class Program
     static void Main()
     {
         // prova lettura da stream
-        /*
-        HdrImage img2 = new HdrImage(3, 2);
+        /*HdrImage img2 = new HdrImage(3, 2);
 
         var col = new Color((float)1.0e1, (float)2.0e1, (float)3.0e1);
         img2.SetPixel(0, 0, col);
@@ -23,7 +24,11 @@ class Program
         img2.SetPixel(1, 1, col);
         col = new Color((float)7.0e2, (float)8.0e2, (float)9.0e2);
         img2.SetPixel(2, 1, col);
+
+        Stream buf = new MemoryStream();
+        img2.WritePFMFile(buf, Endianness.BigEndian);
         */
+        
         
         var img = new HdrImage(3, 2);
         

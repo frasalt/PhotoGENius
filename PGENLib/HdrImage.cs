@@ -160,8 +160,8 @@ namespace PGENLib
             }
             
             // chiedo se il sistema operativo è allineato con la mia endianness. se NO, ribalto i byte.
-            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) Array.Reverse(bytes);
-            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) {Array.Reverse(bytes); Console.WriteLine("(R) B-L: revert");}
+            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) {Array.Reverse(bytes); Console.WriteLine("(R) L-B: revert");}
             
             return BitConverter.ToSingle(bytes, 0);
         }
@@ -234,8 +234,8 @@ namespace PGENLib
         private static void WriteFloat(Stream outputStream, float value, Endianness end)
         {
             var seq = BitConverter.GetBytes(value);
-            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) Array.Reverse(seq);
-            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) Array.Reverse(seq); 
+            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) {Array.Reverse(seq); Console.WriteLine("(W) B-L: revert");} 
+            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) {Array.Reverse(seq); Console.WriteLine("(W) L-B: revert");}
             outputStream.Write(seq, 0, seq.Length);
         }
 
