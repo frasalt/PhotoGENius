@@ -28,13 +28,6 @@ namespace PGENLib
             Height = HeightConstr;
             if(pixels == null) {pixels = new Color[Width*Height];}
             Pixels = pixels;
-            Color col = new Color();
-            
-            // create an empty image
-            for (int i = 0; i < Width * Height; i++)
-            {
-                Pixels[i] = col;
-            }
         }
 
         /// <summary>
