@@ -59,7 +59,7 @@ namespace PGENLib
         /// <summary>
         /// Verifica che date coordinate abbiano valori sensati, ovvero compresi tra 0 e il numero di righe/colonne
         /// </summary>
-        private bool ValidCoord(int x, int y)
+        public bool ValidCoord(int x, int y)
         {
             return (x >= 0 && y >= 0 && x < Width && y < Height);
         }

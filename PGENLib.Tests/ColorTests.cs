@@ -7,6 +7,27 @@ namespace PGENLib.Tests
     public class ColorTests
     {
         [Fact]
+        public void test_GetR()
+        {
+            Color a = new Color(1.0f, 2.0f, 3.0f);
+            Assert.True(Math.Abs(a.GetR() - 1.0f) < 1E-5);
+        }
+        
+        [Fact]
+        public void test_GetG()
+        {
+            Color a = new Color(1.0f, 2.0f, 3.0f);
+            Assert.True(Math.Abs(a.GetG() - 2.0f) < 1E-5);
+        }
+        
+        [Fact]
+        public void test_GetB()
+        {
+            Color a = new Color(1.0f, 2.0f, 3.0f);
+            Assert.True(Math.Abs(a.GetB() - 3.0f) < 1E-5);
+        }
+        
+        [Fact]
         public void test_sum()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
