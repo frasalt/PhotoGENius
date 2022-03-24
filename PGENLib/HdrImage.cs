@@ -18,44 +18,18 @@ namespace PGENLib
         public static int Width;
         public static int Height;
         public Color[] Pixels; // un vettore di tipo Color che contiene tutti i pixel
-
-        // Costruttori:
         
         /// <summary>
-        /// Costruttore con pixel noti
+        /// Costruttore, vuoto o con pixel
         /// </summary>
-        public HdrImage(int WidthConstr, int HeightConstr, Color[] pixels)
+        public HdrImage(int WidthConstr, int HeightConstr, Color[]? pixels = null)
         {
             Width = WidthConstr;
             Height = HeightConstr;
-            this.Pixels = pixels;
-            Color col = new Color();
-            
-            // create an empty image
-            for (int i = 0; i < Width * Height; i++)
-            {
-                this.Pixels[i] = col;
-            }
+            if(pixels == null) {pixels = new Color[Width*Height];}
+            Pixels = pixels;
         }
-        
-        /// <summary>
-        /// Costruttore con pixel neri
-        /// </summary>
-        public HdrImage(int WidthConstr, int WeightConstr)
-        {
-            Width = WidthConstr;
-            Height = WeightConstr;
-            Color[] pixels = new Color[Width*Height];
-            this.Pixels = pixels;
-            Color col = new Color();
-            
-            // create an empty image
-            for (int i = 0; i < Width * Height; i++)
-            {
-                this.Pixels[i] = col;
-            }
-        }
-        
+
         /// <summary>
         /// Verifica che date coordinate abbiano valori sensati, ovvero compresi tra 0 e il numero di righe/colonne
         /// </summary>
@@ -179,8 +153,8 @@ namespace PGENLib
             }
             
             // chiedo se il sistema operativo è allineato con la mia endianness. se NO, ribalto i byte.
-            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) Array.Reverse(bytes);
-            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) {Array.Reverse(bytes); Console.WriteLine("(R) B-L: revert");}
+            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) {Array.Reverse(bytes); Console.WriteLine("(R) L-B: revert");}
             
             return BitConverter.ToSingle(bytes, 0);
         }
@@ -190,11 +164,18 @@ namespace PGENLib
         /// </summary>
         public int[] ParseImgSize(string str)
         {
-            string[] sub = str.Split();
             int[] dim = new int[2];
-            
-            dim[0] = int.Parse(sub[0]); 
-            dim[1] = int.Parse(sub[1]);
+            try
+            {
+                string[] sub = str.Split();
+                dim[0] = int.Parse(sub[0]);
+                dim[1] = int.Parse(sub[1]);
+            }
+            catch
+            {
+                //throw new InvalidPfmFileFormat("Second line of the header must be two spaced integers");
+            }
+
             return dim;
         }
         // Va fatto meglio inserendo dei try per sollevare eccezioni
@@ -253,8 +234,8 @@ namespace PGENLib
         private static void WriteFloat(Stream outputStream, float value, Endianness end)
         {
             var seq = BitConverter.GetBytes(value);
-            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) Array.Reverse(seq);
-            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) Array.Reverse(seq); 
+            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) {Array.Reverse(seq); Console.WriteLine("(W) B-L: revert");} 
+            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) {Array.Reverse(seq); Console.WriteLine("(W) L-B: revert");}
             outputStream.Write(seq, 0, seq.Length);
         }
 
