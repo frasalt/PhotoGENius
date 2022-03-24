@@ -59,7 +59,7 @@ namespace PGENLib
         /// <summary>
         /// Data una coppia di coordinate, restituisce il colore del pixel corrispondente
         /// </summary>
-        private Color GetPixel(int x, int y)
+        public Color GetPixel(int x, int y)
         {
             Debug.Assert(this.ValidCoord(x, y)) ;
             return this.Pixels[this.PixelOffset(x,y)];
