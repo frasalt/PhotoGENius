@@ -164,11 +164,18 @@ namespace PGENLib
         /// </summary>
         public int[] ParseImgSize(string str)
         {
-            string[] sub = str.Split();
             int[] dim = new int[2];
-            
-            dim[0] = int.Parse(sub[0]); 
-            dim[1] = int.Parse(sub[1]);
+            try
+            {
+                string[] sub = str.Split();
+                dim[0] = int.Parse(sub[0]);
+                dim[1] = int.Parse(sub[1]);
+            }
+            catch
+            {
+                //throw new InvalidPfmFileFormat("Second line of the header must be two spaced integers");
+            }
+
             return dim;
         }
         // Va fatto meglio inserendo dei try per sollevare eccezioni
