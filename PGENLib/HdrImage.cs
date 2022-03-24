@@ -18,44 +18,25 @@ namespace PGENLib
         public static int Width;
         public static int Height;
         public Color[] Pixels; // un vettore di tipo Color che contiene tutti i pixel
-
-        // Costruttori:
         
         /// <summary>
-        /// Costruttore con pixel noti
+        /// Costruttore, vuoto o con pixel
         /// </summary>
-        public HdrImage(int WidthConstr, int HeightConstr, Color[] pixels)
+        public HdrImage(int WidthConstr, int HeightConstr, Color[]? pixels = null)
         {
             Width = WidthConstr;
             Height = HeightConstr;
-            this.Pixels = pixels;
+            if(pixels == null) {pixels = new Color[Width*Height];}
+            Pixels = pixels;
             Color col = new Color();
             
             // create an empty image
             for (int i = 0; i < Width * Height; i++)
             {
-                this.Pixels[i] = col;
+                Pixels[i] = col;
             }
         }
-        
-        /// <summary>
-        /// Costruttore con pixel neri
-        /// </summary>
-        public HdrImage(int WidthConstr, int WeightConstr)
-        {
-            Width = WidthConstr;
-            Height = WeightConstr;
-            Color[] pixels = new Color[Width*Height];
-            this.Pixels = pixels;
-            Color col = new Color();
-            
-            // create an empty image
-            for (int i = 0; i < Width * Height; i++)
-            {
-                this.Pixels[i] = col;
-            }
-        }
-        
+
         /// <summary>
         /// Verifica che date coordinate abbiano valori sensati, ovvero compresi tra 0 e il numero di righe/colonne
         /// </summary>
