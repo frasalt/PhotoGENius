@@ -239,6 +239,26 @@ namespace PGENLib
             outputStream.Write(seq, 0, seq.Length);
         }
 
+        //==============================PARTE SULLA LUMINOSITà DEI PIXEL============================================
+        /// <summary>
+        /// Restituisce la luminosità media dell'immagine
+        /// </summary>
+        public float AverageLum(double delta = 1e-10)
+        {
+
+            double average = 0.0;
+
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    average += (Math.Log(delta + this.GetPixel(i, j).Lum(), 10));
+                }
+            }
+
+            return (float)Math.Pow(10, average / (Width * Height));
+
+        }
     }
 
 } 

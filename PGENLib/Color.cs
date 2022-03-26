@@ -32,10 +32,12 @@ namespace PGENLib
         {
             return r;
         }
+
         public float GetG()
         {
             return g;
         }
+
         public float GetB()
         {
             return b;
@@ -84,7 +86,7 @@ namespace PGENLib
             col2.b = col1.b * s;
             return col2;
         }
-        
+
         /// <summary>
         ///  Restituisce il prodotto tra due colori (sulle varie componenti) 
         /// </summary>
@@ -108,6 +110,16 @@ namespace PGENLib
             {
                 return false;
             }
+        }
+
+
+        /// <summary>
+        ///  Calcola la luminosità di un colore (formula di Shirley & Morley)
+        /// </summary>
+        public float Lum()
+        {
+            float lum = Math.Max((Math.Max(r, b)), g) + Math.Min((Math.Min(r, b)), g);
+            return lum/2;
         }
     }
 }
