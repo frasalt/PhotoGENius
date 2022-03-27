@@ -141,5 +141,18 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
+
+        [Fact]
+        public void test_AverageLum()
+        {
+            HdrImage img = new HdrImage(2, 1);
+            img.SetPixel(0, 0, new Color(  5.0f,   10.0f,   15.0f)); // Lum = 10.0
+            img.SetPixel(1, 0, new Color(  500.0f,   1000.0f,   1500.0f)); //Lum = 1000.0
+            Assert.True(Math.Abs(img.AverageLum(0.0f) - 100.0f) < 1e-5);
+        }
+        
+        
+
     }
+    
 }
