@@ -18,7 +18,7 @@ namespace PGENLib
         public static int Width;
         public static int Height;
         public Color[] Pixels; // un vettore di tipo Color che contiene tutti i pixel
-        
+
         /// <summary>
         /// Costruttore, vuoto o con pixel
         /// </summary>
@@ -26,7 +26,11 @@ namespace PGENLib
         {
             Width = WidthConstr;
             Height = HeightConstr;
-            if(pixels == null) {pixels = new Color[Width*Height];}
+            if (pixels == null)
+            {
+                pixels = new Color[Width * Height];
+            }
+
             Pixels = pixels;
         }
 
@@ -43,10 +47,10 @@ namespace PGENLib
         /// </summary>
         private int PixelOffset(int x, int y)
         {
-            Debug.Assert(this.ValidCoord(x, y)) ;
+            Debug.Assert(this.ValidCoord(x, y));
             return y * Width + x;
         }
-        
+
         /// <summary>
         /// Imposta il colore di un pixel di date coordinate
         /// </summary>
@@ -55,18 +59,18 @@ namespace PGENLib
             Debug.Assert(ValidCoord(x, y));
             Pixels[PixelOffset(x, y)] = newCol;
         }
-        
+
         /// <summary>
         /// Data una coppia di coordinate, restituisce il colore del pixel corrispondente
         /// </summary>
         public Color GetPixel(int x, int y)
         {
-            Debug.Assert(this.ValidCoord(x, y)) ;
-            return this.Pixels[this.PixelOffset(x,y)];
+            Debug.Assert(this.ValidCoord(x, y));
+            return this.Pixels[this.PixelOffset(x, y)];
         }
-        
+
         // =============== SEGUONO FUNZIONI PER LA LETTURA DA FILE ============
-        
+
         /// <summary>
         /// funzione che legge un file PFM e scrive il contenuto in una nuova HDR image
         /// </summary>
@@ -75,8 +79,8 @@ namespace PGENLib
         public HdrImage ReadPFMFile(Stream input)
         {
             string magic = ReadLine(input);
-            Debug.Assert(magic == "PF");  
-            
+            Debug.Assert(magic == "PF");
+
             string imgsize = ReadLine(input);
             int[] dim = ParseImgSize(imgsize);
             Width = dim[0];
@@ -88,17 +92,17 @@ namespace PGENLib
             if (endi == -1) end = Endianness.LittleEndian;
 
             HdrImage myimg = new HdrImage(Width, Height);
-            for (int y = Height-1; y >= 0; y--)
+            for (int y = Height - 1; y >= 0; y--)
             {
                 for (int x = 0; x < Width; x++)
                 {
                     float r = ReadFloat(input, end);
                     float g = ReadFloat(input, end);
                     float b = ReadFloat(input, end);
-                        
+
                     Color newcol = new Color(r, g, b);
                     //Console.WriteLine($"    red {newcol.GetR()}     green {newcol.GetG()}       blue {newcol.GetB()}");
-                    
+
                     myimg.SetPixel(x, y, newcol);
                 }
             }
@@ -114,19 +118,20 @@ namespace PGENLib
         public string ReadLine(Stream input)
         {
             string str = "";
-            byte[] mybyte = new byte[1]; 
-            
+            byte[] mybyte = new byte[1];
+
             while (Encoding.ASCII.GetString(mybyte) != "\n")
             {
-                mybyte[0] = (byte)input.ReadByte();
+                mybyte[0] = (byte) input.ReadByte();
                 if (Encoding.ASCII.GetString(mybyte) != "\n")
                 {
                     str += Encoding.ASCII.GetString(mybyte);
                 }
             }
+
             return str;
         }
-        
+
         // per esaurimento sono andato a prendere la funzione da colleghi dell'anno scorso:
         // https://github.com/andreasala98/NM4PIG/blob/master/Trace/HdrImage.cs
         /// <summary>
@@ -137,25 +142,34 @@ namespace PGENLib
         /// <returns> Float value corresponding to 4-byte sequence</returns>
         public static float ReadFloat(Stream input, Endianness end)
         {
-            byte[] bytes = new byte[4]; 
+            byte[] bytes = new byte[4];
 
             try
             {
-                bytes[0] = (byte)input.ReadByte();
-                bytes[1] = (byte)input.ReadByte();
-                bytes[2] = (byte)input.ReadByte();
-                bytes[3] = (byte)input.ReadByte();
+                bytes[0] = (byte) input.ReadByte();
+                bytes[1] = (byte) input.ReadByte();
+                bytes[2] = (byte) input.ReadByte();
+                bytes[3] = (byte) input.ReadByte();
             }
             catch
             {
                 Console.WriteLine("ReadFloat: non ce lho fatta");
-            //    throw new InvalidPfmFileFormat("Unable to read float!");
+                //    throw new InvalidPfmFileFormat("Unable to read float!");
             }
-            
+
             // chiedo se il sistema operativo è allineato con la mia endianness. se NO, ribalto i byte.
-            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) {Array.Reverse(bytes); Console.WriteLine("(R) B-L: revert");}
-            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) {Array.Reverse(bytes); Console.WriteLine("(R) L-B: revert");}
-            
+            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(bytes);
+                Console.WriteLine("(R) B-L: revert");
+            }
+
+            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(bytes);
+                Console.WriteLine("(R) L-B: revert");
+            }
+
             return BitConverter.ToSingle(bytes, 0);
         }
 
@@ -185,15 +199,24 @@ namespace PGENLib
         /// </summary>
         public int ParseEndianness(string input)
         {
-            double endianness = Convert.ToDouble(input);
-            
-            Debug.Assert(endianness != 0); 
-            double normEnd = endianness / Math.Abs(endianness); 
-            return (int)normEnd;
+            double endianness = 0;
+            try
+            {
+                endianness = Convert.ToDouble(input);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Missing Endianness specification");
+            }
+
+            Debug.Assert(endianness != 0);
+            double normEnd = endianness / Math.Abs(endianness);
+            return (int) normEnd;
         }
-        
+
         // RICORDIAMO: RAGIONARE SUL TENERE TUTTI QUESTI METODI PUBLIC
-        
+
         // =============== SEGUONO FUNZIONI PER LA SCRITTURA SU FILE ============
 
         /// <summary>
@@ -208,24 +231,24 @@ namespace PGENLib
             double end = 0;
             if (endian == Endianness.LittleEndian) end = -1.0;
             else end = 1.0;
-            
+
             // convert header into sequence of bytes
             var header = Encoding.ASCII.GetBytes($"PF\n{Width} {Height}\n{end}.0\n");
             output.Write(header);
-            
+
             // write the image pixels
             for (int y = Height - 1; y >= 0; y--)
             {
                 for (int x = 0; x < Width; x++)
                 {
                     Color color = GetPixel(x, y);
-                    WriteFloat(output, color.GetR(), endian); 
+                    WriteFloat(output, color.GetR(), endian);
                     WriteFloat(output, color.GetG(), endian);
                     WriteFloat(output, color.GetB(), endian);
                 }
             }
         }
-        
+
         /// <summary>
         /// metodo di scrittura di un numero floating-point a 32 bit in binario
         /// </summary>
@@ -234,8 +257,18 @@ namespace PGENLib
         private static void WriteFloat(Stream outputStream, float value, Endianness end)
         {
             var seq = BitConverter.GetBytes(value);
-            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian) {Array.Reverse(seq); Console.WriteLine("(W) B-L: revert");} 
-            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian) {Array.Reverse(seq); Console.WriteLine("(W) L-B: revert");}
+            if (end == Endianness.BigEndian && BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(seq);
+                Console.WriteLine("(W) B-L: revert");
+            }
+
+            if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(seq);
+                Console.WriteLine("(W) L-B: revert");
+            }
+
             outputStream.Write(seq, 0, seq.Length);
         }
 
@@ -256,12 +289,11 @@ namespace PGENLib
                 }
             }
 
-            return (float)Math.Pow(10, average / (Width * Height));
+            return (float) Math.Pow(10, average / (Width * Height));
 
         }
     }
-
-} 
+}
 
     
 

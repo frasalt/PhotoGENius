@@ -8,6 +8,17 @@ namespace PGENLib.Tests
 {
     public class HdrImageTests
     {
+        //Vettore di byte di riferimento
+        byte[] byteRef_LE = new byte[84]{
+            0x50, 0x46, 0x0a, 0x33, 0x20, 0x32, 0x0a, 0x2d, 0x31, 0x2e, 0x30, 0x0a,
+            0x00, 0x00, 0xc8, 0x42, 0x00, 0x00, 0x48, 0x43, 0x00, 0x00, 0x96, 0x43,
+            0x00, 0x00, 0xc8, 0x43, 0x00, 0x00, 0xfa, 0x43, 0x00, 0x00, 0x16, 0x44,
+            0x00, 0x00, 0x2f, 0x44, 0x00, 0x00, 0x48, 0x44, 0x00, 0x00, 0x61, 0x44,
+            0x00, 0x00, 0x20, 0x41, 0x00, 0x00, 0xa0, 0x41, 0x00, 0x00, 0xf0, 0x41,
+            0x00, 0x00, 0x20, 0x42, 0x00, 0x00, 0x48, 0x42, 0x00, 0x00, 0x70, 0x42,
+            0x00, 0x00, 0x8c, 0x42, 0x00, 0x00, 0xa0, 0x42, 0x00, 0x00, 0xb4, 0x42
+        };
+        
         private readonly ITestOutputHelper _testOutputHelper;
 
         public HdrImageTests(ITestOutputHelper testOutputHelper)
@@ -37,18 +48,6 @@ namespace PGENLib.Tests
         [Fact]
         public void test_WritePFM()
         {
-            //Vettore di byte di riferimento
-            byte[] byteRef = new byte[84]{
-                0x50, 0x46, 0x0a, 0x33, 0x20, 0x32, 0x0a, 0x2d, 0x31, 0x2e, 0x30, 0x0a,
-                0x00, 0x00, 0xc8, 0x42, 0x00, 0x00, 0x48, 0x43, 0x00, 0x00, 0x96, 0x43,
-                0x00, 0x00, 0xc8, 0x43, 0x00, 0x00, 0xfa, 0x43, 0x00, 0x00, 0x16, 0x44,
-                0x00, 0x00, 0x2f, 0x44, 0x00, 0x00, 0x48, 0x44, 0x00, 0x00, 0x61, 0x44,
-                0x00, 0x00, 0x20, 0x41, 0x00, 0x00, 0xa0, 0x41, 0x00, 0x00, 0xf0, 0x41,
-                0x00, 0x00, 0x20, 0x42, 0x00, 0x00, 0x48, 0x42, 0x00, 0x00, 0x70, 0x42,
-                0x00, 0x00, 0x8c, 0x42, 0x00, 0x00, 0xa0, 0x42, 0x00, 0x00, 0xb4, 0x42
-            };
-            
-            
             //Creo un'immagine hdr e scrivo i colori in binario
             HdrImage img = new HdrImage(3, 2);
             Color a = new Color(1.0e1f, 2.0e1f, 3.0e1f);
@@ -67,7 +66,7 @@ namespace PGENLib.Tests
             img.WritePFMFile(str, Endianness.LittleEndian);
             MemoryStream ms = new MemoryStream();
             str.CopyTo(ms);
-            Assert.True(ms.ToArray() == byteRef);
+            Assert.True(ms.ToArray() == byteRef_LE);
             
         }
         
@@ -141,17 +140,30 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
-
+/*
         [Fact]
-        public void test_AverageLum()
+        public void test_ReadFilePFM()
         {
-            HdrImage img = new HdrImage(2, 1);
-            img.SetPixel(0, 0, new Color(  5.0f,   10.0f,   15.0f)); // Lum = 10.0
-            img.SetPixel(1, 0, new Color(  500.0f,   1000.0f,   1500.0f)); //Lum = 1000.0
-            Assert.True(Math.Abs(img.AverageLum(0.0f) - 100.0f) < 1e-5);
+            Color a = new Color(1.0e1f, 2.0e1f, 3.0e1f);
+            Color b = new Color(4.0e1f, 5.0e1f, 6.0e1f);
+            Color c = new Color(7.0e1f, 8.0e1f, 9.0e1f);
+            Color d = new Color(1.0e2f, 2.0e2f, 3.0e2f);
+            Color e = new Color(4.0e2f, 5.0e2f, 6.0e2f);
+            Color f = new Color(7.0e2f, 8.0e2f, 9.0e2f);
+            HdrImage img = new HdrImage();
+            using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_le.pfm"))
+            { img = img.ReadPFMFile(fileStream); }
+            Assert.True(img.Width == "3");
+            Assert.True(img.Height == "2");
+            Assert.True(Color.are_close(img.GetPixel(0,0), a));
+            Assert.True(Color.are_close(img.GetPixel(1,0), b));
+            Assert.True(Color.are_close(img.GetPixel(2,0), c));
+            Assert.True(Color.are_close(img.GetPixel(0,1), d));
+            Assert.True(Color.are_close(img.GetPixel(1,1), e));
+            Assert.True(Color.are_close(img.GetPixel(2,1), f));
+            
         }
-        
-        
+        */
 
     }
     
