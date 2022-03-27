@@ -9,6 +9,11 @@ class Program
 {
     static void Main()
     {
+        Color a = new Color(3, 5, 7);
+        float lumi;
+        lumi = a.Lum();
+        Console.WriteLine(a);
+        Console.WriteLine(lumi);
         // prova lettura da stream
         /*HdrImage img2 = new HdrImage(3, 2);
 
