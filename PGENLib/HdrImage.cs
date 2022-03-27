@@ -292,6 +292,19 @@ namespace PGENLib
             return (float) Math.Pow(10, average / (Width * Height));
 
         }
+
+        /// <summary>
+        /// Calcola la luminosità media di un’immagine secondo la formula axRi/<l>
+        /// </summary>
+        public void NormalizeImage(float factor, float? luminosity = null)
+        {
+            var lum = luminosity ?? AverageLum();
+            for (int i = 0; i < Pixels.Length; ++i)
+            {
+                Pixels[i] = Pixels[i] * (factor / lum);
+            }
+        }
+        
     }
 }
 

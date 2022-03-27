@@ -140,6 +140,10 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
+        
+        /// <summary>
+        /// TEST sulla fz che restituisce la luminosità media dell'immagine
+        /// </summary>
         [Fact]
         public void test_AverageLum()
         {
@@ -147,6 +151,20 @@ namespace PGENLib.Tests
             img.SetPixel(0, 0, new Color(  5.0f,   10.0f,   15.0f)); // Lum = 10.0
             img.SetPixel(1, 0, new Color(  500.0f,   1000.0f,   1500.0f)); //Lum = 1000.0
             Assert.True(Math.Abs(img.AverageLum(0.0f) - 100.0f) < 1e-5);
+        }
+
+        /// <summary>
+        /// TEST sulla fz che calcola la luminosità media di un’immagine secondo la formula axRi/<l>
+        /// </summary>
+        [Fact]
+        public void test_NormalizeImage()
+        {
+            HdrImage img = new HdrImage(2, 1);
+            img.SetPixel(0, 0, new Color(  5.0f,   10.0f,   15.0f));
+            img.SetPixel(1, 0, new Color(  500.0f,   1000.0f,   1500.0f));
+            img.NormalizeImage(1000.0f, 100.0f);
+            Assert.True(Color.are_close(img.GetPixel(0, 0),new Color(0.5e2f, 1.0e2f, 1.5e2f)));
+            Assert.True(Color.are_close(img.GetPixel(1, 0),new Color(0.5e4f, 1.0e4f, 1.5e4f)));
         }
 /*
         [Fact]
