@@ -114,7 +114,7 @@ namespace PGENLib
         public string ReadLine(Stream input)
         {
             string str = "";
-            byte[] mybyte = new byte[1];
+            byte[] mybyte = new byte[1]; 
             
             while (Encoding.ASCII.GetString(mybyte) != "\n")
             {
@@ -133,7 +133,7 @@ namespace PGENLib
         /// Read a 32bit sequence from a stream and convert it to floating-point number.
         /// </summary>
         /// <param name="input"> The input stream </param>
-        /// <param name="end"> -1 if the image is little-endian, -1 if big-endian </param>
+        /// <param name="end"> -1 if the image is little-endian, 1 if big-endian </param>
         /// <returns> Float value corresponding to 4-byte sequence</returns>
         public static float ReadFloat(Stream input, Endianness end)
         {

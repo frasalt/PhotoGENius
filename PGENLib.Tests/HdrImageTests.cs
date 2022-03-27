@@ -71,6 +71,79 @@ namespace PGENLib.Tests
             
         }
         
+        [Fact]
+        public void test_ParseImgSize()
+        {
+            HdrImage img = new HdrImage(1,1);
+            string str = "20 30";
+            int[] dim = new int[2];
+            dim = img.ParseImgSize(str);
+            Assert.True(dim[0] == 20 && dim[1] == 30);
+        }
         
+        [Fact]
+        public void test_ParseEndianness()
+        {
+            HdrImage img = new HdrImage(1,1);
+            string str = "-2";
+            int end;
+            end = img.ParseEndianness(str);
+            Assert.True(end == -1);
+        }
+        
+        [Fact]
+        public void test_ReadLine()
+        {
+            //Preparo il memory stream da leggere
+            HdrImage img = new HdrImage(1,1);
+            MemoryStream input = new MemoryStream();
+            using (StreamWriter writer = new StreamWriter(input))
+            {
+                writer.Write("Hello\nworld!");
+            }
+
+            string a;
+            string b;
+            string c;
+            using (StreamReader reader = new StreamReader(input))
+            {
+                a = img.ReadLine(input);
+                b = img.ReadLine(input);
+                c = img.ReadLine(input);
+
+            }
+            
+            Assert.True(b == "Hello");
+            Assert.True(b == "world!");
+            Assert.True(c == "");
+        }
+        
+        //Provo a fare un test con la funzione readline disponibile per gli oggetti di tipo streamreader
+        [Fact]
+        public void test_ReadLine2()
+        {
+            //Preparo il memory stream da leggere
+            HdrImage img = new HdrImage(1,1);
+            MemoryStream input = new MemoryStream();
+            using (StreamWriter writer = new StreamWriter(input))
+            {
+                writer.Write("Hello\nworld!");
+            }
+            
+            //Leggo e confronto 
+            string? a;
+            string? b;
+            string? c;
+            using (StreamReader reader = new StreamReader(input))
+            {
+                a = reader.ReadLine();
+                b = reader.ReadLine();
+                c = reader.ReadLine();
+            }
+            
+            Assert.True(b == "Hello");
+            Assert.True(b == "world!");
+            Assert.True(c == "");
+        }
     }
 }
