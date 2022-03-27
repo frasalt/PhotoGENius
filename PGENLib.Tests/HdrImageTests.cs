@@ -95,25 +95,21 @@ namespace PGENLib.Tests
         public void test_ReadLine()
         {
             //Preparo il memory stream da leggere
-            HdrImage img = new HdrImage(1,1);
-            MemoryStream input = new MemoryStream();
-            using (StreamWriter writer = new StreamWriter(input))
-            {
-                writer.Write("Hello\nworld!");
-            }
-
             string a;
             string b;
             string c;
-            using (StreamReader reader = new StreamReader(input))
+            HdrImage img = new HdrImage(1,1);
+            MemoryStream input = new MemoryStream();
+            using (StreamWriter writer = new StreamWriter(input))
+            //using (Stream fileStream = File.OpenRead(@"....\..\..\PGENLib.tests\HelloWorld.txt"))
             {
+                writer.Write("Hello\nworld!");
                 a = img.ReadLine(input);
                 b = img.ReadLine(input);
                 c = img.ReadLine(input);
-
             }
             
-            Assert.True(b == "Hello");
+            Assert.True(a == "Hello");
             Assert.True(b == "world!");
             Assert.True(c == "");
         }

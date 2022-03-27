@@ -111,14 +111,13 @@ namespace PGENLib
                 return false;
             }
         }
-
-
+        
         /// <summary>
         ///  Calcola la luminosità di un colore (formula di Shirley & Morley)
         /// </summary>
         public float Lum()
         {
-            float lum = Math.Max((Math.Max(r, b)), g) + Math.Min((Math.Min(r, b)), g);
+            float lum = Math.Max((Math.Max(this.r, this.b)), this.g) + Math.Min((Math.Min(this.r, this.b)), this.g);
             return lum/2;
         }
     }

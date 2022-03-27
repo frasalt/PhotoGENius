@@ -70,15 +70,17 @@ namespace PGENLib.Tests
             Assert.True(Color.are_close(new Color(1.0f, 2.0f, 3.0f), a));
         }
         //NON SONO RIUSCITA A FARE IL TEST MA NON CAPISCO SE CI SERVE O MENO LA IS_CLOSE O è LA NOSTRA ARE_CLOSE
-        /*
+        
+        [Fact]
         public void test_luminosity()
         {
             Color col1 = new Color(1.0f, 2.0f, 3.0f);
             float lumi = col1.Lum();
-            Assert.True(lumi) == 5.0f;
+            Assert.True(Math.Abs(lumi - 2.0f) < 1E-5);
 
-        }*/
+        }
         
+        /*
         public void test_ccproduct()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
@@ -86,6 +88,6 @@ namespace PGENLib.Tests
             // C# convention: *first* the expected value, *then* the test value
             Assert.True(Color.are_close(new Color(5.0f, 12.0f, 21.0f), a * b));
         }
-
+        */
     }
 }
