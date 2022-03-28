@@ -5,7 +5,7 @@
 
 ## Features
 
-## Requirements (Windows? Linux? A GPU? A printer?)
+## Requirements
 
 ## Installation
 
