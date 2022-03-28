@@ -3,9 +3,9 @@
 
 ![](logo1.png)  add here a funny but explenatory image, maybe one of a genius!
 
-## What does PGEN do?
+## Features
 
-## What does PGEN requires to work? (Windows? Linux? A GPU? A printer?)
+## Requirements (Windows? Linux? A GPU? A printer?)
 
 ## Installation
 
