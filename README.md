@@ -5,13 +5,13 @@
 
 ## Features
 
-## Requirements
-
-## Installation
-
 ## Examples
 ### The simplest
 ### Basic
 ### Advanced
+
+## Requirements
+
+## Installation
 
 ## Licence
