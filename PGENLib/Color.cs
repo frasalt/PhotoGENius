@@ -11,9 +11,9 @@ namespace PGENLib
         /// </summary>
         public Color()
         {
-            this.r = 0;
-            this.g = 0;
-            this.b = 0;
+            r = 0;
+            g = 0;
+            b = 0;
         }
 
         /// <summary>
@@ -26,8 +26,21 @@ namespace PGENLib
             this.b = b;
         }
 
+
         //Metodi-------------------------------------
 
+        public void SetR(float x)
+        {
+            r = x;
+        }
+        public void SetG(float x)
+        {
+            g = x;
+        }public void SetB(float x)
+        {
+            b = x;
+        }
+        
         public float GetR()
         {
             return r;

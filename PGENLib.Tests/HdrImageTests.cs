@@ -166,6 +166,33 @@ namespace PGENLib.Tests
             Assert.True(Color.are_close(img.GetPixel(0, 0),new Color(0.5e2f, 1.0e2f, 1.5e2f)));
             Assert.True(Color.are_close(img.GetPixel(1, 0),new Color(0.5e4f, 1.0e4f, 1.5e4f)));
         }
+
+        /// <summary>
+        /// Test sulla funzione che 
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public void test_ClampImage()
+        {
+            HdrImage img = new HdrImage(2, 1);
+
+            Color col1 = new Color(0.5e1f, 1.0e1f, 1.5e1f);
+            Color col2 = new Color(0.5e3f, 1.0e3f, 1.5e3f);
+            
+            img.SetPixel(0, 0, col1);
+            img.SetPixel(1, 0, col2);
+
+            img.ClampImage();
+
+            // Just check that the R/G/B values are within the expected boundaries
+            for (int i = 0; i < img.Pixels.Length; i++)
+            {
+                Assert.True((img.Pixels[i].GetR() >= 0) & (img.Pixels[i].GetR() <= 1));
+                Assert.True((img.Pixels[i].GetG() >= 0) & (img.Pixels[i].GetG() <= 1));
+                Assert.True((img.Pixels[i].GetB() >= 0) & (img.Pixels[i].GetB() <= 1));
+            }
+        }
+
 /*
         [Fact]
         public void test_ReadFilePFM()

@@ -28,6 +28,30 @@ namespace PGENLib.Tests
         }
         
         [Fact]
+        public void test_SetR()
+        {
+            Color a = new Color(1.0f, 2.0f, 3.0f);
+            a.SetR(4.0f);
+            Assert.True(Math.Abs(a.GetR() - 4.0f) < 1E-5); // si può fare meglio senza usare Get?
+        }
+        
+        [Fact]
+        public void test_SetG()
+        {
+            Color a = new Color(1.0f, 2.0f, 3.0f);
+            a.SetG(4.0f);
+            Assert.True(Math.Abs(a.GetG() - 4.0f) < 1E-5); // si può fare meglio senza usare Get?
+        }
+        
+        [Fact]
+        public void test_SetB()
+        {
+            Color a = new Color(1.0f, 2.0f, 3.0f);
+            a.SetB(4.0f);
+            Assert.True(Math.Abs(a.GetB() - 4.0f) < 1E-5); // si può fare meglio senza usare Get?
+        }
+        
+        [Fact]
         public void test_sum()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);

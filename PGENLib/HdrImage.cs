@@ -304,6 +304,27 @@ namespace PGENLib
                 Pixels[i] = Pixels[i] * (factor / lum);
             }
         }
+
+        /// <summary>
+        /// Mappa un float da [0,+inf) a [0,1]
+        /// </summary>
+        public float ClampFloat(float x)
+        {
+            return x / (1 + x);
+        }
+        
+        /// <summary>
+        /// Applica la correzione per i punti luminosi, ancora da testare
+        /// </summary>
+        public void ClampImage()
+        {
+            for (int i = 0; i < Pixels.Length; i++)
+            {
+                Pixels[i].SetR(ClampFloat(Pixels[i].GetR()));
+                Pixels[i].SetG(ClampFloat(Pixels[i].GetR()));
+                Pixels[i].SetB(ClampFloat(Pixels[i].GetR()));
+            }
+        }
         
     }
 }
