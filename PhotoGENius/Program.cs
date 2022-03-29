@@ -7,15 +7,50 @@ using System.Text;
 
 class Program
 {
-    static void Main()
+    /*
+    class Parameters
     {
-        Color a = new Color(3, 5, 7);
-        float lumi;
-        lumi = a.Lum();
-        Console.WriteLine(a);
-        Console.WriteLine(lumi);
+        public string InputPfmFileName = "";
+        public float Factor = 0.2f;
+        public float Gamma = 1.0f;
+        public string OutputPngFileName = "";
+
+        public void parse_command_line(string[] argv)
+        {
+            if(argv.Length != 5)
+            {
+                raise RuntimeError("Usage: ./Program.exe INPUT_PFM_FILE FACTOR GAMMA OUTPUT_PNG_FILE");
+                // come si fa l'equivalente in c#?
+            }
+
+            InputPfmFileName = argv[1];
+
+            try { Factor =  Convert.ToSingle(argv[2]); }
+            catch
+            {
+                ValueError:
+                raise RuntimeError($"Invalid factor ('{argv[2]}'), it must be a floating-point number.");
+                // come si fa l'equivalente in c#?
+            }
+
+            try { Gamma = Convert.ToSingle(argv[3]); }
+            catch
+            {
+                ValueError:
+                raise RuntimeError($"Invalid gamma ('{argv[3]}'), it must be a floating-point number.");
+                // come si fa l'equivalente in c#?
+            }
+
+            OutputPngFileName = argv[4];
+        }
+    }
+    */
+    
+    static void Main(string[] argv)
+    {
+        /*
         // prova lettura da stream
-        /*HdrImage img2 = new HdrImage(3, 2);
+        HdrImage img2 = new HdrImage(3, 2);
 
         var col = new Color((float)1.0e1, (float)2.0e1, (float)3.0e1);
         img2.SetPixel(0, 0, col);
@@ -34,7 +69,7 @@ class Program
         img2.WritePFMFile(buf, Endianness.BigEndian);
         */
         
-        
+        /*
         var img = new HdrImage(3, 2);
         
         // prova con BigEndianness
@@ -60,9 +95,39 @@ class Program
         
         using (Stream outFileStream2 = File.OpenWrite("file_LL.pfm"))
         { prova_be.WritePFMFile(outFileStream2, Endianness.LittleEndian); }
+        */
+
+        /* // main definitivo, una volta che funzionano readpfm e writepfm
+        Parameters parameters = null;
+        try
+        {
+            parameters.parse_command_line(argv);
+        }
+        catch
+        {
+            RuntimeError as err:
+            Console.WriteLine("Error: ", err);
+            return;
+        }
+
+        HdrImage img = null;
         
-        
-        
-        
+        with open(parameters.InputPfmFileName, "rb") as inpf
+        {
+            img = img.ReadPFMFile(inpf);
+        }
+
+        Console.WriteLine($"File {parameters.InputPfmFileName} has been read from disk.");
+
+        img.NormalizeImage(parameters.Factor);
+        img.ClampImage();
+
+        with open(parameters.OutputPngFileName, "wb") as outf:
+        {
+            img.write_ldr_image(stream = outf, "PNG", parameters.Gamma);
+        }
+
+        Console.WriteLine($"File {parameters.OutputPngFileName} has been written to disk.");
+        */
     }
 }
