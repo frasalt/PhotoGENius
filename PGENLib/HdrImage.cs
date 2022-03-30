@@ -320,9 +320,9 @@ namespace PGENLib
         {
             for (int i = 0; i < Pixels.Length; i++)
             {
-                Pixels[i].SetR(ClampFloat(Pixels[i].GetR()));
-                Pixels[i].SetG(ClampFloat(Pixels[i].GetR()));
-                Pixels[i].SetB(ClampFloat(Pixels[i].GetR()));
+                Pixels[i].SetR(ClampFloat(Pixels[i].GetR())); //Perchè non usare SetPixel?
+                Pixels[i].SetG(ClampFloat(Pixels[i].GetG()));
+                Pixels[i].SetB(ClampFloat(Pixels[i].GetB()));
             }
         }
         
