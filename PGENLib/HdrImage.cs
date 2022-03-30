@@ -226,7 +226,7 @@ namespace PGENLib
         /// <param name="endian"></param>
         public void WritePFMFile(Stream output, Endianness endian)
         {
-            Debug.Assert(endian is Endianness.LittleEndian or Endianness.BigEndian);
+            Debug.Assert(endian is Endianness.LittleEndian or Endianness.BigEndian); // inutile una volta che tutto è normale
 
             double end = 0;
             if (endian == Endianness.LittleEndian) end = -1.0;

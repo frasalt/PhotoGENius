@@ -69,7 +69,7 @@ class Program
         img2.WritePFMFile(buf, Endianness.BigEndian);
         */
         
-        /*
+        
         var img = new HdrImage(3, 2);
         
         // prova con BigEndianness
@@ -95,7 +95,7 @@ class Program
         
         using (Stream outFileStream2 = File.OpenWrite("file_LL.pfm"))
         { prova_be.WritePFMFile(outFileStream2, Endianness.LittleEndian); }
-        */
+        //*/
 
         /* // main definitivo, una volta che funzionano readpfm e writepfm
         Parameters parameters = null;
