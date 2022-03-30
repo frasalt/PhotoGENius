@@ -24,4 +24,9 @@
     <ProjectReference Include="..\PGENLib\PGENLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="obj\reference_le.pfm" />
+    <Content Include="reference_le.pfm" />
+  </ItemGroup>
+
 </Project>
