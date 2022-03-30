@@ -140,8 +140,31 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
+
+        [Fact]
+        public void test_ReadFilePFM()
+        {
+            Color a = new Color(1.0e1f, 2.0e1f, 3.0e1f);
+            Color b = new Color(4.0e1f, 5.0e1f, 6.0e1f);
+            Color c = new Color(7.0e1f, 8.0e1f, 9.0e1f);
+            Color d = new Color(1.0e2f, 2.0e2f, 3.0e2f);
+            Color e = new Color(4.0e2f, 5.0e2f, 6.0e2f);
+            Color f = new Color(7.0e2f, 8.0e2f, 9.0e2f);
+            HdrImage img = new HdrImage(1, 1);
+            using (Stream fileStream = File.OpenRead(@"../../../../PGENLib.tests/reference_le.pfm"))
+            { img = img.ReadPFMFile(fileStream); }
+            Assert.True(HdrImage.Width == 3); //Come fa a sapere che voglio controllare Width di img? Alternativa: img.Width togliendo static
+            Assert.True(HdrImage.Height == 2);
+            Assert.True(Color.are_close(img.GetPixel(0,0), a));
+            Assert.True(Color.are_close(img.GetPixel(1,0), b));
+            Assert.True(Color.are_close(img.GetPixel(2,0), c));
+            Assert.True(Color.are_close(img.GetPixel(0,1), d));
+            Assert.True(Color.are_close(img.GetPixel(1,1), e));
+            Assert.True(Color.are_close(img.GetPixel(2,1), f));
+            
+        }
         
-        /// <summary>
+         /// <summary>
         /// TEST sulla fz che restituisce la luminosità media dell'immagine
         /// </summary>
         [Fact]
@@ -193,30 +216,8 @@ namespace PGENLib.Tests
             }
         }
 
-/*
-        [Fact]
-        public void test_ReadFilePFM()
-        {
-            Color a = new Color(1.0e1f, 2.0e1f, 3.0e1f);
-            Color b = new Color(4.0e1f, 5.0e1f, 6.0e1f);
-            Color c = new Color(7.0e1f, 8.0e1f, 9.0e1f);
-            Color d = new Color(1.0e2f, 2.0e2f, 3.0e2f);
-            Color e = new Color(4.0e2f, 5.0e2f, 6.0e2f);
-            Color f = new Color(7.0e2f, 8.0e2f, 9.0e2f);
-            HdrImage img = new HdrImage();
-            using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_le.pfm"))
-            { img = img.ReadPFMFile(fileStream); }
-            Assert.True(img.Width == "3");
-            Assert.True(img.Height == "2");
-            Assert.True(Color.are_close(img.GetPixel(0,0), a));
-            Assert.True(Color.are_close(img.GetPixel(1,0), b));
-            Assert.True(Color.are_close(img.GetPixel(2,0), c));
-            Assert.True(Color.are_close(img.GetPixel(0,1), d));
-            Assert.True(Color.are_close(img.GetPixel(1,1), e));
-            Assert.True(Color.are_close(img.GetPixel(2,1), f));
-            
-        }
-        */
+
+        
 
     }
     
