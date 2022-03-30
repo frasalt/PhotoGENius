@@ -5,6 +5,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.ColorSpaces.Companding;
+//ImageSharp
 
 namespace PGENLib
 {
@@ -328,12 +329,16 @@ namespace PGENLib
         /*
         public void WriteLdrImage(Stream,..., new float gamma = 1.0f){
             //importa
-            HdrImage img = new HdrImage(Width, Height);
+            // var tipo implicito
+            HdrImage img = new HdrImage(..., float gamma);
             for (int y = 0; y < Width; y++)
             {
                 for (int x = 0; x < Height; x++)
                 {
-                    
+                    var curColor = this.GetPixel(x, y);
+                    var red = (int)(255 * Math.Pow(curColor.r, 1.0f / gamma));
+                    var green = (int)(255 * Math.Pow(curColor.g, 1.0f / gamma));
+                    var blue = (int)(255 * Math.Pow(curColor.b, 1.0f / gamma)); 
                 }
             }
 
@@ -351,8 +356,8 @@ namespace PGENLib
         ))
 
         img.save(stream, format=format)
-        */
         
+        */
     }
 }
 

@@ -2,9 +2,9 @@ namespace PGENLib
 {
     public struct Color
     {
-        private float r;
-        private float g;
-        private float b;
+        public float r;
+        public float g;
+        public float b;
 
         /// <summary>
         /// Costruttore vuoto
@@ -41,7 +41,7 @@ namespace PGENLib
             b = x;
         }
         
-        public float GetR()
+        public double GetR()
         {
             return r;
         }
