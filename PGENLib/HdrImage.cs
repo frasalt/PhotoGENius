@@ -101,7 +101,6 @@ namespace PGENLib
                     float b = ReadFloat(input, end);
 
                     Color newcol = new Color(r, g, b);
-                    //Console.WriteLine($"    red {newcol.GetR()}     green {newcol.GetG()}       blue {newcol.GetB()}");
 
                     myimg.SetPixel(x, y, newcol);
                 }
@@ -153,21 +152,18 @@ namespace PGENLib
             }
             catch
             {
-                Console.WriteLine("ReadFloat: non ce lho fatta");
-                //    throw new InvalidPfmFileFormat("Unable to read float!");
+                throw new InvalidPfmFileFormat("Unable to read float!");
             }
 
             // chiedo se il sistema operativo è allineato con la mia endianness. se NO, ribalto i byte.
             if (end == Endianness.BigEndian && BitConverter.IsLittleEndian)
             {
                 Array.Reverse(bytes);
-                Console.WriteLine("(R) B-L: revert");
             }
 
             if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian)
             {
                 Array.Reverse(bytes);
-                Console.WriteLine("(R) L-B: revert");
             }
 
             return BitConverter.ToSingle(bytes, 0);
@@ -260,13 +256,11 @@ namespace PGENLib
             if (end == Endianness.BigEndian && BitConverter.IsLittleEndian)
             {
                 Array.Reverse(seq);
-                Console.WriteLine("(W) B-L: revert");
             }
 
             if (end == Endianness.LittleEndian && !BitConverter.IsLittleEndian)
             {
                 Array.Reverse(seq);
-                Console.WriteLine("(W) L-B: revert");
             }
 
             outputStream.Write(seq, 0, seq.Length);

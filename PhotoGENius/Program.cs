@@ -4,6 +4,7 @@ using System.IO.Compression;
 using PGENLib;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Runtime;
 
 class Program
 {
@@ -19,32 +20,29 @@ class Program
         {
             if(argv.Length != 5)
             {
-                raise RuntimeError("Usage: ./Program.exe INPUT_PFM_FILE FACTOR GAMMA OUTPUT_PNG_FILE");
+                throw new RuntimeEr("Usage: ./Program.exe INPUT_PFM_FILE FACTOR GAMMA OUTPUT_PNG_FILE");
                 // come si fa l'equivalente in c#?
             }
 
             InputPfmFileName = argv[1];
 
             try { Factor =  Convert.ToSingle(argv[2]); }
-            catch
+            catch(ValueError)
             {
-                ValueError:
-                raise RuntimeError($"Invalid factor ('{argv[2]}'), it must be a floating-point number.");
-                // come si fa l'equivalente in c#?
+                throw RuntimeError($"Invalid factor ('{argv[2]}'), it must be a floating-point number.");
             }
 
             try { Gamma = Convert.ToSingle(argv[3]); }
             catch
             {
                 ValueError:
-                raise RuntimeError($"Invalid gamma ('{argv[3]}'), it must be a floating-point number.");
-                // come si fa l'equivalente in c#?
+                throw RuntimeError($"Invalid gamma ('{argv[3]}'), it must be a floating-point number.");
             }
 
             OutputPngFileName = argv[4];
         }
     }
-    */
+    //*/
     
    //----------------------------------------------------------------------------------------------------------- 
     static void Main(string[] argv)
@@ -83,7 +81,7 @@ class Program
         }
         catch
         {
-            RuntimeError as err:
+            RuntimeError as err;
             Console.WriteLine("Error: ", err);
             return;
         }
