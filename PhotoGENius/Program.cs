@@ -49,7 +49,7 @@ class Program
    //----------------------------------------------------------------------------------------------------------- 
     static void Main(string[] argv)
     {
-        /*
+        
         // prova lettura da stream
         HdrImage img2 = new HdrImage(3, 2);
 
@@ -68,7 +68,7 @@ class Program
 
         Stream buf = new MemoryStream();
         img2.WritePFMFile(buf, Endianness.BigEndian);
-        */
+        
         
         /*
         var img = new HdrImage(3, 2);
