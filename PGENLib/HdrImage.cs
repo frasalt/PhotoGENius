@@ -3,6 +3,8 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.ColorSpaces.Companding;
 
 namespace PGENLib
 {
@@ -319,6 +321,37 @@ namespace PGENLib
                 Pixels[i].SetB(ClampFloat(Pixels[i].GetB()));
             }
         }
+        
+        /// <summary>
+        /// Converte un'immagine HDR in LDR
+        /// </summary>
+        /*
+        public void WriteLdrImage(Stream,..., new float gamma = 1.0f){
+            //importa
+            HdrImage img = new HdrImage(Width, Height);
+            for (int y = 0; y < Width; y++)
+            {
+                for (int x = 0; x < Height; x++)
+                {
+                    
+                }
+            }
+
+        }
+        def write_ldr_image(self, stream, format, gamma=1.0):
+        from PIL import Image
+        img = Image.new("RGB", (self.width, self.height))
+        for y in range(self.height):
+            for x in range(self.width):
+            cur_color = self.get_pixel(x, y)
+            img.putpixel(xy=(x, y), value=(
+        int(255 * math.pow(cur_color.r, 1 / gamma)),
+        int(255 * math.pow(cur_color.g, 1 / gamma)),
+        int(255 * math.pow(cur_color.b, 1 / gamma)),
+        ))
+
+        img.save(stream, format=format)
+        */
         
     }
 }
