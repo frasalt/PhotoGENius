@@ -4,8 +4,10 @@ using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.ColorSpaces.Companding;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 //ImageSharp
+
 
 namespace PGENLib
 {
@@ -18,8 +20,8 @@ namespace PGENLib
     public class HdrImage
     {
         // attributi dell'immagine
-        public static int Width;
-        public static int Height;
+        public int Width;
+        public int Height;
         public Color[] Pixels; // un vettore di tipo Color che contiene tutti i pixel
 
         /// <summary>
@@ -330,10 +332,10 @@ namespace PGENLib
         public void WriteLdrImage(Stream,..., new float gamma = 1.0f){
             //importa
             // var tipo implicito
-            HdrImage img = new HdrImage(..., float gamma);
-            for (int y = 0; y < Width; y++)
+            new Image<Rgb32>(Configuration.Default, this.Width, this.Height);
+            for (int y = 0; y < this.Width; y++)
             {
-                for (int x = 0; x < Height; x++)
+                for (int x = 0; x < this.Height; x++)
                 {
                     var curColor = this.GetPixel(x, y);
                     var red = (int)(255 * Math.Pow(curColor.r, 1.0f / gamma));
