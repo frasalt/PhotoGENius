@@ -329,10 +329,10 @@ namespace PGENLib
         /// Converte un'immagine HDR in LDR
         /// </summary>
         /*
-        public void WriteLdrImage(Stream,..., new float gamma = 1.0f){
-            //importa
-            // var tipo implicito
-            new Image<Rgb32>(Configuration.Default, this.Width, this.Height);
+        public void WriteLdrImage(Stream output, String format, float gamma = 1.0f)
+        {
+            HdrImage img = new HdrImage(this.Width, this.Height);
+            //new Image<Rgb32>(Configuration.Default, this.Width, this.Height);
             for (int y = 0; y < this.Width; y++)
             {
                 for (int x = 0; x < this.Height; x++)
@@ -344,6 +344,10 @@ namespace PGENLib
                 }
             }
 
+            using (Image image = Image.Load(format))
+            {
+                image.Save(format);
+            }
         }
         def write_ldr_image(self, stream, format, gamma=1.0):
         from PIL import Image
