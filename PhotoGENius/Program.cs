@@ -8,43 +8,52 @@ using System.Runtime;
 
 class Program
 {
-    /*
+    
     class Parameters
     {
         public string InputPfmFileName = "";
         public float Factor = 0.2f;
         public float Gamma = 1.0f;
         public string OutputPngFileName = "";
+        public string Options = "";
+
+        // costruttore vuoto
+        public Parameters()
+        {
+            InputPfmFileName = "";
+            Factor = 0.2f;
+            Gamma = 1.0f;
+            OutputPngFileName = "";
+            Options = "";
+        }
 
         public void parse_command_line(string[] argv)
         {
-            if(argv.Length != 5)
+            if(argv.Length != 4 && argv.Length != 5)
             {
-                throw new RuntimeEr("Usage: ./Program.exe INPUT_PFM_FILE FACTOR GAMMA OUTPUT_PNG_FILE");
-                // come si fa l'equivalente in c#?
+                throw new RuntimeError("Usage: ./Program.exe INPUT_PFM_FILE FACTOR GAMMA OUTPUT_PNG_FILE OPTIONS");
+            }
+            InputPfmFileName = argv[0];
+
+            try { Factor =  Convert.ToSingle(argv[1]); }
+            catch //(ValueError) // se la funzione .ToSingle lanciasse un value error in caso di problemi,
+                                 // catch potrebbe catturarla e restituire in cambio un RunTimeError
+            {
+                throw new RuntimeError($"Invalid factor ('{argv[1]}'), it must be a floating-point number.");
             }
 
-            InputPfmFileName = argv[1];
-
-            try { Factor =  Convert.ToSingle(argv[2]); }
-            catch(ValueError)
+            try { Gamma = Convert.ToSingle(argv[2]); }
+            catch //(ValueError) // idem come sopra
             {
-                throw RuntimeError($"Invalid factor ('{argv[2]}'), it must be a floating-point number.");
+                throw new RuntimeError($"Invalid gamma ('{argv[2]}'), it must be a floating-point number.");
             }
 
-            try { Gamma = Convert.ToSingle(argv[3]); }
-            catch
-            {
-                ValueError:
-                throw RuntimeError($"Invalid gamma ('{argv[3]}'), it must be a floating-point number.");
-            }
-
-            OutputPngFileName = argv[4];
+            OutputPngFileName = argv[3];
+            if (argv.Length == 5) Options = argv[4];
         }
     }
-    //*/
-    
-   //----------------------------------------------------------------------------------------------------------- 
+
+    //----------------------------------------------------------------------------------------------------------- 
     static void Main(string[] argv)
     {
         /*
@@ -71,39 +80,57 @@ class Program
         using (Stream outFileStream2 = File.OpenWrite("file_LL.pfm"))
         { prova.WritePFMFile(outFileStream2, Endianness.LittleEndian); }
         //*/
-
-        /*
+        
         // main definitivo, una volta che funzionano readpfm e writepfm
-        Parameters parameters = null;
+        Parameters parameters = new Parameters();
         try
         {
             parameters.parse_command_line(argv);
         }
-        catch
+        catch(RuntimeError err)
         {
-            RuntimeError as err;
-            Console.WriteLine("Error: ", err);
+            Console.WriteLine("Error: {0} ", err.Message); // funzionerà?
             return;
         }
 
-        HdrImage img = null;
+        HdrImage img = new HdrImage(0,0);
         
-        with open(parameters.InputPfmFileName, "rb") as inpf
+        using (var inpf = new FileStream(parameters.InputPfmFileName, FileMode.Open, FileAccess.Read))
         {
             img = img.ReadPFMFile(inpf);
         }
 
-        Console.WriteLine($"File {parameters.InputPfmFileName} has been read from disk.");
+        Console.WriteLine($" >> File {parameters.InputPfmFileName} has been read from disk.");
 
         img.NormalizeImage(parameters.Factor);
         img.ClampImage();
 
-        with open(parameters.OutputPngFileName, "wb") as outf:
+        if (parameters.Options == "")
         {
-            img.write_ldr_image(stream = outf, "PNG", parameters.Gamma);
+            try
+            {
+                using (var outf = new FileStream(parameters.OutputPngFileName, FileMode.CreateNew))
+                {
+                    img.WriteLdrImage(outf, "PNG", parameters.Gamma);
+                }
+
+                Console.WriteLine($" >> File {parameters.OutputPngFileName} has been written to disk.");
+            }
+            catch (IOException)
+            {
+                Console.WriteLine(
+                    "Error: file {0} already exists. Use another name, or add option \"overwrite\".",
+                    parameters.OutputPngFileName);
+            }
+        }
+        else if(parameters.Options == "overwrite")
+        {
+            using (var outf = new FileStream(parameters.OutputPngFileName, FileMode.Create))
+            {
+                img.WriteLdrImage(outf, "PNG", parameters.Gamma);
+            }
+            Console.WriteLine($" >> File {parameters.OutputPngFileName} has been written to disk.");
         }
 
-        Console.WriteLine($"File {parameters.OutputPngFileName} has been written to disk.");
-        //*/
     }
 }

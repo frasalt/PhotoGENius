@@ -7,4 +7,11 @@ namespace PGENLib
             Console.WriteLine(errMessage);
         }
     }
+    public class RuntimeError : Exception
+    {
+        public RuntimeError(string errMessage)
+        {
+            Console.WriteLine(errMessage);
+        }
+    }
 }

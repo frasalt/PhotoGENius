@@ -324,46 +324,59 @@ namespace PGENLib
                 Pixels[i].SetB(ClampFloat(Pixels[i].GetB()));
             }
         }
-        
+
         /// <summary>
         /// Converte un'immagine HDR in LDR
         /// </summary>
-        /*
         public void WriteLdrImage(Stream output, String format, float gamma = 1.0f)
         {
-            HdrImage img = new HdrImage(this.Width, this.Height);
+            Console.WriteLine("WriteLdrImage method still not developed!");
+            
+            //HdrImage img = new HdrImage(Width, Height);
             //new Image<Rgb32>(Configuration.Default, this.Width, this.Height);
-            for (int y = 0; y < this.Width; y++)
+            
+            // link utili:
+            // https://docs.sixlabors.com/api/ImageSharp/SixLabors.ImageSharp.Image.html#SixLabors_ImageSharp_Image_LoadPixelData__1___0___System_Int32_System_Int32_
+            // https://docs.sixlabors.com/api/ImageSharp/SixLabors.ImageSharp.Image-1.html
+            // https://docs.sixlabors.com/api/ImageSharp/SixLabors.ImageSharp.Formats.IImageEncoder.html
+            // https://docs.sixlabors.com/api/ImageSharp/SixLabors.ImageSharp.Formats.Png.PngEncoder.html
+            
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < this.Height; x++)
+                for (int x = 0; x < Width; x++)
                 {
-                    var curColor = this.GetPixel(x, y);
-                    var red = (int)(255 * Math.Pow(curColor.r, 1.0f / gamma));
-                    var green = (int)(255 * Math.Pow(curColor.g, 1.0f / gamma));
-                    var blue = (int)(255 * Math.Pow(curColor.b, 1.0f / gamma)); 
+                    var curColor = GetPixel(x, y);
+                    var red = (int) (255 * Math.Pow(curColor.r, 1.0f / gamma));
+                    var green = (int) (255 * Math.Pow(curColor.g, 1.0f / gamma));
+                    var blue = (int) (255 * Math.Pow(curColor.b, 1.0f / gamma));
+                    
+                    // image.putpixel(xy=(x,y), value = ( red, green, blue);
+                    // img.save(stream, format=format)
+                    
+                    /*
+                    using (Image image = Image.Load("reference_le.pfm")) // a che serve?
+                    {
+                        image.Save("path_of_file_out");
+                    }
+                    //*/
                 }
             }
 
-            using (Image image = Image.Load(format))
-            {
-                image.Save(format);
-            }
+            /*
+            def write_ldr_image(self, stream, format, gamma=1.0):
+                    from PIL import Image
+                    img = Image.new("RGB", (self.width, self.height))
+                    for y in range(self.height):
+                        for x in range(self.width):
+                            cur_color = self.get_pixel(x, y)
+                            img.putpixel(xy=(x, y), value=(
+                                int(255 * math.pow(cur_color.r, 1 / gamma)),
+                                int(255 * math.pow(cur_color.g, 1 / gamma)),
+                                int(255 * math.pow(cur_color.b, 1 / gamma)),
+                            ))
+                    img.save(stream, format=format)        
+            */
         }
-        def write_ldr_image(self, stream, format, gamma=1.0):
-        from PIL import Image
-        img = Image.new("RGB", (self.width, self.height))
-        for y in range(self.height):
-            for x in range(self.width):
-            cur_color = self.get_pixel(x, y)
-            img.putpixel(xy=(x, y), value=(
-        int(255 * math.pow(cur_color.r, 1 / gamma)),
-        int(255 * math.pow(cur_color.g, 1 / gamma)),
-        int(255 * math.pow(cur_color.b, 1 / gamma)),
-        ))
-
-        img.save(stream, format=format)
-        
-        */
     }
 }
 
