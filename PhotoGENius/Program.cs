@@ -32,7 +32,7 @@ class Program
             if(argv.Length != 4 && argv.Length != 5)
             {
                 throw new RuntimeError("Usage: ./ProgramName.exe INPUT_PFM_FILE.pfm FACTOR GAMMA OUTPUT_PNG_FILE OPTIONS");
-            }
+            }// Option sta per???
             InputPfmFileName = argv[0];
 
             try { Factor =  Convert.ToSingle(argv[1]); }
@@ -49,7 +49,7 @@ class Program
             }
 
             OutputPngFileName = argv[3];
-            if (argv.Length == 5) Options = argv[4];
+            if (argv.Length == 5) Options = argv[4]; //CHIEDERE SPIEGAZIONE
         }
     }
 
@@ -109,7 +109,7 @@ class Program
         {
             try
             {
-                using (var outf = new FileStream(parameters.OutputPngFileName, FileMode.CreateNew))
+                string outf = "C:/Users/User/RiderProjects/PhotoGENius/prova";
                 {
                     img.WriteLdrImage(outf, "PNG", parameters.Gamma);
                 }
@@ -123,14 +123,14 @@ class Program
                     parameters.OutputPngFileName);
             }
         }
-        else if(parameters.Options == "overwrite")
+        /*else if(parameters.Options == "overwrite")
         {
             using (var outf = new FileStream(parameters.OutputPngFileName, FileMode.Create))
             {
                 img.WriteLdrImage(outf, "PNG", parameters.Gamma);
             }
             Console.WriteLine($" >> File {parameters.OutputPngFileName} has been written to disk.");
-        }
+        }*/
 
     }
 }

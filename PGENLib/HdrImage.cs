@@ -5,6 +5,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 //ImageSharp
@@ -330,25 +331,25 @@ namespace PGENLib
         /// Converte un'immagine HDR in LDR
         /// </summary>
         
-        public void WriteLdrImage(Stream output, String format, float gamma = 1.0f)
+        public void WriteLdrImage(String output, String format, float gamma = 1.0f)
         {
-            HdrImage img = new HdrImage(this.Width, this.Height);
-            for (int y = 0; y < this.Width; y++)
+            //HdrImage img = new HdrImage(this.Width, this.Height);
+            var bitmap = new Image<Rgb24>(this.Width, this.Height);
+            for (int x = 0; x < this.Width; x++)
             {
-                for (int x = 0; x < this.Height; x++)
+                for (int y = 0; y < this.Height; y++)
                 {
                     var curColor = this.GetPixel(x, y);
                     var red = (int)(255 * Math.Pow(curColor.r, 1.0f / gamma));
                     var green = (int)(255 * Math.Pow(curColor.g, 1.0f / gamma));
-                    var blue = (int)(255 * Math.Pow(curColor.b, 1.0f / gamma)); 
-                    img.SetPixel(x, y, new Color(red, green, blue));
+                    var blue = (int)(255 * Math.Pow(curColor.b, 1.0f / gamma));
+                    bitmap[x, y] = new Rgb24((byte) BitConverter.TryWriteBytes(red), (byte) BitConverter.TryWriteBytes(green), (byte) BitConverter.TryWriteBytes(blue));
                 }
             }
-
-            IImageFormat png;
-            using (var image = Image.Load(output, out png))
+            
+            using (Stream output1 = File.OpenWrite(output))
             {
-                image.Save(output, png);
+                bitmap.SaveAsPng(output1);
             }
         }
     }
