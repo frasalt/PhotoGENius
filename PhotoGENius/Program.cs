@@ -123,14 +123,16 @@ class Program
                     parameters.OutputPngFileName);
             }
         }
-        /*else if(parameters.Options == "overwrite")
+        /*
+        else if(parameters.Options == "overwrite")
         {
             using (var outf = new FileStream(parameters.OutputPngFileName, FileMode.Create))
             {
                 img.WriteLdrImage(outf, "PNG", parameters.Gamma);
             }
             Console.WriteLine($" >> File {parameters.OutputPngFileName} has been written to disk.");
-        }*/
+        }
+        */
 
     }
 }

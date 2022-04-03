@@ -157,9 +157,10 @@ namespace PGENLib
                 bytes[2] = (byte) input.ReadByte();
                 bytes[3] = (byte) input.ReadByte();
             }
+            
             catch
             {
-                throw new InvalidPfmFileFormat("Unable to read float!");
+                //throw new InvalidPfmFileFormat("Unable to read float!");
             }
 
             // chiedo se il sistema operativo è allineato con la mia endianness. se NO, ribalto i byte.
@@ -333,8 +334,7 @@ namespace PGENLib
         
         public void WriteLdrImage(String output, String format, float gamma = 1.0f)
         {
-            //HdrImage img = new HdrImage(this.Width, this.Height);
-            var bitmap = new Image<Rgb24>(this.Width, this.Height);
+            var img = new Image<Rgb24>(this.Width, this.Height);
             for (int x = 0; x < this.Width; x++)
             {
                 for (int y = 0; y < this.Height; y++)
@@ -343,13 +343,13 @@ namespace PGENLib
                     var red = (int)(255 * Math.Pow(curColor.r, 1.0f / gamma));
                     var green = (int)(255 * Math.Pow(curColor.g, 1.0f / gamma));
                     var blue = (int)(255 * Math.Pow(curColor.b, 1.0f / gamma));
-                    bitmap[x, y] = new Rgb24((byte) BitConverter.TryWriteBytes(red), (byte) BitConverter.TryWriteBytes(green), (byte) BitConverter.TryWriteBytes(blue));
+                    img[x, y] = new Rgb24( Convert.ToByte(red), Convert.ToByte(green), Convert.ToByte(blue));
                 }
             }
             
             using (Stream output1 = File.OpenWrite(output))
             {
-                bitmap.SaveAsPng(output1);
+                img.SaveAsPng(output1);
             }
         }
     }
