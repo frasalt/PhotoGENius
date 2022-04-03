@@ -31,7 +31,7 @@ class Program
         {
             if(argv.Length != 4 && argv.Length != 5)
             {
-                throw new RuntimeError("Usage: ./Program.exe INPUT_PFM_FILE FACTOR GAMMA OUTPUT_PNG_FILE OPTIONS");
+                throw new RuntimeError("Usage: ./ProgramName.exe INPUT_PFM_FILE.pfm FACTOR GAMMA OUTPUT_PNG_FILE OPTIONS");
             }
             InputPfmFileName = argv[0];
 

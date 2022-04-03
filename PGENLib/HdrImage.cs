@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 //ImageSharp
@@ -328,11 +329,10 @@ namespace PGENLib
         /// <summary>
         /// Converte un'immagine HDR in LDR
         /// </summary>
-        /*
+        
         public void WriteLdrImage(Stream output, String format, float gamma = 1.0f)
         {
             HdrImage img = new HdrImage(this.Width, this.Height);
-            //new Image<Rgb32>(Configuration.Default, this.Width, this.Height);
             for (int y = 0; y < this.Width; y++)
             {
                 for (int x = 0; x < this.Height; x++)
@@ -341,29 +341,16 @@ namespace PGENLib
                     var red = (int)(255 * Math.Pow(curColor.r, 1.0f / gamma));
                     var green = (int)(255 * Math.Pow(curColor.g, 1.0f / gamma));
                     var blue = (int)(255 * Math.Pow(curColor.b, 1.0f / gamma)); 
+                    img.SetPixel(x, y, new Color(red, green, blue));
                 }
             }
 
-            using (Image image = Image.Load(format))
+            IImageFormat png;
+            using (var image = Image.Load(output, out png))
             {
-                image.Save(format);
+                image.Save(output, png);
             }
         }
-        def write_ldr_image(self, stream, format, gamma=1.0):
-        from PIL import Image
-        img = Image.new("RGB", (self.width, self.height))
-        for y in range(self.height):
-            for x in range(self.width):
-            cur_color = self.get_pixel(x, y)
-            img.putpixel(xy=(x, y), value=(
-        int(255 * math.pow(cur_color.r, 1 / gamma)),
-        int(255 * math.pow(cur_color.g, 1 / gamma)),
-        int(255 * math.pow(cur_color.b, 1 / gamma)),
-        ))
-
-        img.save(stream, format=format)
-        
-        */
     }
 }
 
