@@ -156,4 +156,131 @@ namespace PGENLib
             return t;
         }
     }
+    
+    //==================================================================================================================
+    //Point
+    //==================================================================================================================
+
+    public struct Point
+    {
+        public float x;
+        public float y;
+        public float z;
+
+        /// <summary>
+        /// Costruttore vuoto
+        /// </summary>
+        public Point()
+        {
+            x = 0;
+            y = 0;
+            z = 0;
+        }
+        
+        /// <summary>
+        /// Costruttore con parametri float 
+        /// </summary>
+        public Point(float x, float y, float z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        
+        //METODI========================================================================================================
+        /// <summary>
+        /// Restituisce i valori di x,y,z in forma di stringa
+        /// </summary>
+        public override string ToString()
+        {
+            return $"Point(x={x}, y={y}, z={z})";
+        }
+        
+        /// <summary>
+        /// Confronta due vettori e restituisce true se coincidono, false altrimenti; 
+        /// </summary>
+        public static bool are_close(Point p, Point q)
+        {
+            var epsilon = 1E-5;
+            if (Math.Abs(p.x - q.x) < epsilon & 
+                Math.Abs(p.y - q.y) < epsilon & 
+                Math.Abs(p.z - q.z) < epsilon)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        /// <summary>
+        ///  Somma tra punto e vettore, restituisce punto
+        /// </summary>
+        public static Point operator +(Point p, Vec v)
+        {
+            var q = new Point
+            {
+                x = v.x + p.x,
+                y = v.y + p.y,
+                z = v.z + p.z
+            };
+            return q;
+        }
+
+        /// <summary>
+        ///  Prodotto punto*scalare, restituisce punto
+        /// </summary>
+        public static Point operator *(Point p, float a)
+        {
+            var q = new Point
+            {
+                x = p.x * a,
+                y = p.y * a,
+                z = p.z * a
+            };
+            return q;
+        }
+        /// <summary>
+        ///  Restituisce il vettore differenza tra due punti 
+        /// </summary>
+        public static Vec operator -(Point p, Point q)
+        {
+            var v = new Vec
+            {
+                x = p.x - q.x,
+                y = p.y - q.y,
+                z = p.z - q.z
+            };
+            return v;
+        }
+        
+        /// <summary>
+        ///  Differenza tra punto e vettore, restituisce un punto 
+        /// </summary>
+        public static Point operator -(Point p, Vec v)
+        {
+            var q = new Point
+            {
+                x = p.x - v.x,
+                y = p.y - v.y,
+                z = p.z - v.z
+            };
+            return q;
+        }
+
+        /// <summary>
+        ///  Restituisce il vettore moltiplicato per uno scalare 
+        /// </summary>
+        public Vec PointToVec()
+        {
+            var q = new Vec
+            {
+                x = this.x,
+                y = this.y,
+                z = this.z
+            };
+            return q;
+        }
+    }
 }

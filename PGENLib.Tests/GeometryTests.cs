@@ -33,8 +33,30 @@ namespace PGENLib.Tests
             Assert.True(Math.Abs(Vec.SquaredNorm(a) - 14.0f) < 1E-5);
             Assert.True(Math.Abs(Vec.Norm(a_norm)-1.0f) < 1E-5);
         }
-
         
+        [Fact]
+        public void test_are_point_close()
+        {
+            Point a = new Point(1.0f, 2.0f, 3.0f);
+            Point b = new Point(4.0f, 6.0f, 8.0f);
+            Assert.True(Point.are_close(a, a));
+            Assert.False(Point.are_close(b, a));
+        }
+        
+        
+        [Fact]
+        public void test_point_operations()
+        {
+            Point a = new Point(1.0f, 2.0f, 3.0f);
+            Point b = new Point(4.0f, 6.0f, 8.0f);
+            Vec v = new Vec(4.0f, 6.0f, 8.0f);
+
+            Assert.True(Point.are_close(new Point(5.0f, 8.0f, 11.0f), a + v));
+            Assert.True(Vec.are_close(new Vec(-3.0f, -4.0f, -5.0f), a - b));
+            Assert.True(Point.are_close(new Point(-3.0f, -4.0f, -5.0f), a - v));
+            Assert.True(Point.are_close(new Point(2.0f, 4.0f, 6.0f), a * 2));
+            Assert.True(Vec.are_close(b.PointToVec(), v));
+        }
         
         
     }
