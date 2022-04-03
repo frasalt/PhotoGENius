@@ -41,7 +41,7 @@ namespace PGENLib
             b = x;
         }
         
-        public double GetR()
+        public float GetR()
         {
             return r;
         }
