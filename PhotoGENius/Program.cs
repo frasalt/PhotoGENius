@@ -32,7 +32,10 @@ class Program
             if(argv.Length != 4 && argv.Length != 5)
             {
                 throw new RuntimeError("Usage: ./ProgramName.exe INPUT_PFM_FILE.pfm FACTOR GAMMA OUTPUT_PNG_FILE OPTIONS");
-            }// Option sta per???
+            }
+            // Option sta per: se vogliamo che il programma faccia cose particolari
+            // a seconda di un ulteriore pezzo di stringa che l'utente mette, le controlliamo da qui.
+            // l'avevo usato all'inizio e adesso non serve più, ma tenerlo non fa male e forse in futuro ci può tornare utile.
             InputPfmFileName = argv[0];
 
             try { Factor =  Convert.ToSingle(argv[1]); }
@@ -49,7 +52,7 @@ class Program
             }
 
             OutputPngFileName = argv[3];
-            if (argv.Length == 5) Options = argv[4]; //CHIEDERE SPIEGAZIONE
+            if (argv.Length == 5) Options = argv[4];
         }
     }
 
@@ -109,30 +112,20 @@ class Program
         {
             try
             {
-                string outf = "C:/Users/User/RiderProjects/PhotoGENius/prova";
+                //string outf = "C:/Users/User/RiderProjects/PhotoGENius/prova";
+                string outf = parameters.OutputPngFileName; // meglio così, altrimenti fa confusione tra mac e windows che usano le sbarrette inclinate al contrario
                 {
                     img.WriteLdrImage(outf, "PNG", parameters.Gamma);
                 }
 
                 Console.WriteLine($" >> File {parameters.OutputPngFileName} has been written to disk.");
             }
-            catch (IOException)
+            catch
             {
                 Console.WriteLine(
-                    "Error: file {0} already exists. Use another name, or add option \"overwrite\".",
-                    parameters.OutputPngFileName);
+                    "Error: couldn't write file {0}.", parameters.OutputPngFileName);
             }
         }
-        /*
-        else if(parameters.Options == "overwrite")
-        {
-            using (var outf = new FileStream(parameters.OutputPngFileName, FileMode.Create))
-            {
-                img.WriteLdrImage(outf, "PNG", parameters.Gamma);
-            }
-            Console.WriteLine($" >> File {parameters.OutputPngFileName} has been written to disk.");
-        }
-        */
-
+        
     }
 }
