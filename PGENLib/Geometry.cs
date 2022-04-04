@@ -1,5 +1,11 @@
+using System.Numerics;
+using System.Runtime.CompilerServices;
+
 namespace PGENLib
 {
+    //==================================================================================================================
+    //Vec
+    //==================================================================================================================
     public struct Vec
     {
         public float x;
@@ -425,4 +431,77 @@ namespace PGENLib
         }
     }
     
+    //==================================================================================================================
+    //Transformation
+    //==================================================================================================================
+    /*public struct Transformation
+    {
+        public Matrix4x4 m;
+        public Matrix4x4 invm;
+        
+        /// <summary>
+        /// Costruttore senza parametri, trasformazione identità lascia il vettore su cui agisce invariato
+        /// </summary>
+        public Transformation()
+        {
+            m = Matrix4x4.Identity;
+            bool consistency = Matrix4x4.Invert(m, out invm);
+            
+        }
+        
+        public Transformation(float a, float b, float c, float d,
+                              float e, float f, float g, float h, 
+                              float i, float l, float s, float n,
+                              float o, float p, float q, float r)
+        {
+            m = new Matrix4x4(a,b,c,d, 
+                              e,f,g,h,
+                              i,l,s,n,
+                              o,p,q,r);
+            invm = new Matrix4x4(1,0,0,0, 
+                                 0,1,0,0,
+                                 0,0,1,0,
+                                 0,0,0,1);
+        }
+        
+        public Transformation(Matrix4x4 a, Matrix4x4 inva)
+        {
+            m = a;
+            invm = inva;
+        }
+        
+        public Transformation(Matrix4x4 a)
+        {
+            m = a;
+            bool consistency = Matrix4x4.Invert(a, out invm);
+        }
+        
+        //METODI========================================================================================================
+        public static bool are_matrix_close(Matrix4x4 a, Matrix4x4 b)
+        {
+            var epsilon = 1E-5;
+            if (Math.Abs(a.M11 - b.M11) < epsilon & Math.Abs(a.M12 - b.M12) < epsilon &
+                Math.Abs(a.M13 - b.M13) < epsilon &
+                Math.Abs(a.M21 - b.M21) < epsilon & Math.Abs(a.M22 - b.M22) < epsilon &
+                Math.Abs(a.M23 - b.M23) < epsilon &
+                Math.Abs(a.M31 - b.M31) < epsilon & Math.Abs(a.M32 - b.M32) < epsilon &
+                Math.Abs(a.M33 - b.M33) < epsilon)
+            {
+                return true; 
+            }
+            else
+            {
+                return false;
+            }
+                                                          
+        }
+        public bool IsConsistent()
+        {
+            return are_matrix_close(m*invm, Matrix4x4.Identity);
+        }
+        */
+
+
+
+    }
 }
