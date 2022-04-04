@@ -58,6 +58,24 @@ namespace PGENLib.Tests
             Assert.True(Vec.are_close(b.PointToVec(), v));
         }
         
+        [Fact]
+        public void test_normal_operations()
+        {
+            Normal a = new Normal(1.0f, 2.0f, 3.0f);
+            Normal b = new Normal(4.0f, 6.0f, 8.0f);
+            Vec v = new Vec(1.0f, 3.0f, 2.0f);
+            Normal a_norm = a.NormalizeNormal();
+            
+            Assert.True(Normal.are_close(new Normal(2.0f, 4.0f, 6.0f), a * 2));
+            Assert.True(Normal.are_close(new Normal(-1.0f, -2.0f, -3.0f), a.Neg()));
+            Assert.True(Math.Abs(Normal.VecDotNormal(v,a) - 13.0f) < 1E-5);
+            Assert.True(Normal.are_close(new Normal(5.0f,-1.0f,-1.0f), Normal.VecCrossNormal(v,a)));
+            Assert.True(Normal.are_close(new Normal(-2.0f,4.0f,-2.0f), Normal.NormalCrossNormal(a,b)));
+            Assert.True(Math.Abs(Normal.Norm(a)*Normal.Norm(a) - 14.0f) < 1E-5);
+            Assert.True(Math.Abs(Normal.SquaredNorm(a) - 14.0f) < 1E-5);
+            Assert.True(Math.Abs(Normal.Norm(a_norm)-1.0f) < 1E-5);
+        }
+        
         
     }
 }

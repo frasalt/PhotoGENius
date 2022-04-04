@@ -283,4 +283,146 @@ namespace PGENLib
             return q;
         }
     }
+    //==================================================================================================================
+    //Normal
+    //==================================================================================================================
+    public struct Normal
+    {
+        public float x;
+        public float y;
+        public float z;
+
+        /// <summary>
+        /// Costruttore vuoto
+        /// </summary>
+        public Normal()
+        {
+            x = 0;
+            y = 0;
+            z = 0;
+        }
+        
+        /// <summary>
+        /// Costruttore con parametri float 
+        /// </summary>
+        public Normal(float x, float y, float z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        //METODI========================================================================================================
+        /// <summary>
+        /// Restituisce i valori di x,y,z in forma di stringa
+        /// </summary>
+        public override string ToString()
+        {
+            return $"Normal(x={x}, y={y}, z={z})";
+        }
+        
+        /// <summary>
+        /// Confronta due normali e restituisce true se coincidono, false altrimenti; 
+        /// </summary>
+        public static bool are_close(Normal p, Normal q)
+        {
+            var epsilon = 1E-5;
+            if (Math.Abs(p.x - q.x) < epsilon & 
+                Math.Abs(p.y - q.y) < epsilon & 
+                Math.Abs(p.z - q.z) < epsilon)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        /// <summary>
+        ///  Restituisce la normale moltiplicata per uno scalare 
+        /// </summary>
+        public static Normal operator *(Normal n, float s)
+        {
+            var t = new Normal
+            {
+                x = n.x * s,
+                y = n.y * s,
+                z = n.z * s
+            };
+            return t;
+        }
+        /// <summary>
+        ///  Restituisce -n, data una normale n
+        /// </summary>
+        public Normal Neg()
+        {
+            const float s = -1;
+            return this*s;
+        }
+        
+        /// <summary>
+        ///  Restituisce il prodotto scalare  tra un vettore e una normale
+        /// </summary>
+        public static float VecDotNormal(Vec v, Normal w)
+        {
+            return v.x*w.x+v.y*w.y+v.z*w.z;
+        }
+        
+        /// <summary>
+        ///  Restituisce il prodotto vettoriale Vec x Normal
+        /// </summary>
+        public static Normal VecCrossNormal(Vec v, Normal w)
+        {
+            var t = new Normal     //Restituisce un vettore??? Si arrabbia se lo metto vec
+            {
+                x = v.y*w.z - v.z*w.y,
+                y = v.z*w.x - v.x*w.z,
+                z = v.x*w.y - v.y*w.x
+            };
+            return t;
+        }
+        /// <summary>
+        ///  Restituisce il prodotto vettoriale Normal x Normal
+        /// </summary>
+        public static Normal NormalCrossNormal(Normal v, Normal w)
+        {
+            var t = new Normal //Restituisce un vettore ???
+            {
+                x = v.y*w.z - v.z*w.y,
+                y = v.z*w.x - v.x*w.z,
+                z = v.x*w.y - v.y*w.x
+            };
+            return t;
+        }
+
+        /// <summary>
+        ///  Restituisce la norma al quadrato
+        /// </summary>
+        public static float SquaredNorm(Normal n)
+        {
+            return n.x * n.x + n.y * n.y + n.z * n.z;
+        }
+        /// <summary>
+        ///  Restituisce la norma
+        /// </summary>
+        
+        public static float Norm(Normal n)
+        {
+            return (float) Math.Sqrt(SquaredNorm(n)) ;
+        }
+        
+        /// <summary>
+        ///  Funzione che normalizza la normale
+        /// </summary>
+        public Normal NormalizeNormal()
+        {
+            var t = new Normal
+            {
+                x = this.x/Norm(this),
+                y = this.y/Norm(this),
+                z = this.z/Norm(this)
+            };
+            return t;
+        }
+    }
+    
 }
