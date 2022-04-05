@@ -7,22 +7,18 @@
 
 ## Features
 
+In its first release, PhotoGENius can read a PFM file and convert it to a PNG file, given an output luminosity parameter $\alpha$ and a calibration factor $\gamma$.
+
 ## Examples
-Here are some code lines from the struct _Color_
+Extremely easy use: put your PFM file in the same directory of the executable and type
 ```c#
-namespace PGENLib
-{
-    public struct Color
-    {
-        private float r;
-        private float g;
-        private float b;
-        
-        ...
-    }
-}   
+.\PhotoGENius.exe my_pfm_file_name.pfm <alpha> <gamma> my_png_gile_name.png
 ```
-### Simple
+### Easy
+```c#
+.\PhotoGENius.exe memorial.pfm 0.5 1 memorial.png
+```
+
 ### Medium
 ### Advanced
 
