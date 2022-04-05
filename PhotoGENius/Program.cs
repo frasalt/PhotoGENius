@@ -17,7 +17,9 @@ class Program
         public string OutputPngFileName = "";
         public string Options = "";
 
-        // costruttore vuoto
+        /// <summary>
+        /// Constructor of parameters
+        /// </summary>
         public Parameters()
         {
             InputPfmFileName = "";
@@ -31,25 +33,17 @@ class Program
         {
             if(argv.Length != 4 && argv.Length != 5)
             {
-                throw new RuntimeError("Usage: ./ProgramName.exe INPUT_PFM_FILE.pfm FACTOR GAMMA OUTPUT_PNG_FILE OPTIONS");
+                throw new RuntimeError("Usage: ./PhotoGENius.exe INPUT_PFM_FILE.pfm FACTOR GAMMA OUTPUT_PNG_FILE OPTIONS");
             }
-            // Option sta per: se vogliamo che il programma faccia cose particolari
-            // a seconda di un ulteriore pezzo di stringa che l'utente mette, le controlliamo da qui.
-            // l'avevo usato all'inizio e adesso non serve più, ma tenerlo non fa male e forse in futuro ci può tornare utile.
+            
+            // associo i comandi dell'utente ai parametri di funzionamento del programma
             InputPfmFileName = argv[0];
 
             try { Factor =  Convert.ToSingle(argv[1]); }
-            catch //(ValueError) // se la funzione .ToSingle lanciasse un value error in caso di problemi,
-                                 // catch potrebbe catturarla e restituire in cambio un RunTimeError
-            {
-                throw new RuntimeError($"Invalid factor ('{argv[1]}'), it must be a floating-point number.");
-            }
+            catch { throw new RuntimeError($"Invalid factor ('{argv[1]}'), it must be a floating-point number."); }
 
             try { Gamma = Convert.ToSingle(argv[2]); }
-            catch //(ValueError) // idem come sopra
-            {
-                throw new RuntimeError($"Invalid gamma ('{argv[2]}'), it must be a floating-point number.");
-            }
+            catch { throw new RuntimeError($"Invalid gamma ('{argv[2]}'), it must be a floating-point number."); }
 
             OutputPngFileName = argv[3];
             if (argv.Length == 5) Options = argv[4];
@@ -59,61 +53,34 @@ class Program
     //----------------------------------------------------------------------------------------------------------- 
     static void Main(string[] argv)
     {
-        /*
-        var img = new HdrImage(3, 2);
-        
-        // prova con Endianness
-        HdrImage prova;
-        
-        using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_be.pfm"))
-        { prova = img.ReadPFMFile(fileStream); }
-
-        using (Stream outFileStream = File.OpenWrite("file_BB.pfm"))
-        { prova.WritePFMFile(outFileStream, Endianness.BigEndian); }
-        
-        using (Stream outFileStream2 = File.OpenWrite("file_BL.pfm"))
-        { prova.WritePFMFile(outFileStream2, Endianness.LittleEndian); }
-        
-        using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_le.pfm"))
-        { prova = img.ReadPFMFile(fileStream); }
-
-        using (Stream outFileStream = File.OpenWrite("file_LB.pfm"))
-        { prova.WritePFMFile(outFileStream, Endianness.BigEndian); }
-        
-        using (Stream outFileStream2 = File.OpenWrite("file_LL.pfm"))
-        { prova.WritePFMFile(outFileStream2, Endianness.LittleEndian); }
-        //*/
-        
-        // main definitivo, una volta che funzionano readpfm e writepfm
         Parameters parameters = new Parameters();
-        try
+        
+        // riempio i parametri
+        try { parameters.parse_command_line(argv); }
+        catch (RuntimeError)
         {
-            parameters.parse_command_line(argv);
-        }
-        catch(RuntimeError err)
-        {
-            Console.WriteLine("Error: {0} ", err.Message); // funzionerà?
+            Console.WriteLine("Error: invalid number of parameters. Please, follow usage instructions.");
             return;
         }
 
         HdrImage img = new HdrImage(0,0);
         
+        // leggo l'immagine HDR in formato PFM
         using (var inpf = new FileStream(parameters.InputPfmFileName, FileMode.Open, FileAccess.Read))
-        {
-            img = img.ReadPFMFile(inpf);
-        }
+        { img = img.ReadPFMFile(inpf); }
 
         Console.WriteLine($" >> File {parameters.InputPfmFileName} has been read from disk.");
 
+        // converto i dati in formato LDR
         img.NormalizeImage(parameters.Factor);
         img.ClampImage();
 
+        // salvo in file PNG, a seconda delle opzioni
         if (parameters.Options == "")
         {
             try
             {
-                //string outf = "C:/Users/User/RiderProjects/PhotoGENius/prova";
-                string outf = parameters.OutputPngFileName; // meglio così, altrimenti fa confusione tra mac e windows che usano le sbarrette inclinate al contrario
+                string outf = parameters.OutputPngFileName;
                 {
                     img.WriteLdrImage(outf, "PNG", parameters.Gamma);
                 }
@@ -126,6 +93,10 @@ class Program
                     "Error: couldn't write file {0}.", parameters.OutputPngFileName);
             }
         }
-        
+        else if (parameters.Options != "")
+        {
+            Console.WriteLine("Advanced options not yet implemented: please, do not specify.");
+        }
+
     }
 }
