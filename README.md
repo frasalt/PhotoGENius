@@ -39,6 +39,7 @@ Use alpha=0,001 and gamma=2 :
 Full documentation available in the [UserManual](UserManual).
 
 ## Requirements
+PhotoGENius can be used both on Windows and MacOS systems. 
 
 ## Installation
 
