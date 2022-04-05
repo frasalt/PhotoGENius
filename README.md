@@ -11,11 +11,12 @@ In its first release, PhotoGENius can:
 - read a PFM file and convert it to a PNG file, given an output luminosity parameter $\alpha$ and a calibration factor $\gamma$.
 
 ## Examples
-Extremely easy use: put your PFM file in the same directory of the executable and type
+Extremely easy to use: chose your PFM file to convert and type
 ```bash
-.\PhotoGENius.exe my_pfm_file_name.pfm <alpha> <gamma> my_png_gile_name.png
+.\PhotoGENius.exe path_to\my_pfm_file_name.pfm <alpha> <gamma> my_png_gile_name.png
 ```
 ### Easy
+File `memorial.pfm` in the same directory of the executable:
 ```bash
 .\PhotoGENius.exe memorial.pfm 0.5 1 memorial.png
 ```
@@ -23,7 +24,7 @@ Extremely easy use: put your PFM file in the same directory of the executable an
 ### Medium
 ### Advanced
 
-The full documentation is available at (_link_).
+Full documentation available in the [UserManual](UserManual).
 
 ## Requirements
 
