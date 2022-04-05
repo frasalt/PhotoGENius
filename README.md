@@ -16,10 +16,20 @@ Extremely easy to use: chose your PFM file to convert and type
 .\PhotoGENius.exe path_to\my_pfm_file_name.pfm <alpha> <gamma> my_png_gile_name.png
 ```
 ### Easy
-File `memorial.pfm` in the same directory of the executable:
+File `memorial.pfm` in the same directory of the executable.
+
+Use alpha=10 and gamma=0,01 : 
 ```bash
-.\PhotoGENius.exe memorial.pfm 0.5 1 memorial.png
-```
+ .\PhotoGENius.exe memorial.pfm 10 0,01 prova.png
+ ```
+![](prova.png)
+
+Use alpha=0,001 and gamma=2 : 
+```bash
+ .\PhotoGENius.exe memorial.pfm 0,001 2 prova2.png
+ ```
+![](prova2.png)
+
 
 ### Medium
 ### Advanced
