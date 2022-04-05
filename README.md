@@ -29,3 +29,5 @@ The full documentation is available at (_link_).
 ## Installation
 
 ## Licence
+GNU GENERAL PUBLIC LICENSE: Version 3, 29 June 2007.
+Read the whole licence [here](LICENCE).
