@@ -22,13 +22,13 @@ Use alpha=10 and gamma=0,01 :
 ```bash
  .\PhotoGENius.exe memorial.pfm 10 0,01 prova.png
  ```
-![](prova.png)
+![](img/prova.png)
 
 Use alpha=0,001 and gamma=2 : 
 ```bash
  .\PhotoGENius.exe memorial.pfm 0,001 2 prova2.png
  ```
-![](prova2.png)
+![](img/prova2.png)
 
 
 ### Medium
