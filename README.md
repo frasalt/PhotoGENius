@@ -31,8 +31,10 @@ Use alpha=0,001 and gamma=2 :
 ![](img/prova2.png)
 
 
+<!---
 ### Medium
 ### Advanced
+--->
 
 Full documentation available in the [UserManual](UserManual).
 
