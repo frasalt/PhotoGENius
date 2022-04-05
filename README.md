@@ -8,7 +8,7 @@
 ## Features
 
 In its first release, PhotoGENius can:
-- read a PFM file and convert it to a PNG file, given an output luminosity parameter <alpha> and a calibration factor <gamma>.
+- read a PFM file and convert it to a PNG file, given an output luminosity parameter `alpha` and a calibration factor `gamma`.
 
 ## Examples
 Extremely easy to use: chose your PFM file to convert and type
