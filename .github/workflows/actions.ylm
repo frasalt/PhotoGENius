@@ -1,7 +1,13 @@
+# full documentation at:
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+#
+# --- what's the name of the workflow?
 name: PGENTests
 
+# --- when the workflow starts running?
 on: [push]
 
+# --- what does the workflow do?
 jobs:
   tests:
     runs-on: ${{ matrix.os }}
