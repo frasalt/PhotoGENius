@@ -100,6 +100,21 @@ namespace PGENLib
             };
             return t;
         }
+        
+        /// <summary>
+        ///  Restituisce il vettore diviso per uno scalare 
+        /// </summary>
+        public static Vec operator /(Vec v, float s)
+        {
+            var t = new Vec
+            {
+                x = v.x / s,
+                y = v.y / s,
+                z = v.z / s
+            };
+            return t;
+        }
+
     
         /// <summary>
         ///  Restituisce -v, dato un vettore v
@@ -158,6 +173,20 @@ namespace PGENLib
                 x = this.x/Norm(this),
                 y = this.y/Norm(this),
                 z = this.z/Norm(this)
+            };
+            return t;
+        }
+        
+        /// <summary>
+        ///  Trasforma un vettore in una normale
+        /// </summary>
+        public Normal VecToNorm()
+        {
+            var t = new Normal
+            {
+                x = this.x,
+                y = this.y,
+                z = this.z
             };
             return t;
         }
@@ -287,6 +316,19 @@ namespace PGENLib
                 z = this.z
             };
             return q;
+        }
+        /// <summary>
+        ///  Restituisce il punto diviso per uno scalare 
+        /// </summary>
+        public static Point operator /(Point v, float s)
+        {
+            var t = new Point
+            {
+                x = v.x / s,
+                y = v.y / s,
+                z = v.z / s
+            };
+            return t;
         }
     }
     //==================================================================================================================
@@ -477,6 +519,9 @@ namespace PGENLib
         }
         
         //METODI========================================================================================================
+        /// <summary>
+        /// Confronta due matrici e restituisce true se coincidono, false altrimenti; 
+        /// </summary>
         public static bool are_matrix_close(Matrix4x4 a, Matrix4x4 b)
         {
             var epsilon = 1E-5;
@@ -495,13 +540,91 @@ namespace PGENLib
             }
                                                           
         }
+        /// <summary>
+        /// Verifica che i parametri di una trasformazione siano trasformazione e relativa inversa. 
+        /// </summary>
         public bool IsConsistent()
         {
             return are_matrix_close(m*invm, Matrix4x4.Identity);
         }
         
+        /// <summary>
+        /// Restituisce l'inverso di una trasformazione. 
+        /// </summary>
+        public Transformation Inverse()
+        {
+            Transformation tr = new Transformation(this.invm, this.m);
+            return tr;
+        }
 
-
-
+        /// <summary>
+        /// Prodotto tra Transformation, restituisce Transformation
+        /// </summary>
+        public static Transformation operator *(Transformation a, Transformation b)
+        {
+            Transformation tr = new Transformation(a.m*b.m, b.invm*a.invm);
+            return tr;
+        }
+        
+        /// <summary>
+        /// Prodotto con Point, restiruisce Point
+        /// </summary>
+        public static Point operator *(Transformation a, Point p)
+        {
+            Point q = new Point(p.x*a.m.M11 + p.y*a.m.M12 + p.z*a.m.M13 + a.m.M14, 
+                                p.x*a.m.M21 + p.y*a.m.M22 + p.z*a.m.M23 + a.m.M24, 
+                                p.x*a.m.M31 + p.y*a.m.M32 + p.z*a.m.M33 + a.m.M34);
+            var w = p.x * a.m.M31 + p.y * a.m.M32 + p.z * a.m.M33 + a.m.M44;
+            if (Math.Abs(w - 1.0) < 1E-5)
+            {
+                return q;
+            }
+            else
+            {
+                return q/w;
+            }
+        }
+        
+        /// <summary>
+        /// Prodotto con Vec, restiruisce Vec
+        /// </summary>
+        public static Vec operator *(Transformation a, Vec v)
+        {
+            Vec q = new Vec(v.x*a.m.M11 + v.y*a.m.M12 + v.z*a.m.M13, 
+                            v.x*a.m.M21 + v.y*a.m.M22 + v.z*a.m.M23, 
+                            v.x*a.m.M31 + v.y*a.m.M32 + v.z*a.m.M33);
+            return q;
+        }
+        
+        /// <summary>
+        /// Prodotto con Normal, restiruisce Normal
+        /// </summary>
+        public static Normal operator *(Transformation a, Normal n)
+        {
+            Normal q = new Normal(n.x*a.invm.M11 + n.y*a.invm.M21 + n.z*a.invm.M31, 
+                                  n.x*a.invm.M12 + n.y*a.invm.M22 + n.z*a.invm.M32, 
+                                  n.x*a.invm.M13 + n.y*a.invm.M23 + n.z*a.invm.M33);
+            return q;
+        }
+        
+        /// <summary>
+        /// Metodo che restituisce una matrice di traslazione
+        /// </summary>
+        public Transformation Traslation(Vec v)
+        {
+            Transformation trasl = new Transformation();
+            trasl.m.M14 = v.x;
+            trasl.m.M24 = v.y;
+            trasl.m.M34 = v.z;
+            trasl.invm.M14 = -v.x;
+            trasl.invm.M24 = -v.y;
+            trasl.invm.M34 = -v.z;
+            return trasl;
+        }
+        
     }
+    
+
+    
+
 }
