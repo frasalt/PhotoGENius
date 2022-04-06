@@ -434,7 +434,7 @@ namespace PGENLib
     //==================================================================================================================
     //Transformation
     //==================================================================================================================
-    /*public struct Transformation
+    public struct Transformation
     {
         public Matrix4x4 m;
         public Matrix4x4 invm;
@@ -499,7 +499,7 @@ namespace PGENLib
         {
             return are_matrix_close(m*invm, Matrix4x4.Identity);
         }
-        */
+        
 
 
 
