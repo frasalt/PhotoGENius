@@ -32,7 +32,7 @@ namespace PGENLib.Tests
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
             a.SetR(4.0f);
-            Assert.True(Math.Abs(a.GetR() - 4.0f) < 1E-5); // si può fare meglio senza usare Get?
+            Assert.True(Math.Abs(a.GetR() - 4.0f) < 1E-5);
         }
         
         [Fact]
@@ -40,7 +40,7 @@ namespace PGENLib.Tests
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
             a.SetG(4.0f);
-            Assert.True(Math.Abs(a.GetG() - 4.0f) < 1E-5); // si può fare meglio senza usare Get?
+            Assert.True(Math.Abs(a.GetG() - 4.0f) < 1E-5);
         }
         
         [Fact]
@@ -48,7 +48,7 @@ namespace PGENLib.Tests
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
             a.SetB(4.0f);
-            Assert.True(Math.Abs(a.GetB() - 4.0f) < 1E-5); // si può fare meglio senza usare Get?
+            Assert.True(Math.Abs(a.GetB() - 4.0f) < 1E-5);
         }
         
         [Fact]
@@ -65,7 +65,6 @@ namespace PGENLib.Tests
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
             Color b = new Color(5.0f, 6.0f, 7.0f);
-            // C# convention: *first* the expected value, *then* the test value
             Assert.True(Color.are_close(new Color(-4.0f, -4.0f, -4.0f), a - b));
         }
 
@@ -74,7 +73,6 @@ namespace PGENLib.Tests
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
             Color b = new Color(5.0f, 6.0f, 7.0f);
-            // C# convention: *first* the expected value, *then* the test value
             Assert.True(Color.are_close(new Color(5.0f, 12.0f, 21.0f), a * b));
         }
         
@@ -83,17 +81,15 @@ namespace PGENLib.Tests
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
             float b = 2.0f;
-            // C# convention: *first* the expected value, *then* the test value
             Assert.True(Color.are_close(new Color(2.0f, 4.0f, 6.0f), a * b));
         }
         [Fact]
         public void test_areclose()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
-            // C# convention: *first* the expected value, *then* the test value
             Assert.True(Color.are_close(new Color(1.0f, 2.0f, 3.0f), a));
         }
-        //NON SONO RIUSCITA A FARE IL TEST MA NON CAPISCO SE CI SERVE O MENO LA IS_CLOSE O è LA NOSTRA ARE_CLOSE
+        
         
         [Fact]
         public void test_luminosity()
@@ -104,14 +100,5 @@ namespace PGENLib.Tests
 
         }
         
-        /*
-        public void test_ccproduct()
-        {
-            Color a = new Color(1.0f, 2.0f, 3.0f);
-            Color b = new Color(5.0f, 6.0f, 7.0f);
-            // C# convention: *first* the expected value, *then* the test value
-            Assert.True(Color.are_close(new Color(5.0f, 12.0f, 21.0f), a * b));
-        }
-        */
     }
 }
