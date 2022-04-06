@@ -500,10 +500,7 @@ namespace PGENLib
                               e,f,g,h,
                               i,l,s,n,
                               o,p,q,r);
-            invm = new Matrix4x4(1,0,0,0, 
-                                 0,1,0,0,
-                                 0,0,1,0,
-                                 0,0,0,1);
+            bool consistency = Matrix4x4.Invert(m, out invm);
         }
         
         public Transformation(Matrix4x4 a, Matrix4x4 inva)
@@ -522,7 +519,7 @@ namespace PGENLib
         /// <summary>
         /// Confronta due matrici e restituisce true se coincidono, false altrimenti; 
         /// </summary>
-        public static bool are_matrix_close(Matrix4x4 a, Matrix4x4 b)
+        public static bool are_close(Matrix4x4 a, Matrix4x4 b)
         {
             var epsilon = 1E-5;
             if (Math.Abs(a.M11 - b.M11) < epsilon & Math.Abs(a.M12 - b.M12) < epsilon &
@@ -540,12 +537,30 @@ namespace PGENLib
             }
                                                           
         }
+        
+        /// <summary>
+        /// Confronta due matrici e restituisce true se coincidono, false altrimenti; 
+        /// </summary>
+        public static bool are_close(Transformation a, Transformation b)
+        {
+            var epsilon = 1E-5;
+            if (are_close(a.m, b.m) & are_close(a.invm, b.invm))
+            {
+                return true; 
+            }
+            else
+            {
+                return false;
+            }
+                                                          
+        }
+        
         /// <summary>
         /// Verifica che i parametri di una trasformazione siano trasformazione e relativa inversa. 
         /// </summary>
         public bool IsConsistent()
         {
-            return are_matrix_close(m*invm, Matrix4x4.Identity);
+            return are_close(m*invm, Matrix4x4.Identity);
         }
         
         /// <summary>
@@ -574,7 +589,7 @@ namespace PGENLib
             Point q = new Point(p.x*a.m.M11 + p.y*a.m.M12 + p.z*a.m.M13 + a.m.M14, 
                                 p.x*a.m.M21 + p.y*a.m.M22 + p.z*a.m.M23 + a.m.M24, 
                                 p.x*a.m.M31 + p.y*a.m.M32 + p.z*a.m.M33 + a.m.M34);
-            var w = p.x * a.m.M31 + p.y * a.m.M32 + p.z * a.m.M33 + a.m.M44;
+            var w = p.x * a.m.M41 + p.y * a.m.M42 + p.z * a.m.M43 + a.m.M44;
             if (Math.Abs(w - 1.0) < 1E-5)
             {
                 return q;
@@ -606,11 +621,25 @@ namespace PGENLib
                                   n.x*a.invm.M13 + n.y*a.invm.M23 + n.z*a.invm.M33);
             return q;
         }
-        
         /// <summary>
         /// Metodo che restituisce una matrice di traslazione
         /// </summary>
-        public Transformation Traslation(Vec v)
+        public static Transformation Traslation(Vec v)
+        {
+            Transformation trasl = new Transformation();
+            trasl.m.M14 = v.x;
+            trasl.m.M24 = v.y;
+            trasl.m.M34 = v.z;
+            trasl.invm.M14 = -v.x;
+            trasl.invm.M24 = -v.y;
+            trasl.invm.M34 = -v.z;
+            return trasl;
+        }
+        
+        /// <summary>
+        /// Metodo che restituisce una matrice di rotazione
+        /// </summary>
+        public static Transformation Rotation(Vec v)
         {
             Transformation trasl = new Transformation();
             trasl.m.M14 = v.x;
@@ -623,6 +652,7 @@ namespace PGENLib
         }
         
     }
+    
     
 
     
