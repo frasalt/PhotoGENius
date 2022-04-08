@@ -7,7 +7,7 @@ namespace PGENLib
         public float b;
 
         /// <summary>
-        /// Costruttore vuoto
+        /// Costruttore vuoto.
         /// </summary>
         public Color()
         {
@@ -17,7 +17,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Costruttore non vuoto, chiede tre float per RGB
+        /// Costruttore che chiede tre float per RGB.
         /// </summary>
         public Color(float r, float g, float b)
         {
@@ -27,7 +27,7 @@ namespace PGENLib
         }
 
 
-        //Metodi-------------------------------------
+        //========================= METODI =====================================================================
 
         public void SetR(float x)
         {
@@ -57,7 +57,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Restituisce i valori di r,g,b in forma di stringa
+        /// Restituisce i valori di r,g,b in forma di stringa.
         /// </summary>
         public override string ToString()
         {
@@ -65,7 +65,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Restituisce il colore somma (sulle varie componenti) 
+        ///  Restituisce il colore somma (sulle varie componenti). 
         /// </summary>
         public static Color operator +(Color col1, Color col2)
         {
@@ -77,7 +77,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Restituisce il colore differenza (sulle varie componenti) 
+        ///  Restituisce il colore differenza (sulle varie componenti). 
         /// </summary>
         public static Color operator -(Color col1, Color col2)
         {
@@ -89,7 +89,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Restituisce il colore moltiplicato per uno scalare (sulle varie componenti) 
+        ///  Restituisce il colore moltiplicato per uno scalare (sulle varie componenti).
         /// </summary>
         public static Color operator *(Color col1, float s)
         {
@@ -101,7 +101,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Restituisce il prodotto tra due colori (sulle varie componenti) 
+        ///  Restituisce il prodotto tra due colori (sulle varie componenti).
         /// </summary>
         public static Color operator *(Color col1, Color col2)
         {
@@ -112,6 +112,9 @@ namespace PGENLib
             return col3;
         }
 
+        /// <summary>
+        ///  Controlla se due colori sono uguali.
+        /// </summary>
         public static bool are_close(Color p, Color q)
         {
             double epsilon = 1E-5;
@@ -126,7 +129,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Calcola la luminosità di un colore (formula di Shirley & Morley)
+        ///  Calcola la luminosità di un colore (formula di Shirley & Morley).
         /// </summary>
         public float Lum()
         {
