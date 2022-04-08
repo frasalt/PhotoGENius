@@ -2,7 +2,7 @@
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
 #
 # --- what's the name of the workflow?
-name: PGENTests
+name: PGENLib.test
 
 # --- when the workflow starts running?
 on: [push]
