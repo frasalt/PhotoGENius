@@ -10,7 +10,7 @@ on: [push]
 # --- what does the workflow do?
 jobs:
   # it executes tests.
-  tests:
+  tests: # << this is the name of the job
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -20,7 +20,7 @@ jobs:
     # ogni step ha un nome e richiede di usare qualche pacchetto o altre robe
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3 # ziotom usa v2, ma boh, a noi non funziona ugualmente
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
@@ -30,8 +30,8 @@ jobs:
     #- name: Install dependencies
     #  run: dotnet install test
     #  
-    #- name: Build
-    #  run: dotnet build --no-restore
+    - name: Build
+      run: dotnet build #--no-restore
     #  
-    - name: Test
-      run: dotnet test #--no-build --verbosity normal
+    #- name: Test
+    #  run: dotnet test #--no-build --verbosity normal
