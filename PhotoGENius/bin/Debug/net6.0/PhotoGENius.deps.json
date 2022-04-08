@@ -715,7 +715,7 @@
           "xunit.assert": "2.4.1"
         },
         "runtime": {
-          "PGENLib.dll": {}
+          "PGENlib.dll": {}
         }
       }
     }
