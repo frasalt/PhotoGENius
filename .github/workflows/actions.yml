@@ -15,23 +15,17 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest] # [windows-latest, ubuntu-latest, macos-latest]
-        dotnet: [6.0.x]
+        dotnet: [6.0.x, 5.0.x]
         
     # ogni step ha un nome e richiede di usare qualche pacchetto o altre robe
     steps:
     - name: Checkout
-      uses: actions/checkout@v3 # ziotom usa v2, ma boh, a noi non funziona ugualmente
+      uses: actions/checkout@v3 # ziotom usa v2, ma boh, a noi funziona ugualmente
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: ${{ matrix.dotnet }}
-        
-    #- name: Install dependencies
-    #  run: dotnet install test
-    #  
+     
     - name: Build
-      run: dotnet build #--no-restore # questo comando fa anche i test, mi sa.
-    #  
-    #- name: Test # eseguo i test, esattamente come da terminale
-    #  run: dotnet test #--no-build --verbosity normal
+      run: dotnet build 
