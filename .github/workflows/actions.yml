@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest] # [windows-latest, ubuntu-latest, macos-latest]
-        dotnet: [6.0.x, 5.0.x]
+        dotnet: [6.0.x]
         
     # ogni step ha un nome e richiede di usare qualche pacchetto o altre robe
     steps:
