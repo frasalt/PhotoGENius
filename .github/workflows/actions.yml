@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest] #, ubuntu-latest, macos-latest]
+        os: [macos-latest] #[windows-latest, ubuntu-latest, macos-latest]
         dotnet: [6.0.x]
         
     # ogni step ha un nome e richiede di usare qualche pacchetto o altre robe
@@ -31,7 +31,7 @@ jobs:
     #  run: dotnet install test
     #  
     - name: Build
-      run: dotnet build #--no-restore
+      run: dotnet build #--no-restore # questo comando fa anche i test, mi sa.
     #  
-    #- name: Test
+    #- name: Test # eseguo i test, esattamente come da terminale
     #  run: dotnet test #--no-build --verbosity normal
