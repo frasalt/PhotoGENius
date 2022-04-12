@@ -37,13 +37,11 @@ namespace PGENLib
 
     public class HdrImage
     {
-        // attributi dell'immagine
         public int Width;
         public int Height;
-        public Color[] Pixels; // Vettore di tipo Color che contiene tutti i pixel
-
+        public Color[] Pixels; // Color type vector that contains all the pixels
         /// <summary>
-        /// Costruttore, vuoto o con pixel.
+        /// Constructor, empty or with pixels.
         /// </summary>
         public HdrImage(int WidthConstr, int HeightConstr, Color[]? pixels = null)
         {
@@ -58,7 +56,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Verifica che date coordinate abbiano valori compresi tra 0 e il numero di righe/colonne.
+        /// Check that given coordinates have values between 0 and the number of rows / columns.
         /// </summary>
         public bool ValidCoord(int x, int y)
         {
@@ -66,7 +64,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Data una coppia di coordinate, restituisce la posizione del pixel nel vettore di memorizzazione.
+        /// Given a pair of coordinates, it returns the position of the pixel in the storage vector.
         /// </summary>
         private int PixelOffset(int x, int y)
         {
@@ -75,7 +73,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Imposta il colore di un pixel di date coordinate.
+        /// Sets the color of a pixel of given coordinates.
         /// </summary>
         public void SetPixel(int x, int y, Color newCol)
         {
@@ -84,7 +82,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Data una coppia di coordinate, restituisce il colore del pixel corrispondente.
+        /// Given a pair of coordinates, it returns the color of the corresponding pixel.
         /// </summary>
         public Color GetPixel(int x, int y)
         {
@@ -92,10 +90,10 @@ namespace PGENLib
             return this.Pixels[this.PixelOffset(x, y)];
         }
 
-        //=========================== FUNZIONI PER LA LETTURA DA FILE ======================================
+        //=========================== FUNCTIONS FOR READING FROM FILE ======================================
 
         /// <summary>
-        /// Funzione che legge un file PFM e scrive il contenuto in una nuova immagine HDR.
+        /// Function that reads a PFM file and writes the content to a new HDR image.
         /// </summary>
 
         public HdrImage ReadPFMFile(Stream input)
@@ -132,7 +130,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Funzione che legge un byte e lo trasforma in un carattere ASCII.
+        /// Function that reads a byte and transforms it into an ASCII character.
         /// </summary>
 
         public string ReadLine(Stream input)
@@ -153,7 +151,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Legge una sequenza di 32 bit da uno stream e la converte in un numero floating-point.
+        /// Reads a 32-bit sequence from a stream and converts it to a floating-point number.
         /// </summary>
 
         public static float ReadFloat(Stream input, Endianness end)
@@ -173,7 +171,7 @@ namespace PGENLib
                 //throw new InvalidPfmFileFormat("Unable to read float!");
             }
 
-            // Chiedo se il sistema operativo è allineato con l'endianness, altriemnti ribalto i byte.
+            // I ask if the operating system is aligned with endianness, otherwise I overturn the bytes.
             if (end == Endianness.BigEndian && BitConverter.IsLittleEndian)
             {
                 Array.Reverse(bytes);
@@ -188,7 +186,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Funzione di lettura delle dimensioni delle immagini.
+        /// Image size reading function.
         /// </summary>
         public int[] ParseImgSize(string str)
         {
@@ -208,7 +206,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Funzione che legge l'endianness e restituisce se è little o big.
+        ///  Function that reads the endianness and returns if it is little or big.
         /// </summary>
         public int ParseEndianness(string input)
         {
@@ -229,10 +227,10 @@ namespace PGENLib
         }
         
 
-        //=========================== FUNZIONI PER LA SCRITTURA SU FILE ====================================
+        //=========================== FUNCTIONS FOR WRITING TO FILE ====================================
 
         /// <summary>
-        /// Funzione che scrive un file PFM a partire da un'immagine HDR.
+        /// Function that writes a PFM file from an HDR image.
         /// </summary>
 
         public void WritePFMFile(Stream output, Endianness endian)
@@ -243,7 +241,7 @@ namespace PGENLib
             if (endian == Endianness.LittleEndian) end = -1.0;
             else end = 1.0;
 
-            // Converte l' header in una sequenza di byte.
+            // Convert the header to a sequence of bytes.
             var header = Encoding.ASCII.GetBytes($"PF\n{Width} {Height}\n{end}.0\n");
             output.Write(header);
             
@@ -260,7 +258,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Metodo di scrittura di un numero floating-point a 32 bit in binario.
+        /// Method of writing a 32-bit floating-point number in binary.
         /// </summary>
 
         private static void WriteFloat(Stream outputStream, float value, Endianness end)
@@ -279,9 +277,9 @@ namespace PGENLib
             outputStream.Write(seq, 0, seq.Length);
         }
 
-        //=========================== LUMINOSITA' DEI PIXEL==================================================
+        //=========================== LUMINOSITY OF THE PIXELS ==============================================
         /// <summary>
-        /// Restituisce la luminosità media dell'immagine.
+        /// Returns the average brightness of the image.
         /// </summary>
         public float AverageLum(double delta = 1e-10)
         {
@@ -301,7 +299,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Calcola la luminosità media di un’immagine secondo la formula axRi/<l>.
+        /// Calculate the average brightness of an image according to the axRi / <l> formula.
         /// </summary>
         public void NormalizeImage(float factor, float? luminosity = null)
         {
@@ -313,7 +311,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Mappa un float da [0,+inf) a [0,1].
+        /// Maps a float from [0, + inf) to [0,1].
         /// </summary>
         public float ClampFloat(float x)
         {
@@ -321,7 +319,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Applica la correzione per i punti luminosi.
+        /// Apply correction for bright spots.
         /// </summary>
         public void ClampImage()
         {
@@ -334,7 +332,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Converte un'immagine HDR in LDR.
+        /// Convert an HDR image to LDR.
         /// </summary>
         
         public void WriteLdrImage(String output, String format, float gamma = 1.0f)
