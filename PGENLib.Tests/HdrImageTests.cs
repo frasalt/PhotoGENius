@@ -126,7 +126,7 @@ namespace PGENLib.Tests
             Assert.True(end == -1);
         }
         
-        /*
+        
         [Fact]
         public void test_ReadLine()
         {
@@ -136,9 +136,14 @@ namespace PGENLib.Tests
             string c;
             HdrImage img = new HdrImage(1,1);
             MemoryStream input = new MemoryStream();
+
+            //input.Write(System.Text.Encoding.ASCII.GetBytes("Hello\nworld!"));
+            
             using (StreamWriter writer = new StreamWriter(input))
             {
                 writer.Write("Hello\nworld!");
+                writer.Flush();
+                input.Position = 0;
                 a = img.ReadLine(input);
                 b = img.ReadLine(input);
                 c = img.ReadLine(input);
