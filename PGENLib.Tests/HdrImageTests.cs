@@ -73,7 +73,7 @@ namespace PGENLib.Tests
             Assert.True(Color.are_close(new Color(7.0f, 8.0f, 9.0f), img.GetPixel(0,1)));
         }
         
-        /*//
+        
         [Fact]
         public void test_WritePFM()
         {
@@ -93,15 +93,18 @@ namespace PGENLib.Tests
             img.SetPixel(2, 1, f);
             
             // scrivo l'immagine in uno stream in BE
-            Stream str = new MemoryStream();
+            MemoryStream str = new MemoryStream();
             img.WritePFMFile(str, Endianness.BigEndian);
-            MemoryStream ms = new MemoryStream();
-            str.CopyTo(ms);
+            
+            byte[] localvec = str.ToArray();
+            byte[] refer = str.ToArray();
             
             // verifico l'uguaglianza
-            Assert.True(ms.ToArray() == byteRef_BE);
+            for (int i = 0; i < 83; i++)
+            {
+                Assert.True(localvec[i] == refer[i]);
+            }
         }
-        //*/
         
         [Fact]
         public void test_ParseImgSize()
