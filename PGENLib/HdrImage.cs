@@ -137,11 +137,13 @@ namespace PGENLib
             string str = "";
             byte[] mybyte = new byte[1];
 
-            // provo ad aggiungere la seconda condizione, che dovrebbeo corrispondere a che lo stream è finito
-            while (Encoding.ASCII.GetString(mybyte) != "\n" && Encoding.ASCII.GetString(mybyte) != "")
+            // provo ad aggiungere la seconda condizione, che dovrebbeo corrispondere a che lo stream è finito (?)
+            //while (Encoding.ASCII.GetString(mybyte) != "\n" && Encoding.ASCII.GetString(mybyte) != "")
+            while (Encoding.ASCII.GetString(mybyte) != "\n")
             {
                 mybyte[0] = (byte) input.ReadByte();
-                if (Encoding.ASCII.GetString(mybyte) != "\n" && Encoding.ASCII.GetString(mybyte) != "")
+                //if (Encoding.ASCII.GetString(mybyte) != "\n" && Encoding.ASCII.GetString(mybyte) != "")
+                if (Encoding.ASCII.GetString(mybyte) != "\n")
                 {
                     str += Encoding.ASCII.GetString(mybyte);
                 }

@@ -139,7 +139,7 @@ namespace PGENLib.Tests
             
             using (StreamWriter writer = new StreamWriter(input))
             {
-                writer.Write("Hello\nworld!");
+                writer.Write("Hello\nworld!\n\n"); // ATTENZIONE QUI: la funzione andrebbe corretta per riconoscere la fine di uno stream :(
                 writer.Flush();
                 input.Position = 0;
                 a = img.ReadLine(input);
@@ -151,7 +151,6 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
-        //*/
         
         /*
         // Test alternativo con la funzione readline disponibile per gli oggetti di tipo streamreader

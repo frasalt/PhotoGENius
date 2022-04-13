@@ -44,7 +44,7 @@
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7950575f_002Dd904_002D4c10_002Db6b8_002D3c309a9cc08a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="test_ReadLine #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.HdrImageTests.test_ReadLine&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.HdrImageTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7960607f_002D0fdd_002D4d29_002D93d5_002D52bad686560e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="test_ReadLine #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
