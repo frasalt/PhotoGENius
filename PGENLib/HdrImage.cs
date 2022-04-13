@@ -133,7 +133,7 @@ namespace PGENLib
         /// Function that reads a byte and transforms it into an ASCII character.
         /// </summary>
         
-        public string ReadLine(Stream input)
+        public string ReadLine(Stream input) //DA SISTEMARE!
         {
             string str = "";
             byte[] mybyte = new byte[1];
