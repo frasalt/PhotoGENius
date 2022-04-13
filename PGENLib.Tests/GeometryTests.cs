@@ -8,6 +8,9 @@ namespace PGENLib.Tests
 {
     public class GeometryTests
     {
+        private readonly Vec Vx = new Vec(1.0f, 0.0f, 0.0f);
+        private readonly Vec Vy = new Vec(0.0f, 1.0f, 0.0f);
+        private readonly Vec Vz = new Vec(0.0f, 0.0f, 1.0f);
         [Fact]
         public void test_are_vector_close()
         {
@@ -73,7 +76,7 @@ namespace PGENLib.Tests
             Assert.True(Normal.are_close(new Normal(2.0f, 4.0f, 6.0f), a * 2));
             Assert.True(Normal.are_close(new Normal(-1.0f, -2.0f, -3.0f), a.Neg()));
             Assert.True(Math.Abs(Normal.VecDotNormal(v,a) - 13.0f) < 1E-5);
-            Assert.True(Normal.are_close(new Normal(5.0f,-1.0f,-1.0f), Normal.VecCrossNormal(v,a)));
+            Assert.True(Vec.are_close(new Vec(5.0f,-1.0f,-1.0f), Normal.VecCrossNormal(v,a)));
             Assert.True(Normal.are_close(new Normal(-2.0f,4.0f,-2.0f), Normal.NormalCrossNormal(a,b)));
             Assert.True(Math.Abs(Normal.Norm(a)*Normal.Norm(a) - 14.0f) < 1E-5);
             Assert.True(Math.Abs(Normal.SquaredNorm(a) - 14.0f) < 1E-5);
@@ -200,6 +203,18 @@ namespace PGENLib.Tests
             Assert.True(tr2.IsConsistent());
             Assert.True(tr2.IsConsistent());
             Assert.True(Transformation.are_close(expected, prod));
+        }
+        
+        [Fact]
+        public void test_rotations()
+        {
+            Assert.True(Transformation.RotationX(0.1f).IsConsistent());
+            Assert.True(Transformation.RotationY(0.1f).IsConsistent());
+            Assert.True(Transformation.RotationZ(0.1f).IsConsistent()); 
+            Assert.True(Vec.are_close(Transformation.RotationX(90.0f)*Vy, Vz) );
+            Assert.True(Vec.are_close(Transformation.RotationY(90.0f)*Vz, Vx) );
+            Assert.True(Vec.are_close(Transformation.RotationZ(90.0f)*Vx, Vy) );
+            
         }
         
         

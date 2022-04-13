@@ -6,6 +6,10 @@ namespace PGENLib
     //==================================================================================================================
     //Vec
     //==================================================================================================================
+    /// <summary>
+    /// A 3D vector.
+    /// This class has three floating-point fields: `x`, `y`, and `z`.
+    /// </summary>
     public struct Vec
     {
         public float x;
@@ -13,7 +17,7 @@ namespace PGENLib
         public float z;
 
         /// <summary>
-        /// Costruttore vuoto
+        /// Empty constructor.
         /// </summary>
         public Vec()
         {
@@ -23,7 +27,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Costruttore con parametri float 
+        /// Constructor with float parameters.
         /// </summary>
         public Vec(float x, float y, float z)
         {
@@ -34,7 +38,7 @@ namespace PGENLib
         
         //METODI========================================================================================================
         /// <summary>
-        /// Restituisce i valori di x,y,z in forma di stringa
+        /// Returns x, y, z as a string.
         /// </summary>
         public override string ToString()
         {
@@ -42,7 +46,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Confronta due vettori e restituisce true se coincidono, false altrimenti; 
+        /// Check weather two vectors Vec are equals. 
         /// </summary>
         public static bool are_close(Vec p, Vec q)
         {
@@ -60,7 +64,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Restituisce il vettore somma  
+        ///  Returns the sum of two Vec.  
         /// </summary>
         public static Vec operator +(Vec v, Vec w)
         {
@@ -74,7 +78,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Restituisce il vettore differenza 
+        ///  Returns the difference between two Vec. 
         /// </summary>
         public static Vec operator -(Vec v, Vec w)
         {
@@ -88,7 +92,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Restituisce il vettore moltiplicato per uno scalare 
+        ///  Returns the product between a vector and a scalar.
         /// </summary>
         public static Vec operator *(Vec v, float s)
         {
@@ -102,7 +106,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Restituisce il vettore diviso per uno scalare 
+        ///  Returns the division between a Vec and a float, which is a Vec.
         /// </summary>
         public static Vec operator /(Vec v, float s)
         {
@@ -117,7 +121,7 @@ namespace PGENLib
 
     
         /// <summary>
-        ///  Restituisce -v, dato un vettore v
+        ///  Return the reversed vector.
         /// </summary>
         public Vec Neg()
         {
@@ -126,7 +130,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Restituisce il prodotto scalare 
+        ///  Returns the dot product between two vectors.
         /// </summary>
         public static float DotProd(Vec v, Vec w)
         {
@@ -134,7 +138,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Restituisce il prodotto vettoriale 
+        ///  Returns the dot product between two vectors.
         /// </summary>
         public static Vec CrossProduct(Vec v, Vec w)
         {
@@ -148,7 +152,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Restituisce la norma al quadrato di un vettore 
+        ///  Return the squared norm (Euclidean length) of a vector. 
         /// </summary>
         public static float SquaredNorm(Vec v)
         {
@@ -156,7 +160,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Restituisce la norma di un vettore 
+        ///  Return the norm (Euclidean length) of a vector. 
         /// </summary>
         public static float Norm(Vec v)
         {
@@ -164,7 +168,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Restituisce il vettore normalizzato 
+        ///  Normalize the vector, so that it's norm is equal to 1.
         /// </summary>
         public Vec NormalizeVec()
         {
@@ -178,7 +182,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Trasforma un vettore in una normale
+        ///  Turns a vector in a normal, and returns the normal.
         /// </summary>
         public Normal VecToNorm()
         {
@@ -203,7 +207,7 @@ namespace PGENLib
         public float z;
 
         /// <summary>
-        /// Costruttore vuoto
+        /// Empty constructor.
         /// </summary>
         public Point()
         {
@@ -213,7 +217,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Costruttore con parametri float 
+        /// Constructor with parameter. 
         /// </summary>
         public Point(float x, float y, float z)
         {
@@ -224,7 +228,7 @@ namespace PGENLib
         
         //METODI========================================================================================================
         /// <summary>
-        /// Restituisce i valori di x,y,z in forma di stringa
+        /// Returns x, y, z as a string.
         /// </summary>
         public override string ToString()
         {
@@ -232,7 +236,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Confronta due vettori e restituisce true se coincidono, false altrimenti; 
+        /// Check weather two vectors are equals.  
         /// </summary>
         public static bool are_close(Point p, Point q)
         {
@@ -250,7 +254,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Somma tra punto e vettore, restituisce punto
+        ///  Return the sum between a point and a vector, which is a point.
         /// </summary>
         public static Point operator +(Point p, Vec v)
         {
@@ -264,7 +268,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Prodotto punto*scalare, restituisce punto
+        ///  Returns the product between a point and a scalar.
         /// </summary>
         public static Point operator *(Point p, float a)
         {
@@ -277,7 +281,7 @@ namespace PGENLib
             return q;
         }
         /// <summary>
-        ///  Restituisce il vettore differenza tra due punti 
+        ///  Returns the difference between two points, as a vector.
         /// </summary>
         public static Vec operator -(Point p, Point q)
         {
@@ -291,7 +295,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Differenza tra punto e vettore, restituisce un punto 
+        ///  Return the difference between a point and a vector, as point.
         /// </summary>
         public static Point operator -(Point p, Vec v)
         {
@@ -305,7 +309,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Restituisce il vettore moltiplicato per uno scalare 
+        ///  Turns a point into a vector and returns it.
         /// </summary>
         public Vec PointToVec()
         {
@@ -318,7 +322,7 @@ namespace PGENLib
             return q;
         }
         /// <summary>
-        ///  Restituisce il punto diviso per uno scalare 
+        ///  Returns the division between a point and a scalar. 
         /// </summary>
         public static Point operator /(Point v, float s)
         {
@@ -334,6 +338,10 @@ namespace PGENLib
     //==================================================================================================================
     //Normal
     //==================================================================================================================
+    /// <summary>
+    /// A normal vector in 3D space.
+    /// This struct has three floating-point fields: `x`, `y`, and `z`.
+    /// </summary>
     public struct Normal
     {
         public float x;
@@ -341,7 +349,7 @@ namespace PGENLib
         public float z;
 
         /// <summary>
-        /// Costruttore vuoto
+        /// Empty constructor.
         /// </summary>
         public Normal()
         {
@@ -351,7 +359,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Costruttore con parametri float 
+        /// Constructor with float parameters. 
         /// </summary>
         public Normal(float x, float y, float z)
         {
@@ -361,7 +369,7 @@ namespace PGENLib
         }
         //METODI========================================================================================================
         /// <summary>
-        /// Restituisce i valori di x,y,z in forma di stringa
+        /// Returns x, y, z as astring.
         /// </summary>
         public override string ToString()
         {
@@ -369,7 +377,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Confronta due normali e restituisce true se coincidono, false altrimenti; 
+        /// Check wheater two normal are equals. 
         /// </summary>
         public static bool are_close(Normal p, Normal q)
         {
@@ -386,7 +394,7 @@ namespace PGENLib
             }
         }
         /// <summary>
-        ///  Restituisce la normale moltiplicata per uno scalare 
+        ///  Returns the product between a vector and a scalar. 
         /// </summary>
         public static Normal operator *(Normal n, float s)
         {
@@ -399,7 +407,7 @@ namespace PGENLib
             return t;
         }
         /// <summary>
-        ///  Restituisce -n, data una normale n
+        ///  Invert the direction of a normal. 
         /// </summary>
         public Normal Neg()
         {
@@ -408,7 +416,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Restituisce il prodotto scalare  tra un vettore e una normale
+        ///  Returns the dot product between a vector and a normal.
         /// </summary>
         public static float VecDotNormal(Vec v, Normal w)
         {
@@ -416,11 +424,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Restituisce il prodotto vettoriale Vec x Normal
+        ///  Returns the cross product between a vector and a normal.
         /// </summary>
-        public static Normal VecCrossNormal(Vec v, Normal w)
+        public static Vec VecCrossNormal(Vec v, Normal w)
         {
-            var t = new Normal     //Restituisce un vettore??? Si arrabbia se lo metto vec
+            var t = new Vec     
             {
                 x = v.y*w.z - v.z*w.y,
                 y = v.z*w.x - v.x*w.z,
@@ -429,11 +437,11 @@ namespace PGENLib
             return t;
         }
         /// <summary>
-        ///  Restituisce il prodotto vettoriale Normal x Normal
+        ///  Returns the cross product between two normals.
         /// </summary>
         public static Normal NormalCrossNormal(Normal v, Normal w)
         {
-            var t = new Normal //Restituisce un vettore ???
+            var t = new Normal 
             {
                 x = v.y*w.z - v.z*w.y,
                 y = v.z*w.x - v.x*w.z,
@@ -443,14 +451,14 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Restituisce la norma al quadrato
+        ///  Returns the squared norm of a normal.
         /// </summary>
         public static float SquaredNorm(Normal n)
         {
             return n.x * n.x + n.y * n.y + n.z * n.z;
         }
         /// <summary>
-        ///  Restituisce la norma
+        ///  Returns the norm of a normal.
         /// </summary>
         
         public static float Norm(Normal n)
@@ -459,7 +467,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Funzione che normalizza la normale
+        ///  Normalize the vector, so that it's norm is equal to 1.
         /// </summary>
         public Normal NormalizeNormal()
         {
@@ -476,13 +484,18 @@ namespace PGENLib
     //==================================================================================================================
     //Transformation
     //==================================================================================================================
+    /// <summary>
+    /// An affine transformation.
+    ///This class encodes an affine transformation. It has been designed with the aim of making the calculation
+    ///of the inverse transformation particularly efficient.
+    /// </summary>
     public struct Transformation
     {
         public Matrix4x4 m;
         public Matrix4x4 invm;
         
         /// <summary>
-        /// Costruttore senza parametri, trasformazione identità lascia il vettore su cui agisce invariato
+        /// Constructor, without any parameter
         /// </summary>
         public Transformation()
         {
@@ -517,7 +530,7 @@ namespace PGENLib
         
         //METODI========================================================================================================
         /// <summary>
-        /// Confronta due matrici e restituisce true se coincidono, false altrimenti; 
+        /// Check wheather two matrices are equals.
         /// </summary>
         public static bool are_close(Matrix4x4 a, Matrix4x4 b)
         {
@@ -539,7 +552,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Confronta due matrici e restituisce true se coincidono, false altrimenti; 
+        /// Check whether two Transformations are equals. 
         /// </summary>
         public static bool are_close(Transformation a, Transformation b)
         {
@@ -556,7 +569,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Verifica che i parametri di una trasformazione siano trasformazione e relativa inversa. 
+        /// Check the internal consistency of the transformation. 
         /// </summary>
         public bool IsConsistent()
         {
@@ -564,7 +577,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Restituisce l'inverso di una trasformazione. 
+        /// Returns a struct Transformation object representing the inverse affine transformation.
         /// </summary>
         public Transformation Inverse()
         {
@@ -573,7 +586,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Prodotto tra Transformation, restituisce Transformation
+        /// Product Transformation-Transformation, returns a Transformation.
         /// </summary>
         public static Transformation operator *(Transformation a, Transformation b)
         {
@@ -582,7 +595,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Prodotto con Point, restiruisce Point
+        /// Product Transformation-Point, returns a Point. 
         /// </summary>
         public static Point operator *(Transformation a, Point p)
         {
@@ -601,7 +614,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Prodotto con Vec, restiruisce Vec
+        /// Product Transformation-Vec, returns a Vec. 
         /// </summary>
         public static Vec operator *(Transformation a, Vec v)
         {
@@ -612,7 +625,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Prodotto con Normal, restiruisce Normal
+        /// Product Transformation-Normal, returns a Normal. 
         /// </summary>
         public static Normal operator *(Transformation a, Normal n)
         {
@@ -622,7 +635,7 @@ namespace PGENLib
             return q;
         }
         /// <summary>
-        /// Metodo che restituisce una matrice di traslazione
+        /// Returns a Transformation object, encoding a rigid translation.
         /// </summary>
         public static Transformation Traslation(Vec v)
         {
@@ -637,18 +650,81 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Metodo che restituisce una matrice di rotazione
+        /// Return a Transformation object, encoding a rotation around the X axis.
+        /// The parameter `angle_deg` specifies the rotation angle (in degrees). The positive sign is
+        /// given by the right-hand rule.
         /// </summary>
-        public static Transformation Rotation(Vec v)
+        public static Transformation RotationX(float ang)
         {
-            Transformation trasl = new Transformation();
-            trasl.m.M14 = v.x;
-            trasl.m.M24 = v.y;
-            trasl.m.M34 = v.z;
-            trasl.invm.M14 = -v.x;
-            trasl.invm.M24 = -v.y;
-            trasl.invm.M34 = -v.z;
-            return trasl;
+            Transformation xRot = new Transformation();
+            float cos = (float) Math.Cos(Math.PI * ang / 180.0); 
+            float sin = (float) Math.Sin(Math.PI * ang / 180.0);
+            xRot.m.M22 = cos;
+            xRot.m.M23 = -sin;
+            xRot.m.M32 = sin;
+            xRot.m.M33 = cos;
+            xRot.invm.M22 = cos;
+            xRot.invm.M23 = sin;
+            xRot.invm.M32 = -sin;
+            xRot.invm.M33 = cos;
+            return xRot;
+        }
+        
+        /// <summary>
+        /// Return a Transformation object, encoding a rotation around the Y axis.
+        /// The parameter `angle_deg` specifies the rotation angle (in degrees). The positive sign is
+        /// given by the right-hand rule.
+        /// </summary>
+        public static Transformation RotationY(float ang)
+        {
+            Transformation yRot = new Transformation();
+            float cos = (float) Math.Cos(Math.PI * ang / 180.0);
+            float sin = (float) Math.Sin(Math.PI * ang / 180.0);
+            yRot.m.M11 = cos;
+            yRot.m.M13 = sin;
+            yRot.m.M31 = -sin;
+            yRot.m.M33 = cos;
+            yRot.invm.M11 = cos;
+            yRot.invm.M13 = -sin;
+            yRot.invm.M31 = sin;
+            yRot.invm.M33 = cos;
+            return yRot;
+        }
+        
+        /// <summary>
+        /// Return a Transformation object, encoding a rotation around the Z axis.
+        /// The parameter `angle_deg` specifies the rotation angle (in degrees). The positive sign is
+        /// given by the right-hand rule.
+        /// </summary>
+        public static Transformation RotationZ(float ang)
+        {
+            Transformation zRot = new Transformation();
+            float cos = (float) Math.Cos(Math.PI * ang / 180.0);
+            float sin = (float) Math.Sin(Math.PI * ang / 180.0);
+            zRot.m.M11 = cos;
+            zRot.m.M12 = -sin;
+            zRot.m.M21 = sin;
+            zRot.m.M22 = cos;
+            zRot.invm.M11 = cos;
+            zRot.invm.M12 = sin;
+            zRot.invm.M21 = -sin;
+            zRot.invm.M22 = cos;
+            return zRot;
+        }
+
+        /// <summary>
+        /// Returns a Transformation object, encoding a scaling.
+        /// </summary>
+        public static Transformation Scaling(Vec v)
+        {
+            Transformation scl = new Transformation();
+            scl.m.M11 = v.x;
+            scl.m.M22 = v.y;
+            scl.m.M33 = v.z;
+            scl.invm.M11 = 1 / v.x;
+            scl.invm.M22 = 1 / v.y;
+            scl.invm.M33 = 1 / v.z;
+            return scl;
         }
         
     }
