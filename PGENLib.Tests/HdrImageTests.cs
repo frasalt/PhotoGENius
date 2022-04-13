@@ -163,6 +163,8 @@ namespace PGENLib.Tests
             using (StreamWriter writer = new StreamWriter(input))
             {
                 writer.Write("Hello\nworld!");
+                //writer.Flush();
+                //input.Position = 0;
             }
             
             //Leggo e confronto 
