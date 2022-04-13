@@ -132,16 +132,16 @@ namespace PGENLib
         /// <summary>
         /// Function that reads a byte and transforms it into an ASCII character.
         /// </summary>
-
         public string ReadLine(Stream input)
         {
             string str = "";
             byte[] mybyte = new byte[1];
 
-            while (Encoding.ASCII.GetString(mybyte) != "\n")
+            // provo ad aggiungere la seconda condizione, che dovrebbeo corrispondere a che lo stream è finito
+            while (Encoding.ASCII.GetString(mybyte) != "\n" && Encoding.ASCII.GetString(mybyte) != "")
             {
                 mybyte[0] = (byte) input.ReadByte();
-                if (Encoding.ASCII.GetString(mybyte) != "\n")
+                if (Encoding.ASCII.GetString(mybyte) != "\n" && Encoding.ASCII.GetString(mybyte) != "")
                 {
                     str += Encoding.ASCII.GetString(mybyte);
                 }

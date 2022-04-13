@@ -17,6 +17,11 @@
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.HdrImageTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2084b360_002Dfcb5_002D413b_002Db446_002D2c4cad5902ed/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="test_ReadLine #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.HdrImageTests.test_ReadLine&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3814f302_002De4dd_002D4ce2_002D91e1_002Dc346a1bd4fa9/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ColorTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.ColorTests&lt;/TestId&gt;&#xD;
@@ -37,7 +42,12 @@
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.HdrImageTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7960607f_002D0fdd_002D4d29_002D93d5_002D52bad686560e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="test_ReadLine #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7950575f_002Dd904_002D4c10_002Db6b8_002D3c309a9cc08a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="test_ReadLine #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.HdrImageTests.test_ReadLine&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7960607f_002D0fdd_002D4d29_002D93d5_002D52bad686560e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="test_ReadLine #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.HdrImageTests.test_ReadLine&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
@@ -81,6 +91,7 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e1d44cfa_002D3e6f_002D4e73_002Dadf4_002D52afee3649ef/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="test_WritePFM #6" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.HdrImageTests.test_WritePFM&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.HdrImageTests.test_ReadLine&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e4951e8f_002Dbb10_002D4df2_002Dae7f_002D00dde9bc724c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="test_ParseEndianness" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;

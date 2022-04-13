@@ -136,8 +136,6 @@ namespace PGENLib.Tests
             string c;
             HdrImage img = new HdrImage(1,1);
             MemoryStream input = new MemoryStream();
-
-            //input.Write(System.Text.Encoding.ASCII.GetBytes("Hello\nworld!"));
             
             using (StreamWriter writer = new StreamWriter(input))
             {
