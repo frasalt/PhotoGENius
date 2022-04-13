@@ -73,7 +73,7 @@ namespace PGENLib.Tests
             Assert.True(Color.are_close(new Color(7.0f, 8.0f, 9.0f), img.GetPixel(0,1)));
         }
         
-        /*
+        /*//
         [Fact]
         public void test_WritePFM()
         {
