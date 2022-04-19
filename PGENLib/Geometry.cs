@@ -651,7 +651,7 @@ namespace PGENLib
         
         /// <summary>
         /// Return a Transformation object, encoding a rotation around the X axis.
-        /// The parameter `angle_deg` specifies the rotation angle (in degrees). The positive sign is
+        /// The parameter `ang` specifies the rotation angle (in degrees). The positive sign is
         /// given by the right-hand rule.
         /// </summary>
         public static Transformation RotationX(float ang)
@@ -672,7 +672,7 @@ namespace PGENLib
         
         /// <summary>
         /// Return a Transformation object, encoding a rotation around the Y axis.
-        /// The parameter `angle_deg` specifies the rotation angle (in degrees). The positive sign is
+        /// The parameter `ang` specifies the rotation angle (in degrees). The positive sign is
         /// given by the right-hand rule.
         /// </summary>
         public static Transformation RotationY(float ang)
@@ -693,7 +693,7 @@ namespace PGENLib
         
         /// <summary>
         /// Return a Transformation object, encoding a rotation around the Z axis.
-        /// The parameter `angle_deg` specifies the rotation angle (in degrees). The positive sign is
+        /// The parameter `ang` specifies the rotation angle (in degrees). The positive sign is
         /// given by the right-hand rule.
         /// </summary>
         public static Transformation RotationZ(float ang)
