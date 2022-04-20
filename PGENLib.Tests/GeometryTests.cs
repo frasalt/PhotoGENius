@@ -217,6 +217,15 @@ namespace PGENLib.Tests
             
         }
         
-        
+        [Fact]
+        public void test_scaling()
+        {
+            Transformation tr1 = Transformation.Scaling(new Vec(2.0f, 5.0f, 10.0f));
+            Assert.True(tr1.IsConsistent());
+            Transformation tr2 = Transformation.Scaling(new Vec(3.0f, 2.0f, 4.0f));
+            Assert.True(tr2.IsConsistent());
+            Transformation expected = Transformation.Scaling(new Vec(6.0f, 10.0f, 40.0f));
+            Assert.True(Transformation.are_close(expected, tr1*tr2));
+        }
     }
 }
