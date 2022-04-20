@@ -1,3 +1,21 @@
+/*
+PhotoGENius : photorealistic images generation.
+Copyright (C) 2022  Lamorte Teresa, Salteri Francesca, Zanetti Martino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 using Xunit;
 using System;
 using System.IO;
@@ -8,7 +26,6 @@ namespace PGENLib.Tests
 {
     public class HdrImageTests
     {
-        //Vettore di byte di riferimento
         byte[] byteRef_LE = new byte[84]{
             0x50, 0x46, 0x0a, 0x33, 0x20, 0x32, 0x0a, 0x2d, 0x31, 0x2e, 0x30, 0x0a,
             0x00, 0x00, 0xc8, 0x42, 0x00, 0x00, 0x48, 0x43, 0x00, 0x00, 0x96, 0x43,
@@ -60,7 +77,7 @@ namespace PGENLib.Tests
         [Fact]
         public void test_WritePFM()
         {
-            //Creo un'immagine hdr e scrivo i colori in binario
+            //Creo un'immagine hdr e ci scrivo i colori in binario
             HdrImage img = new HdrImage(3, 2);
             Color a = new Color(1.0e1f, 2.0e1f, 3.0e1f);
             Color b = new Color(4.0e1f, 5.0e1f, 6.0e1f);
@@ -74,14 +91,19 @@ namespace PGENLib.Tests
             img.SetPixel(0, 1, d);
             img.SetPixel(1, 1, e);
             img.SetPixel(2, 1, f);
+            
+            // scrivo l'immagine in uno stream in BE
             Stream str = new MemoryStream();
             img.WritePFMFile(str, Endianness.BigEndian);
             MemoryStream ms = new MemoryStream();
             str.CopyTo(ms);
-            Assert.True(ms.ToArray() == byteRef_BE);
             
+            // verifico l'uguaglianza
+            Assert.True(ms.ToArray() == byteRef_BE);
         }
-        */
+
+        //*/
+
         
         [Fact]
         public void test_ParseImgSize()
@@ -114,7 +136,6 @@ namespace PGENLib.Tests
             HdrImage img = new HdrImage(1,1);
             MemoryStream input = new MemoryStream();
             using (StreamWriter writer = new StreamWriter(input))
-            //using (Stream fileStream = File.OpenRead(@"....\..\..\PGENLib.tests\HelloWorld.txt"))
             {
                 writer.Write("Hello\nworld!");
                 a = img.ReadLine(input);
@@ -126,8 +147,10 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
+        //*/
         
-        //Provo a fare un test con la funzione readline disponibile per gli oggetti di tipo streamreader
+        /*
+        // Test alternativo con la funzione readline disponibile per gli oggetti di tipo streamreader
         [Fact]
         public void test_ReadLine2()
         {
@@ -154,7 +177,9 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
-        */
+
+        //*/
+
 
         [Fact]
         public void test_ReadFilePFM()
@@ -168,8 +193,12 @@ namespace PGENLib.Tests
             HdrImage img = new HdrImage(1, 1);
             using (Stream fileStream = File.OpenRead(@"../../../../PGENLib.tests/reference_le.pfm"))
             { img = img.ReadPFMFile(fileStream); }
+
+
             Assert.True(img.Width == 3); //Come fa a sapere che voglio controllare Width di img? Alternativa: img.Width togliendo static
             Assert.True(img.Height == 2);
+
+
             Assert.True(Color.are_close(img.GetPixel(0,0), a));
             Assert.True(Color.are_close(img.GetPixel(1,0), b));
             Assert.True(Color.are_close(img.GetPixel(2,0), c));
@@ -179,9 +208,7 @@ namespace PGENLib.Tests
             
         }
         
-         /// <summary>
-        /// TEST sulla fz che restituisce la luminosità media dell'immagine
-        /// </summary>
+
         [Fact]
         public void test_AverageLum()
         {
@@ -191,9 +218,7 @@ namespace PGENLib.Tests
             Assert.True(Math.Abs(img.AverageLum(0.0f) - 100.0f) < 1e-5);
         }
 
-        /// <summary>
-        /// TEST sulla fz che calcola la luminosità media di un’immagine secondo la formula axRi/<l>
-        /// </summary>
+
         [Fact]
         public void test_NormalizeImage()
         {
@@ -205,10 +230,7 @@ namespace PGENLib.Tests
             Assert.True(Color.are_close(img.GetPixel(1, 0),new Color(0.5e4f, 1.0e4f, 1.5e4f)));
         }
 
-        /// <summary>
-        /// Test sulla funzione che 
-        /// </summary>
-        /// <returns></returns>
+
         [Fact]
         public void test_ClampImage()
         {
@@ -230,10 +252,7 @@ namespace PGENLib.Tests
                 Assert.True((img.Pixels[i].GetB() >= 0) & (img.Pixels[i].GetB() <= 1));
             }
         }
-
-
         
-
     }
     
 }

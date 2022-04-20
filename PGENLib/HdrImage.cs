@@ -1,13 +1,31 @@
+/*
+PhotoGENius : photorealistic images generation.
+Copyright (C) 2022  Lamorte Teresa, Salteri Francesca, Zanetti Martino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 using System.Diagnostics;
 using System;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-//ImageSharp
-
 
 namespace PGENLib
 {
@@ -19,13 +37,11 @@ namespace PGENLib
 
     public class HdrImage
     {
-        // attributi dell'immagine
         public int Width;
         public int Height;
-        public Color[] Pixels; // un vettore di tipo Color che contiene tutti i pixel
-
+        public Color[] Pixels; // Color type vector that contains all the pixels
         /// <summary>
-        /// Costruttore, vuoto o con pixel
+        /// Constructor, empty or with pixels.
         /// </summary>
         public HdrImage(int WidthConstr, int HeightConstr, Color[]? pixels = null)
         {
@@ -40,7 +56,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Verifica che date coordinate abbiano valori sensati, ovvero compresi tra 0 e il numero di righe/colonne
+        /// Check that given coordinates have values between 0 and the number of rows / columns.
         /// </summary>
         public bool ValidCoord(int x, int y)
         {
@@ -48,7 +64,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Data una coppia di coordinate, restituisce la posizione del pixel nel vettore di memorizzazione.
+        /// Given a pair of coordinates, it returns the position of the pixel in the storage vector.
         /// </summary>
         private int PixelOffset(int x, int y)
         {
@@ -57,7 +73,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Imposta il colore di un pixel di date coordinate
+        /// Sets the color of a pixel of given coordinates.
         /// </summary>
         public void SetPixel(int x, int y, Color newCol)
         {
@@ -66,7 +82,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Data una coppia di coordinate, restituisce il colore del pixel corrispondente
+        /// Given a pair of coordinates, it returns the color of the corresponding pixel.
         /// </summary>
         public Color GetPixel(int x, int y)
         {
@@ -74,13 +90,12 @@ namespace PGENLib
             return this.Pixels[this.PixelOffset(x, y)];
         }
 
-        // =============== SEGUONO FUNZIONI PER LA LETTURA DA FILE ============
+        //=========================== FUNCTIONS FOR READING FROM FILE ======================================
 
         /// <summary>
-        /// funzione che legge un file PFM e scrive il contenuto in una nuova HDR image
+        /// Function that reads a PFM file and writes the content to a new HDR image.
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
+
         public HdrImage ReadPFMFile(Stream input)
         {
             string magic = ReadLine(input);
@@ -115,10 +130,9 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// funzione che legge un byte e ne fa un carattere ascii
+        /// Function that reads a byte and transforms it into an ASCII character.
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
+
         public string ReadLine(Stream input)
         {
             string str = "";
@@ -135,15 +149,11 @@ namespace PGENLib
 
             return str;
         }
-
-        // per esaurimento sono andato a prendere la funzione da colleghi dell'anno scorso:
-        // https://github.com/andreasala98/NM4PIG/blob/master/Trace/HdrImage.cs
+        
         /// <summary>
-        /// Read a 32bit sequence from a stream and convert it to floating-point number.
+        /// Reads a 32-bit sequence from a stream and converts it to a floating-point number.
         /// </summary>
-        /// <param name="input"> The input stream </param>
-        /// <param name="end"> -1 if the image is little-endian, 1 if big-endian </param>
-        /// <returns> Float value corresponding to 4-byte sequence</returns>
+
         public static float ReadFloat(Stream input, Endianness end)
         {
             byte[] bytes = new byte[4];
@@ -155,12 +165,13 @@ namespace PGENLib
                 bytes[2] = (byte) input.ReadByte();
                 bytes[3] = (byte) input.ReadByte();
             }
+            
             catch
             {
-                throw new InvalidPfmFileFormat("Unable to read float!");
+                //throw new InvalidPfmFileFormat("Unable to read float!");
             }
 
-            // chiedo se il sistema operativo è allineato con la mia endianness. se NO, ribalto i byte.
+            // I ask if the operating system is aligned with endianness, otherwise I overturn the bytes.
             if (end == Endianness.BigEndian && BitConverter.IsLittleEndian)
             {
                 Array.Reverse(bytes);
@@ -175,7 +186,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// funzione lettura dimensioni img - FRA
+        /// Image size reading function.
         /// </summary>
         public int[] ParseImgSize(string str)
         {
@@ -193,10 +204,9 @@ namespace PGENLib
 
             return dim;
         }
-        // Va fatto meglio inserendo dei try per sollevare eccezioni
 
         /// <summary>
-        ///  Funzione che legge l'endianness e restituisce se è little o big.
+        ///  Function that reads the endianness and returns if it is little or big.
         /// </summary>
         public int ParseEndianness(string input)
         {
@@ -215,29 +225,26 @@ namespace PGENLib
             double normEnd = endianness / Math.Abs(endianness);
             return (int) normEnd;
         }
+        
 
-        // RICORDIAMO: RAGIONARE SUL TENERE TUTTI QUESTI METODI PUBLIC
-
-        // =============== SEGUONO FUNZIONI PER LA SCRITTURA SU FILE ============
+        //=========================== FUNCTIONS FOR WRITING TO FILE ====================================
 
         /// <summary>
-        /// funzione che scrive un file PFM a partire da una HDR image
+        /// Function that writes a PFM file from an HDR image.
         /// </summary>
-        /// <param name="output"></param>
-        /// <param name="endian"></param>
+
         public void WritePFMFile(Stream output, Endianness endian)
         {
-            Debug.Assert(endian is Endianness.LittleEndian or Endianness.BigEndian); // inutile una volta che tutto è normale
+            Debug.Assert(endian is Endianness.LittleEndian or Endianness.BigEndian);
 
             double end = 0;
             if (endian == Endianness.LittleEndian) end = -1.0;
             else end = 1.0;
 
-            // convert header into sequence of bytes
+            // Convert the header to a sequence of bytes.
             var header = Encoding.ASCII.GetBytes($"PF\n{Width} {Height}\n{end}.0\n");
             output.Write(header);
-
-            // write the image pixels
+            
             for (int y = Height - 1; y >= 0; y--)
             {
                 for (int x = 0; x < Width; x++)
@@ -251,10 +258,9 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// metodo di scrittura di un numero floating-point a 32 bit in binario
+        /// Method of writing a 32-bit floating-point number in binary.
         /// </summary>
-        /// <param name="outputStream"></param>
-        /// <param name="value"></param>
+
         private static void WriteFloat(Stream outputStream, float value, Endianness end)
         {
             var seq = BitConverter.GetBytes(value);
@@ -271,9 +277,9 @@ namespace PGENLib
             outputStream.Write(seq, 0, seq.Length);
         }
 
-        //==============================PARTE SULLA LUMINOSITà DEI PIXEL============================================
+        //=========================== LUMINOSITY OF THE PIXELS ==============================================
         /// <summary>
-        /// Restituisce la luminosità media dell'immagine
+        /// Returns the average brightness of the image.
         /// </summary>
         public float AverageLum(double delta = 1e-10)
         {
@@ -293,7 +299,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Calcola la luminosità media di un’immagine secondo la formula axRi/<l>
+        /// Calculate the average brightness of an image according to the axRi / <l> formula.
         /// </summary>
         public void NormalizeImage(float factor, float? luminosity = null)
         {
@@ -305,7 +311,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Mappa un float da [0,+inf) a [0,1]
+        /// Maps a float from [0, + inf) to [0,1].
         /// </summary>
         public float ClampFloat(float x)
         {
@@ -313,57 +319,42 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Applica la correzione per i punti luminosi, ancora da testare
+        /// Apply correction for bright spots.
         /// </summary>
         public void ClampImage()
         {
             for (int i = 0; i < Pixels.Length; i++)
             {
-                Pixels[i].SetR(ClampFloat(Pixels[i].GetR())); //Perchè non usare SetPixel?
+                Pixels[i].SetR(ClampFloat(Pixels[i].GetR()));
                 Pixels[i].SetG(ClampFloat(Pixels[i].GetG()));
                 Pixels[i].SetB(ClampFloat(Pixels[i].GetB()));
             }
         }
         
         /// <summary>
-        /// Converte un'immagine HDR in LDR
+        /// Convert an HDR image to LDR.
         /// </summary>
-        /*
-        public void WriteLdrImage(Stream output, String format, float gamma = 1.0f)
+        
+        public void WriteLdrImage(String output, String format, float gamma = 1.0f)
         {
-            HdrImage img = new HdrImage(this.Width, this.Height);
-            //new Image<Rgb32>(Configuration.Default, this.Width, this.Height);
-            for (int y = 0; y < this.Width; y++)
+            var img = new Image<Rgb24>(this.Width, this.Height);
+            for (int x = 0; x < this.Width; x++)
             {
-                for (int x = 0; x < this.Height; x++)
+                for (int y = 0; y < this.Height; y++)
                 {
                     var curColor = this.GetPixel(x, y);
                     var red = (int)(255 * Math.Pow(curColor.r, 1.0f / gamma));
                     var green = (int)(255 * Math.Pow(curColor.g, 1.0f / gamma));
-                    var blue = (int)(255 * Math.Pow(curColor.b, 1.0f / gamma)); 
+                    var blue = (int)(255 * Math.Pow(curColor.b, 1.0f / gamma));
+                    img[x, y] = new Rgb24( Convert.ToByte(red), Convert.ToByte(green), Convert.ToByte(blue));
                 }
             }
-
-            using (Image image = Image.Load(format))
+            
+            using (Stream output1 = File.OpenWrite(output))
             {
-                image.Save(format);
+                img.SaveAsPng(output1);
             }
         }
-        def write_ldr_image(self, stream, format, gamma=1.0):
-        from PIL import Image
-        img = Image.new("RGB", (self.width, self.height))
-        for y in range(self.height):
-            for x in range(self.width):
-            cur_color = self.get_pixel(x, y)
-            img.putpixel(xy=(x, y), value=(
-        int(255 * math.pow(cur_color.r, 1 / gamma)),
-        int(255 * math.pow(cur_color.g, 1 / gamma)),
-        int(255 * math.pow(cur_color.b, 1 / gamma)),
-        ))
-
-        img.save(stream, format=format)
-        
-        */
     }
 }
 

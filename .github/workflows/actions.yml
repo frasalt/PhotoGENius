@@ -1,0 +1,31 @@
+# full documentation at:
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+#
+# --- what's the name of the workflow?
+name: PGENLib.test
+
+# --- when the workflow starts running?
+on: [push]
+
+# --- what does the workflow do?
+jobs:
+  # it executes tests.
+  tests: # << this is the name of the job
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest] # [windows-latest, ubuntu-latest, macos-latest]
+        dotnet: [6.0.x] 
+        
+    # ogni step ha un nome e richiede di usare qualche pacchetto o altre robe
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3 # ziotom usa v2, ma boh, a noi funziona ugualmente
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+     
+    - name: Build
+      run: dotnet build 
