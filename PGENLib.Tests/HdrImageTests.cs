@@ -101,7 +101,9 @@ namespace PGENLib.Tests
             // verifico l'uguaglianza
             Assert.True(ms.ToArray() == byteRef_BE);
         }
+
         //*/
+
         
         [Fact]
         public void test_ParseImgSize()
@@ -175,7 +177,9 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
+
         //*/
+
 
         [Fact]
         public void test_ReadFilePFM()
@@ -190,8 +194,10 @@ namespace PGENLib.Tests
             using (Stream fileStream = File.OpenRead(@"../../../../PGENLib.tests/reference_le.pfm"))
             { img = img.ReadPFMFile(fileStream); }
 
+
             Assert.True(img.Width == 3); //Come fa a sapere che voglio controllare Width di img? Alternativa: img.Width togliendo static
             Assert.True(img.Height == 2);
+
 
             Assert.True(Color.are_close(img.GetPixel(0,0), a));
             Assert.True(Color.are_close(img.GetPixel(1,0), b));
