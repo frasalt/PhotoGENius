@@ -75,7 +75,7 @@ namespace PGENLib.Tests
             Assert.True(Point.are_close(ray1.At(1.0f), new Point(0.0f, 2.0f, -1.0f)));
             Assert.True(Point.are_close(ray2.At(1.0f), new Point(0.0f, -2.0f, -1.0f)));
             Assert.True(Point.are_close(ray3.At(1.0f), new Point(0.0f, 2.0f, 1.0f)));
-            Assert.True(Point.are_close(ray4.At(1.0f), new Point(0.0f, -2.0f, 1.0f))
+            Assert.True(Point.are_close(ray4.At(1.0f), new Point(0.0f, -2.0f, 1.0f)));
         }
         
     }
