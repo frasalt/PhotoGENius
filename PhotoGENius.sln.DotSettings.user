@@ -31,6 +31,7 @@
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.GeometryTests.test_scaling&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.CamerasTest.test_isclose&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.CamerasTest&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.GeometryTests.test_vector_operations&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=91dea38e_002Dcf40_002D46b7_002Dbbc2_002D1f97b97c9b90/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="test_WritePFM" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
