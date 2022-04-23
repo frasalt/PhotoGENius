@@ -110,6 +110,7 @@ namespace PGENLib.Tests
             }
         }
 
+        // This function is needed for test_image_tracer
         Color lambda(Ray ray)
         {
             return new Color(1.0f, 2.0f, 3.0f);
