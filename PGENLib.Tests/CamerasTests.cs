@@ -94,15 +94,20 @@ namespace PGENLib.Tests
             Ray ray2 = tracer.FireRay(2, 1, 0.5f, 0.5f);
             Assert.True(Ray.are_close(ray1,ray2));
 
-            tracer.FireAllRays(lambda)
+            tracer.FireAllRays(lambda);
+            
+            Color mycolor = new Color(1.0f, 2.0f, 3.0f);
+            Color mypixel;
+            for (int row = 0; row < image.Height; row++)
             {
-                for(int row = 0; row< image.Height; row ++)
+                for (int col = 0; col < image.Width; col++)
                 {
-                    for (int col = 0; col < image.Width; col++)
-                    {
-                        Assert.True(image.GetPixel(col, row) == Color(1.0f, 2.0f, 3.0f));
-                    }
+                    mypixel = image.GetPixel(col, row);
+                    Assert.True(mypixel.GetR() == mycolor.GetR());
+                    Assert.True(mypixel.GetG() == mycolor.GetG());
+                    Assert.True(mypixel.GetB() == mycolor.GetB());
                 }
+            }
         }
 
         Color lambda(Ray ray)
