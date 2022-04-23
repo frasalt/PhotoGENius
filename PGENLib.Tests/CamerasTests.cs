@@ -8,6 +8,10 @@ namespace PGENLib.Tests
 {
     public class CamerasTest
     {
+        //==============================================================================================================
+        //Ray
+        //==============================================================================================================
+        
         [Fact]
         public void test_areclose()
         {
@@ -25,6 +29,10 @@ namespace PGENLib.Tests
             Assert.True(Point.are_close(d.At(1.0f), new Point(5.0f, 4.0f, 5.0f)));
             Assert.True(Point.are_close(d.At(2.0f), new Point(9.0f, 6.0f, 6.0f)));
         }
+        
+        //==============================================================================================================
+        //Cameras
+        //==============================================================================================================
         
         [Fact]
         public void test_ortCamera()
@@ -110,7 +118,7 @@ namespace PGENLib.Tests
             }
         }
 
-        // This function is needed for test_image_tracer
+        // This dummy function is needed for test_image_tracer
         Color lambda(Ray ray)
         {
             return new Color(1.0f, 2.0f, 3.0f);
