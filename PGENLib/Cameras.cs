@@ -1,7 +1,12 @@
+using System;
+using SixLabors.ImageSharp;
+
 namespace PGENLib
 {
     
-
+    //==============================================================================================================
+    //Ray
+    //==============================================================================================================
     public struct Ray
     {
         public Point Origin;
@@ -137,6 +142,14 @@ namespace PGENLib
             AspectRatio = 1.0f;
             Transf = new Transformation();
         }
+        
+        // Martin: ho aggiunto questo costruttore che mi era comodo per il test di ImageTracer
+        public PerspectiveCamera(float aspectRatio) 
+        {
+            ScreenDistance = 1.0f;
+            AspectRatio = aspectRatio;
+            Transf = new Transformation();
+        }
         public PerspectiveCamera(float distance, float aspectRatio)
         {
             ScreenDistance = distance;
@@ -160,4 +173,51 @@ namespace PGENLib
         }
     }
     
+    //==============================================================================================================
+    //ImageTracer
+    //==============================================================================================================
+    /// <summary>
+    /// Send rays from the Camera (observer) to corresponding pixels of an HdrImage (screen),
+    /// converting "u-v" Camera coordinates to "column-raw" index of the HdrImage.
+    /// </summary>
+    public struct ImageTracer
+    {
+        public HdrImage Image;
+        public ICamera Camera;
+
+        public ImageTracer(HdrImage image, ICamera camera)
+        {
+            Image = image;
+            Camera = camera;
+        }
+
+        public Ray FireRay(int col, int row, float uPixel = 0.5f, float vPixel = 0.5f)
+        {
+            // There is an error in this formula:
+            
+            // A parte convertire le coordinate dallo spazio (u, v) allo spazio dei pixel,
+            // c’è il problema della superficie del pixel.
+            // Un pixel ha una certa area: in quale punto del pixel deve passare il raggio?
+            // Per il momento nel centro, ma lasciamo che si possa specificare una
+            // posizione relativa tramite le coordinate (uPixel, vPixel)
+            
+            float u = (col + uPixel) / (Image.Width - 1);
+            float v = (row + vPixel) / (Image.Height - 1);
+            return Camera.FireRay(u, v);
+        }
+
+        public void FireAllRays (Func<Ray,Color> func)
+        {
+            for(int row = 0; row< Image.Height; row ++)
+            {
+                for(int col = 0; col< Image.Width; col ++)
+                {
+                    Ray ray = FireRay(col, row);
+                    Color color = func(ray);    // una funzione che viene invocata per ogni raggio e
+                                                // restituisca un oggetto di tipo Color.
+                    Image.SetPixel(col, row, color);
+                }
+            }
+        }
+    }
 }

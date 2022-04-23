@@ -1,5 +1,6 @@
 using Xunit;
 using System;
+using System.Numerics;
 using System.Reflection.PortableExecutable;
 using PGENLib;
 
@@ -78,5 +79,36 @@ namespace PGENLib.Tests
             Assert.True(Point.are_close(ray4.At(1.0f), new Point(0.0f, -2.0f, 1.0f)));
         }
         
+        //==============================================================================================================
+        //ImageTracer
+        //==============================================================================================================
+
+        [Fact]
+        public void test_image_tracer()
+        {
+            HdrImage image = new HdrImage(4, 2);
+            PerspectiveCamera camera = new PerspectiveCamera(2);
+            ImageTracer tracer = new ImageTracer(image, camera);
+
+            Ray ray1 = tracer.FireRay(0, 0, 2.5f, 1.5f);
+            Ray ray2 = tracer.FireRay(2, 1, 0.5f, 0.5f);
+            Assert.True(Ray.are_close(ray1,ray2));
+
+            tracer.FireAllRays(lambda)
+            {
+                for(int row = 0; row< image.Height; row ++)
+                {
+                    for (int col = 0; col < image.Width; col++)
+                    {
+                        Assert.True(image.GetPixel(col, row) == Color(1.0f, 2.0f, 3.0f));
+                    }
+                }
+        }
+
+        Color lambda(Ray ray)
+        {
+            return new Color(1.0f, 2.0f, 3.0f);
+        }
+
     }
 }

@@ -22,3 +22,6 @@ C:/Users/Martino/Documents/formazione/università/Magistrale/2021-2022/secondo s
 /Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib/obj/Debug/net6.0/PGENLib.dll
 /Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib/obj/Debug/net6.0/ref/PGENLib.dll
 /Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib/obj/Debug/net6.0/PGENLib.pdb
+C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo semestre\immagini_fotorealistiche\es_1\PhotoGENius\PGENLib\obj\Debug\net6.0\PGENLib.dll
+C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo semestre\immagini_fotorealistiche\es_1\PhotoGENius\PGENLib\obj\Debug\net6.0\refint\PGENLib.dll
+C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo semestre\immagini_fotorealistiche\es_1\PhotoGENius\PGENLib\obj\Debug\net6.0\PGENLib.pdb
