@@ -19,6 +19,7 @@ namespace PGENLib.Tests
             Ray b = new Ray(new Point(1.0f, 2.0f, 3.0f), new Vec(5.0f, 4.0f, -1.0f));
             Ray c = new Ray(new Point(5.0f, 1.0f, 4.0f), new Vec(3.0f, 9.0f, 4.0f));
             Assert.True(Ray.are_close(a, b));
+            Assert.False(Ray.are_close(a,c));
         }
   
         [Fact]
