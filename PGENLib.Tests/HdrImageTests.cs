@@ -105,7 +105,7 @@ namespace PGENLib.Tests
                 Assert.True(localvec[i] == refer[i]);
             }
         }
-        
+
         [Fact]
         public void test_ParseImgSize()
         {
@@ -182,7 +182,9 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
+
         //*/
+
 
         [Fact]
         public void test_ReadFilePFM()
