@@ -92,38 +92,69 @@ namespace PGENLib.Tests
         //ImageTracer
         //==============================================================================================================
 
-        [Fact]
-        public void test_image_tracer() // test da modificare
+        public class TestImageTracer
         {
-            HdrImage image = new HdrImage(4, 2);
-            PerspectiveCamera camera = new PerspectiveCamera(2);
-            ImageTracer tracer = new ImageTracer(image, camera);
-
-            Ray ray1 = tracer.FireRay(0, 0, 2.5f, 1.5f);
-            Ray ray2 = tracer.FireRay(2, 1, 0.5f, 0.5f);
-            Assert.True(Ray.are_close(ray1,ray2));
-
-            tracer.FireAllRays(lambda);
+            private readonly HdrImage _image;
+            private readonly PerspectiveCamera _camera;
+            private ImageTracer _tracer;
             
-            Color mycolor = new Color(1.0f, 2.0f, 3.0f);
-            Color mypixel;
-            for (int row = 0; row < image.Height; row++)
+            /// <summary>
+            /// SetUp method (a sort of constructor)
+            /// </summary>
+            public TestImageTracer()
             {
-                for (int col = 0; col < image.Width; col++)
+                _image = new HdrImage(4, 2);
+                _camera = new PerspectiveCamera(2);
+                _tracer = new ImageTracer(_image, _camera);
+            }
+
+            [Fact]
+            public void test_orientation()
+            {
+                // Fire a ray against top-left corner of the screen
+                Ray topLeftRay = _tracer.FireRay(0, 0, 0.0f, 0.0f);
+                Assert.True(Point.are_close(new Point(0.0f, 2.0f, 1.0f),(topLeftRay.At(1.0f))));
+
+                // Fire a ray against bottom-right corner of the screen
+                Ray bottomRightRay = _tracer.FireRay(3, 1, 1.0f, 1.0f);
+                Assert.True(Point.are_close(new Point(0.0f, -2.0f, -1.0f),(bottomRightRay.At(1.0f))));
+            }
+
+            [Fact]
+            public void test_uv_submapping() 
+            {
+                Ray ray1 = _tracer.FireRay(0, 0, 2.5f, 1.5f);
+                Ray ray2 = _tracer.FireRay(2, 1, 0.5f, 0.5f);
+                Assert.True(Ray.are_close(ray1, ray2));
+            }
+
+            [Fact]
+            public void test_image_coverage()
+            {
+                _tracer.FireAllRays(lambda);
+
+                Color mycolor = new Color(1.0f, 2.0f, 3.0f);
+                Color mypixel;
+                for (int row = 0; row < _image.Height; row++)
                 {
-                    mypixel = image.GetPixel(col, row);
-                    Assert.True(mypixel.GetR() == mycolor.GetR());
-                    Assert.True(mypixel.GetG() == mycolor.GetG());
-                    Assert.True(mypixel.GetB() == mycolor.GetB());
+                    for (int col = 0; col < _image.Width; col++)
+                    {
+                        mypixel = _image.GetPixel(col, row);
+                        Assert.True(mypixel.GetR() == mycolor.GetR());
+                        Assert.True(mypixel.GetG() == mycolor.GetG());
+                        Assert.True(mypixel.GetB() == mycolor.GetB());
+                    }
                 }
+            }
+
+            // This dummy function is only needed for test_image_coverage
+            Color lambda(Ray ray)
+            {
+                return new Color(1.0f, 2.0f, 3.0f);
             }
         }
 
-        // This dummy function is needed for test_image_tracer
-        Color lambda(Ray ray)
-        {
-            return new Color(1.0f, 2.0f, 3.0f);
-        }
+
 
     }
 }
