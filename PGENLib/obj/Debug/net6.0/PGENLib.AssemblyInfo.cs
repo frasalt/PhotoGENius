@@ -10,12 +10,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("PGENLib.Tests")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("PGENLib")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyProductAttribute("PGENLib.Tests")]
-[assembly: System.Reflection.AssemblyTitleAttribute("PGENLib.Tests")]
+[assembly: System.Reflection.AssemblyProductAttribute("PGENLib")]
+[assembly: System.Reflection.AssemblyTitleAttribute("PGENLib")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Generato dalla classe WriteCodeFragment di MSBuild.
