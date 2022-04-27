@@ -4,12 +4,18 @@ using System.Runtime.CompilerServices;
 namespace PGENLib
 {
     
+    /// <summary>
+    /// Interface for a generic 3D shape: the method RayIntersection is implemented in different concrete shapes.
+    /// </summary>
     public interface IShapes
     {
         HitRecord? RayIntersection(Ray ray);
 
     }
 
+    /// <summary>
+    /// A 3D unit sphere centered on the axes origin.
+    /// </summary>
     public struct Sphere : IShapes
     {
         private Transformation Transf;
