@@ -6131,19 +6131,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/fra/.nuget/packages/": {}
+    "C:\\Users\\Martino\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib.Tests/PGENLib.Tests.csproj",
+      "projectUniqueName": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib.Tests\\PGENLib.Tests.csproj",
       "projectName": "PGENLib.Tests",
-      "projectPath": "/Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib.Tests/PGENLib.Tests.csproj",
-      "packagesPath": "/Users/fra/.nuget/packages/",
-      "outputPath": "/Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib.Tests/obj/",
+      "projectPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib.Tests\\PGENLib.Tests.csproj",
+      "packagesPath": "C:\\Users\\Martino\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/fra/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Martino\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
@@ -6155,8 +6155,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "/Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib/PGENLib.csproj": {
-              "projectPath": "/Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib/PGENLib.csproj"
+            "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj": {
+              "projectPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj"
             }
           }
         }
@@ -6207,7 +6207,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/Users/fra/.dotnet/sdk/6.0.101/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -93,7 +93,7 @@ namespace PGENLib.Tests
         //==============================================================================================================
 
         [Fact]
-        public void test_image_tracer()
+        public void test_image_tracer() // test da modificare
         {
             HdrImage image = new HdrImage(4, 2);
             PerspectiveCamera camera = new PerspectiveCamera(2);
