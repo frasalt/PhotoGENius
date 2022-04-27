@@ -112,11 +112,11 @@ namespace PGENLib.Tests
             public void test_orientation()
             {
                 // Fire a ray against top-left corner of the screen
-                Ray topLeftRay = _tracer.FireRay(0, 0, 0.0f, 0.0f);
+                Ray topLeftRay = _tracer.FireRay(0, 0, 0.0f, 0.0f); // perché (u,v) = (0,0) vuol dire in alto a sinistra? ...
                 Assert.True(Point.are_close(new Point(0.0f, 2.0f, 1.0f),(topLeftRay.At(1.0f))));
 
                 // Fire a ray against bottom-right corner of the screen
-                Ray bottomRightRay = _tracer.FireRay(3, 1, 1.0f, 1.0f);
+                Ray bottomRightRay = _tracer.FireRay(3, 1, 1.0f, 1.0f); // ... e (u,v) = (1,1) vuol dire in basso a destra?
                 Assert.True(Point.are_close(new Point(0.0f, -2.0f, -1.0f),(bottomRightRay.At(1.0f))));
             }
             
