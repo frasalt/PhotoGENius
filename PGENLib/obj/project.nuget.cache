@@ -1,14 +1,6 @@
 {
   "version": 2,
-<<<<<<< HEAD
-<<<<<<< HEAD
   "dgSpecHash": "qv2aYty36K7SOhDUHbEf/058CiyqoZ4y6+ZWMhHkh31ZGBcmLrW/VrrrUk/jwym8sVejksZLk0h9BNnmGNg5FQ==",
-=======
-  "dgSpecHash": "taI6PKsfC3KemUM6H9mvkXRj7fsU1fsZUhWJECCVVYHIwWaffRTL5OyVS+/75EDp1EvodQ6FTfnTQ320MlFlow==",
->>>>>>> 1496bde412a16588b055e14dc93e8caa76a2a7a7
-=======
-  "dgSpecHash": "qv2aYty36K7SOhDUHbEf/058CiyqoZ4y6+ZWMhHkh31ZGBcmLrW/VrrrUk/jwym8sVejksZLk0h9BNnmGNg5FQ==",
->>>>>>> fix#5
   "success": true,
   "projectFilePath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj",
   "expectedPackageFiles": [

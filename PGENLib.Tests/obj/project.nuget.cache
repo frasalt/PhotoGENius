@@ -1,14 +1,6 @@
 {
   "version": 2,
-<<<<<<< HEAD
-<<<<<<< HEAD
   "dgSpecHash": "YXMxN4Z1O9rsZYdf2HjwdOBR2zLDNNj5lZX8LPj3n28Kdd0sYBD4eWwCUuhZ/xkPGGWi+IifXVgm2bJ+jyhFMQ==",
-=======
-  "dgSpecHash": "CCZ2AkZ2McDI+JPrpukyEVZwbmHSltixPMb17naPiZHdEEWj3O8Hw+rBB9gT0G9wgg1JKBwRw4TmtdsizZlemQ==",
->>>>>>> 1496bde412a16588b055e14dc93e8caa76a2a7a7
-=======
-  "dgSpecHash": "YXMxN4Z1O9rsZYdf2HjwdOBR2zLDNNj5lZX8LPj3n28Kdd0sYBD4eWwCUuhZ/xkPGGWi+IifXVgm2bJ+jyhFMQ==",
->>>>>>> fix#5
   "success": true,
   "projectFilePath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib.Tests\\PGENLib.Tests.csproj",
   "expectedPackageFiles": [
@@ -109,4 +101,4 @@
     "C:\\Users\\Martino\\.nuget\\packages\\xunit.runner.visualstudio\\2.4.3\\xunit.runner.visualstudio.2.4.3.nupkg.sha512"
   ],
   "logs": []
-}
+}}
