@@ -10,6 +10,7 @@ namespace PGENLib
     /// A 3D vector.
     /// This class has three floating-point fields: `x`, `y`, and `z`.
     /// </summary>
+    
     public struct Vec
     {
         public float x;
@@ -130,6 +131,15 @@ namespace PGENLib
         }
         
         /// <summary>
+        ///  Return the reversed vector.
+        /// </summary>
+        public static Vec operator-(Vec a)
+        {
+            float s = -1;
+            return a*s;
+        }
+        
+        /// <summary>
         ///  Returns the dot product between two vectors.
         /// </summary>
         public static float DotProd(Vec v, Vec w)
@@ -138,7 +148,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Returns the dot product between two vectors.
+        ///  Returns the cross product between two vectors.
         /// </summary>
         public static Vec CrossProduct(Vec v, Vec w)
         {
