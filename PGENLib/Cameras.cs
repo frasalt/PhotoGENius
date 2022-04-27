@@ -201,7 +201,7 @@ namespace PGENLib
             // posizione relativa tramite le coordinate (uPixel, vPixel)
             
             float u = (col + uPixel) / (Image.Width - 1);
-            float v = (row + vPixel) / (Image.Height - 1);
+            float v = 1.0f - (row + vPixel) / (Image.Height - 1);
             return Camera.FireRay(u, v);
         }
 
