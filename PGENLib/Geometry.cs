@@ -566,7 +566,6 @@ namespace PGENLib
         /// </summary>
         public static bool are_close(Transformation a, Transformation b)
         {
-            var epsilon = 1E-5;
             if (are_close(a.m, b.m) & are_close(a.invm, b.invm))
             {
                 return true; 
