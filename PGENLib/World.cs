@@ -10,11 +10,16 @@ namespace PGENLib
             this.Shapes = new List<IShapes>();
         }
 
+        /// <summary>
+        /// Add a shape in the list of shapes present in the world.
+        /// </summary>
+        public void AddShape(IShapes sh)
+        {
+            this.Shapes.Append(sh);
+        }
+           
         /*
 
-        def add(self, shape: Shape):
-
-        self.shapes.append(shape)
 
             def ray_intersection(self, ray: Ray) -> Optional[HitRecord]:
         closest = None # "closest" should be a nullable type!
