@@ -20,11 +20,7 @@ namespace PGENLib
     public struct Sphere : IShapes
     {
         private Transformation Transf;
-        public Normal n;
-        public Vec dir;
-        public Point point;
-
-
+        
         public Sphere(Transformation transf)
         {
             Transf = transf;
@@ -62,8 +58,8 @@ namespace PGENLib
             }
 
             var hitPoint = InvRay.At(tFirstHit);
-            HitRecord hit = new HitRecord(this.Transf*hitPoint, this.Transf*sphere_normal(hit_point, ray.dir),
-                sphere_point_to_uv(hit_point), tFirstHit, ray);
+            HitRecord hit = new HitRecord(this.Transf*hitPoint, this.Transf*SphereNormal(hitPoint, ray.Dir),
+                SpherePointToUv(hitPoint), tFirstHit, ray);
             return hit;
         }
         /// <summary>
