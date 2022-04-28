@@ -4633,19 +4633,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Martino\\.nuget\\packages\\": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj",
+      "projectUniqueName": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENLib.csproj",
       "projectName": "PGENLib",
-      "projectPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj",
-      "packagesPath": "C:\\Users\\Martino\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\obj\\",
+      "projectPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENLib.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Martino\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"

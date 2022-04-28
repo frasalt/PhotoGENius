@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj": {}
+    "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj": {
+    "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENLib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj",
+        "projectUniqueName": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENLib.csproj",
         "projectName": "PGENLib",
-        "projectPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj",
-        "packagesPath": "C:\\Users\\Martino\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\obj\\",
+        "projectPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENLib.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Martino\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -66,17 +66,17 @@
         }
       }
     },
-    "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj": {
+    "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj",
+        "projectUniqueName": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj",
         "projectName": "PhotoGENius",
-        "projectPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj",
-        "packagesPath": "C:\\Users\\Martino\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PhotoGENius\\obj\\",
+        "projectPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Martino\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -88,8 +88,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENlib.csproj": {
-                "projectPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENlib.csproj"
+              "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENlib.csproj": {
+                "projectPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENlib.csproj"
               }
             }
           }

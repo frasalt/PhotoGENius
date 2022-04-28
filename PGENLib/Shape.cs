@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Xml.Schema;
 
 namespace PGENLib
 {
@@ -19,6 +20,10 @@ namespace PGENLib
     public struct Sphere : IShapes
     {
         private Transformation Transf;
+        public Normal n;
+        public Vec dir;
+        public Point point;
+
 
         public Sphere(Transformation transf)
         {
@@ -61,6 +66,46 @@ namespace PGENLib
                 sphere_point_to_uv(hit_point), tFirstHit, ray);
             return hit;
         }
+        /// <summary>
+        /// Normal in intersection point. 
+        /// </summary>
+        public Normal SphereNormal(Point point,  Vec dir)
+        { 
+            Normal result = new Normal(point.x, point.y, point.z);
+            Normal n = new Normal();
+            if (Vec.DotProd(point.PointToVec(),dir) < 0.0)
+            {
+                n = result;
+            }
+            else
+            {
+                n = result*(-1);
+            }
+            return n;
+        }
+
+        /// <summary>
+        /// Convert intersection point in u,v coordinates. 
+        /// </summary>
+        public Vec2d SpherePointToUv(Point point)
+        {
+            var arg = point.y / point.x;
+            var u = Math.Atan(arg) / (2.0 * Math.PI);
+            var v = Math.Acos(point.z) / Math.PI;
+            
+            if (u >= 0.0)
+            {
+                Vec2d tot = new Vec2d((float)u,(float)v);
+                return tot;
+            }
+            else
+            {
+                u = u + 1.0f;
+                Vec2d tot = new Vec2d((float) u, (float) v);
+                return tot;
+            }
+        }
         
+ 
     }
 }
