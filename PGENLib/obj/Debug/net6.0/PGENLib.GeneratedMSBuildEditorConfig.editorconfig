@@ -7,4 +7,8 @@ build_property.InvariantGlobalization =
 build_property.PlatformNeutralAssembly = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PGENLib
+<<<<<<< HEAD
 build_property.ProjectDir = /Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib/
+=======
+build_property.ProjectDir = C:\Users\User\RiderProjects\PhotoGENius\PGENLib\
+>>>>>>> d8a4d78ab0eb62307f46b0737cfde2e95d98404a

@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "/Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PhotoGENius/PhotoGENius.csproj": {}
   },
   "projects": {
@@ -15,6 +16,22 @@
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/fra/.nuget/NuGet/NuGet.Config"
+=======
+    "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENLib.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENLib.csproj",
+        "projectName": "PGENLib",
+        "projectPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENLib.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+>>>>>>> d8a4d78ab0eb62307f46b0737cfde2e95d98404a
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -66,6 +83,7 @@
         }
       }
     },
+<<<<<<< HEAD
     "/Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PhotoGENius/PhotoGENius.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -77,6 +95,19 @@
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/fra/.nuget/NuGet/NuGet.Config"
+=======
+    "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj",
+        "projectName": "PhotoGENius",
+        "projectPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\PhotoGENius.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PhotoGENius\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+>>>>>>> d8a4d78ab0eb62307f46b0737cfde2e95d98404a
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -88,8 +119,13 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
+<<<<<<< HEAD
               "/Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib/PGENLib.csproj": {
                 "projectPath": "/Users/fra/Documenti/Università/Magistrale/SNIF/PhotoGENius/PGENLib/PGENLib.csproj"
+=======
+              "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENlib.csproj": {
+                "projectPath": "C:\\Users\\User\\RiderProjects\\PhotoGENius\\PGENLib\\PGENlib.csproj"
+>>>>>>> d8a4d78ab0eb62307f46b0737cfde2e95d98404a
               }
             }
           }
