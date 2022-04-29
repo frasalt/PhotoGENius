@@ -64,11 +64,11 @@ namespace PGENLib
     /// 
     public struct HitRecord
     {
-        private Point WorldPoint;
-        private Normal Normal;
-        private Vec2d SurfacePoint;
-        private float t;
-        private Ray Ray;
+        public Point WorldPoint;
+        public Normal Normal;
+        public Vec2d SurfacePoint;
+        public float t;
+        public Ray Ray;
         /// <summary>
         /// Constructor with parameters.
         /// </summary>

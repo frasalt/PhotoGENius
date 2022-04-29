@@ -15,24 +15,27 @@ namespace PGENLib
         /// </summary>
         public void AddShape(IShapes sh)
         {
-            this.Shapes.Append(sh);
+            Shapes.Append(sh);
         }
-           
-        /*
 
+        public HitRecord? rayIntersection(Ray intRay, List<IShapes> Shapes)
+        {
+            HitRecord? closest = null;
+             
+            
+            for (int i = 0; i < Shapes.Count; i++)
+            {
+                HitRecord? intersection;
+                intersection = IShapes.RayIntersection(intRay);
+                if (intersection == null) continue;
+                if (closest == null || (float)closest?.t > (float)intersection?.t)
+                {
+                    closest = intersection;
+                }
+            }
 
-            def ray_intersection(self, ray: Ray) -> Optional[HitRecord]:
-        closest = None # "closest" should be a nullable type!
-        for shape in self.shapes:
-        intersection = shape.ray_intersection(ray)
-
-        if not intersection:
-        continue
-
-        if (not closest) or(intersection.t<closest.t):
-        closest = intersection
-
-        return closest
-        */
+            return closest;
+        }
+        
     }
 }
