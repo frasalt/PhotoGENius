@@ -4,36 +4,38 @@ using System.Xml.Schema;
 
 namespace PGENLib
 {
-    
+
     /// <summary>
     /// Interface for a generic 3D shape: the method RayIntersection is implemented in different concrete shapes.
     /// </summary>
-    public interface IShapes
+    public abstract class Shape
     {
-        HitRecord? RayIntersection(Ray ray);
-
+        private Transformation _transf;
+        public virtual HitRecord? RayIntersection(Ray ray)
+        {
+            throw new NotImplementedException();
+        }
     }
-
+    
     /// <summary>
     /// A 3D unit sphere centered on the axes origin.
     /// </summary>
-    public struct Sphere : IShapes
+    public class Sphere : Shape
     {
-        private Transformation Transf;
+        private Transformation _transf;
         
         public Sphere(Transformation transf)
         {
-            Transf = transf;
+            _transf = transf;
         }
         
-        
-        public HitRecord? RayIntersection(Ray ray)
+        public override HitRecord? RayIntersection(Ray ray)
         {
-            Ray InvRay = ray.Transform(this.Transf.Inverse());
-            var OriginVec = InvRay.Origin.PointToVec();
-            var a = Vec.SquaredNorm(InvRay.Dir);
-            var b = 2.0f * Vec.DotProd(OriginVec, InvRay.Dir);
-            var c = Vec.SquaredNorm(OriginVec) - 1;
+            Ray invRay = ray.Transform(this._transf.Inverse());
+            var originVec = invRay.Origin.PointToVec();
+            var a = Vec.SquaredNorm(invRay.Dir);
+            var b = 2.0f * Vec.DotProd(originVec, invRay.Dir);
+            var c = Vec.SquaredNorm(originVec) - 1;
             var delta = b * b - 4.0f * a * c;
             
             if (delta <= 0)
@@ -41,14 +43,14 @@ namespace PGENLib
                 return null;
             }
             float sqrtDelta = (float) Math.Sqrt(delta);
-            float tmin = (float) ((-b - sqrtDelta) / (2.0f * a));
-            float tmax = (float) ((-b + sqrtDelta) / (2.0f * a));
-            float tFirstHit = 0;
-            if (tmin > InvRay.Tmin & tmin < InvRay.Tmax)
+            float tmin = (-b - sqrtDelta) / (2.0f * a);
+            float tmax = (-b + sqrtDelta) / (2.0f * a);
+            float tFirstHit;
+            if (tmin > invRay.Tmin & tmin < invRay.Tmax)
             {
                 tFirstHit = tmin;
             }
-            else if (tmax > InvRay.Tmin & tmax < InvRay.Tmax)
+            else if (tmax > invRay.Tmin & tmax < invRay.Tmax)
             {
                 tFirstHit = tmax;
             }
@@ -57,8 +59,8 @@ namespace PGENLib
                 return null;
             }
 
-            var hitPoint = InvRay.At(tFirstHit);
-            HitRecord hit = new HitRecord(this.Transf*hitPoint, this.Transf*SphereNormal(hitPoint, ray.Dir),
+            var hitPoint = invRay.At(tFirstHit);
+            var hit = new HitRecord(_transf*hitPoint, _transf*SphereNormal(hitPoint, ray.Dir),
                 SpherePointToUv(hitPoint), tFirstHit, ray);
             return hit;
         }
@@ -68,7 +70,7 @@ namespace PGENLib
         public Normal SphereNormal(Point point,  Vec dir)
         { 
             Normal result = new Normal(point.x, point.y, point.z);
-            Normal n = new Normal();
+            Normal n;
             if (Vec.DotProd(point.PointToVec(),dir) < 0.0)
             {
                 n = result;

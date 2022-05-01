@@ -60,11 +60,11 @@ namespace PGENLib.Tests
         [Fact]
         public void test_ortCameraTransform()
         {
-            var Vy = new Vec(0.0f, 1.0f, 0.0f);
-            var tr = Transformation.Traslation(-Vy * 2.0f)*Transformation.RotationZ(90);
+            var vy = new Vec(0.0f, 1.0f, 0.0f);
+            var tr = Transformation.Traslation(-vy * 2.0f)*Transformation.RotationZ(90);
             var cam = new OrthogonalCamera(2.0f, tr);
-            var Ray = cam.FireRay(0.5f, 0.5f);
-            Assert.True(Point.are_close(Ray.At(1.0f), new Point(0.0f, -2.0f, 0.0f)));
+            var ray = cam.FireRay(0.5f, 0.5f);
+            Assert.True(Point.are_close(ray.At(1.0f), new Point(0.0f, -2.0f, 0.0f)));
         }
         
         [Fact]
@@ -140,9 +140,9 @@ namespace PGENLib.Tests
                     for (int col = 0; col < _image.Width; col++)
                     {
                         mypixel = _image.GetPixel(col, row);
-                        Assert.True(mypixel.GetR() == mycolor.GetR());
-                        Assert.True(mypixel.GetG() == mycolor.GetG());
-                        Assert.True(mypixel.GetB() == mycolor.GetB());
+                        Assert.True(Math.Abs(mypixel.GetR() - mycolor.GetR()) < 1E-5);
+                        Assert.True(Math.Abs(mypixel.GetG() - mycolor.GetG()) < 1E-5);
+                        Assert.True(Math.Abs(mypixel.GetB() - mycolor.GetB()) < 1E-5);
                     }
                 }
             }
