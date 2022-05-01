@@ -17,6 +17,7 @@ namespace PGENLib
         }
     }
     
+    
     /// <summary>
     /// A 3D unit sphere centered on the axes origin.
     /// </summary>
