@@ -30,6 +30,10 @@ namespace PGENLib
             _transf = transf;
         }
         
+        /// <summary>
+        /// Compute the intersection between a ray and the shape.
+        /// Returns a HitRecord, or Null if the ray doesn't hit the sphere.
+        /// </summary>
         public override HitRecord? RayIntersection(Ray ray)
         {
             Ray invRay = ray.Transform(this._transf.Inverse());
