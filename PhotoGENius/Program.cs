@@ -23,6 +23,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Runtime;
 using SixLabors.ImageSharp.Processing;
+using System.CommandLine;
 
 
     class Program
@@ -83,10 +84,143 @@ using SixLabors.ImageSharp.Processing;
                 if (argv.Length == 5) Options = argv[4];
             }
         }
+        
+/*
+        //==============================================================================================================
+        //Prova demo con SystemCommandLine
+        //==============================================================================================================
+        static void Main()
+        {
+            var width = new Option<int>(
+                name: "--width",
+                description: "Width of the image to render.",
+                getDefaultValue: () => 640);
+            
+            var height = new Option<int>(
+                name: "--height",
+                description: "Height of the image to render.",
+                getDefaultValue: () => 480);
+            
+            var angleDeg = new Option<float>(
+                name: "--angle-deg",
+                description: "Angle of view in degrees.",
+                getDefaultValue: () => 0.0f);
+            
+            var pfmOutput = new Option<string>(
+                name: "--pfm-output",
+                description: "Name of the PFM file to create.",
+                getDefaultValue: () => "output.pfm");
+            
+            var pngOutput = new Option<string>(
+                name: "--png-output",
+                description: "Name of the PNG file to create.",
+                getDefaultValue: () => "output.png");
+            
+            var cameraType = new Option<string>(
+                name: "--camera-type",
+                description: "Type of camera to be used: 'orthogonal' or 'perspective'.",
+                getDefaultValue: () => "orthogonal");
+            
+            var demo = new RootCommand("Sample app for creating an image")
+            {
+                width,
+                height,
+                angleDeg,
+                pfmOutput,
+                pngOutput,
+                cameraType
+            };
+            
+            demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue, string pngOutputValue, string cameraType) =>
+            {
+                // 1.World initialization (10 spheres)
+                World world = new World();
 
+                //   sphere in vertices
+                Transformation scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
+                Transformation transformation;
+
+                for (float x = -0.5f; x <= 0.5f; x++)
+                {
+                    for (float y = -0.5f; y <= 0.5f; y++)
+                    {
+                        for (float z = -0.5f; z <= 0.5f; z++)
+                        {
+                            transformation = Transformation.Traslation(new Vec(x, y, z));
+
+                            Sphere sphere = new Sphere(transformation * scaling);
+                            world.AddShape(sphere);
+                        }
+                    }
+                }
+
+                //   sphere in faces
+                transformation = Transformation.Traslation(new Vec(0.0f, 0.0f, -0.5f));
+                world.AddShape(new Sphere(transformation * scaling));
+
+                transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
+                world.AddShape(new Sphere(transformation * scaling));
+
+
+                // 2.Camera initialization
+                transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
+                Transformation rotation = Transformation.RotationZ(angleDegValue);
+                //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
+                if (cameraType == "perspective")
+                {
+                    PerspectiveCamera camera = new PerspectiveCamera(1.0f, widthValue/heightValue, transformation*rotation);
+                }
+                
+                // 3.(ruotare l'osservatore)
+
+                // 4.Run raytracer
+                HdrImage image = new HdrImage(800, 600);
+                ImageTracer tracer = new ImageTracer(image, camera);
+
+                Color ComputeColor(Ray ray)
+                {
+                    if (world.RayIntersection(ray) == null) return BLACK;
+                    else return WHITE;
+                }
+
+                tracer.FireAllRays(ComputeColor);
+
+                // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura su file pfm, per colpa dello stream.
+                MemoryStream stream = new MemoryStream();
+                image.WritePFMFile(stream, Endianness.BigEndian);
+
+                //image.WritePFMFile(stream, Endianness.LittleEndian);
+
+                // 6.convertire a PNG
+                image.NormalizeImage(1.0f);
+                image.ClampImage();
+
+                // salvo in file PNG, a seconda delle opzioni
+                try
+                {
+                    string outf = "image.png";
+                    {
+                        image.WriteLdrImage(outf, "PNG", 0.2f);
+                    }
+
+                    Console.WriteLine($" >> File image.png has been written to disk.");
+                }
+                catch
+                {
+                    Console.WriteLine(
+                        "Error: couldn't write file image.png.");
+                }
+            },
+            width, height, angleDeg, pfmOutput, pngOutput, cameraType );
+            
+            
+            
+                
+        }
+
+*/        
         //----------------------------------------------------------------------------------------------------------- 
-
-        //*
+        
         static void Main()
         {
             // 1.World initialization (10 spheres)
