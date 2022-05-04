@@ -17,12 +17,14 @@
      */
 
 using System.IO.Compression;
+using System.Numerics;
 using PGENLib;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Runtime;
+using SixLabors.ImageSharp.Processing;
 
-class Program
+    class Program
 {
     
     class Parameters
@@ -67,7 +69,71 @@ class Program
     }
 
     //----------------------------------------------------------------------------------------------------------- 
-    static void Main(string[] argv)
+
+    static void Main()
+    { 
+        // 1.World initialization (10 spheres)
+        World world = new World();
+
+        //   sphere in vertices
+        Transformation scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
+        Transformation transformation;
+
+        for (float x = -0.5f; x <= 0.5f; x++)
+        {
+            for (float y = -0.5f; y <= 0.5f; y++)
+            {
+                for (float z = -0.5f; z <= 0.5f; z++)
+                {
+                    transformation = Transformation.Traslation(new Vec(x,y,z));
+                    
+                    Sphere sphere = new Sphere(transformation*scaling);
+                    world.AddShape(sphere); 
+                }
+            }
+        }
+        
+        //   sphere in faces
+        transformation = Transformation.Traslation(new Vec(0.0f,0.0f,-0.5f));
+        world.AddShape(new Sphere(transformation*scaling));
+        
+        transformation = Transformation.Traslation(new Vec(0.0f,0.5f,0.0f));
+        world.AddShape(new Sphere(transformation*scaling));
+        
+
+        // 2.Camera initialization
+        transformation = Transformation.Traslation(new Vec(-1.0f,0.0f,0.0f));
+        OrthogonalCamera camera = new OrthogonalCamera(4.0f/3.0f,transformation);
+        
+
+        // 3.(ruotare l'osservatore)
+
+        // 4.Run raytracer
+        Color WHITE = new Color(255, 255, 255);
+        Color BLACK = new Color(0, 0, 0);
+
+        HdrImage image = new HdrImage(400,300);
+        ImageTracer tracer = new ImageTracer(image, camera);
+
+        Color ComputeColor(Ray ray)
+        {
+            if (world.RayIntersection(ray)==null) return BLACK;
+            else return WHITE;
+        }
+        
+        tracer.FireAllRays(ComputeColor);
+
+        // 5.salvare PFM
+        Stream stream = new FileStream("image.pfm", FileMode.Open, FileAccess.Write);
+        image.WritePFMFile(stream, Endianness.LittleEndian);
+
+        // 6.convertire a PNG
+        
+    }
+    
+    //----------------------------------------------------------------------------------------------------------- 
+    /*
+    static void Pfm2Png(string[] argv)
     {
         Parameters parameters = new Parameters();
         
@@ -113,6 +179,7 @@ class Program
         {
             Console.WriteLine("Advanced options not yet implemented: please, do not specify.");
         }
-
-    }
+    }*/
+    
 }
+

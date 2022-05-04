@@ -191,7 +191,6 @@ namespace PGENLib
             Camera = camera;
         }
 
-        // There is an error in this function
         public Ray FireRay(int col, int row, float uPixel = 0.5f, float vPixel = 0.5f)
         {
             // A parte convertire le coordinate dallo spazio (u, v) allo spazio dei pixel,
