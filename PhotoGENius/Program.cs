@@ -24,6 +24,8 @@ using System.Text;
 using System.Runtime;
 using SixLabors.ImageSharp.Processing;
 using System.CommandLine;
+using SixLabors.ImageSharp;
+using Color = PGENLib.Color;
 
 
     class Program
@@ -85,7 +87,7 @@ using System.CommandLine;
             }
         }
         
-/*
+
         //==============================================================================================================
         //Prova demo con SystemCommandLine
         //==============================================================================================================
@@ -134,21 +136,21 @@ using System.CommandLine;
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue, string pngOutputValue, string cameraType) =>
             {
                 // 1.World initialization (10 spheres)
-                World world = new World();
+                var world = new World();
 
                 //   sphere in vertices
-                Transformation scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
+                var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
                 Transformation transformation;
 
-                for (float x = -0.5f; x <= 0.5f; x++)
+                for (var x = -0.5f; x <= 0.5f; x++)
                 {
-                    for (float y = -0.5f; y <= 0.5f; y++)
+                    for (var y = -0.5f; y <= 0.5f; y++)
                     {
-                        for (float z = -0.5f; z <= 0.5f; z++)
+                        for (var z = -0.5f; z <= 0.5f; z++)
                         {
                             transformation = Transformation.Traslation(new Vec(x, y, z));
 
-                            Sphere sphere = new Sphere(transformation * scaling);
+                            var sphere = new Sphere(transformation * scaling);
                             world.AddShape(sphere);
                         }
                     }
@@ -164,29 +166,35 @@ using System.CommandLine;
 
                 // 2.Camera initialization
                 transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
-                Transformation rotation = Transformation.RotationZ(angleDegValue);
+                var rotation = Transformation.RotationZ(angleDegValue);
+                float aspectRatio = (float)widthValue/heightValue;
                 //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
+
+                ICamera camera;
                 if (cameraType == "perspective")
                 {
-                    PerspectiveCamera camera = new PerspectiveCamera(1.0f, widthValue/heightValue, transformation*rotation);
+                    camera = new PerspectiveCamera(1.0f, aspectRatio, transformation*rotation);
                 }
-                
+                else
+                {
+                    camera = new OrthogonalCamera(aspectRatio, transformation * rotation);
+                }
+
                 // 3.(ruotare l'osservatore)
 
                 // 4.Run raytracer
-                HdrImage image = new HdrImage(800, 600);
-                ImageTracer tracer = new ImageTracer(image, camera);
+                var image = new HdrImage(800, 600);
+                var tracer = new ImageTracer(image, camera);
 
                 Color ComputeColor(Ray ray)
                 {
-                    if (world.RayIntersection(ray) == null) return BLACK;
-                    else return WHITE;
+                    return world.RayIntersection(ray) == null ? BLACK : WHITE;
                 }
 
                 tracer.FireAllRays(ComputeColor);
 
                 // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura su file pfm, per colpa dello stream.
-                MemoryStream stream = new MemoryStream();
+                var stream = new MemoryStream();
                 image.WritePFMFile(stream, Endianness.BigEndian);
 
                 //image.WritePFMFile(stream, Endianness.LittleEndian);
@@ -198,7 +206,7 @@ using System.CommandLine;
                 // salvo in file PNG, a seconda delle opzioni
                 try
                 {
-                    string outf = "image.png";
+                    var outf = "image.png";
                     {
                         image.WriteLdrImage(outf, "PNG", 0.2f);
                     }
@@ -213,14 +221,84 @@ using System.CommandLine;
             },
             width, height, angleDeg, pfmOutput, pngOutput, cameraType );
             
+            //---------------------------------------------------------------------------------
+            var factor = new Option<float>(
+                name: "--factor",
+                description: "Multiplicative factor.",
+                getDefaultValue: () => 0.2f);
             
+            var gamma = new Option<float>(
+                name: "--gamma",
+                description: "Value to be used for gamma correction.",
+                getDefaultValue: () => 1.0f);
+            
+            var inputPfmFileName = new Option<string>(
+                name: "--input-pfm",
+                description: "PFM file to be converted.",
+                getDefaultValue: () => "input.pfm");
+            
+            var outputPngFileName = new Option<string>(
+                name: "--output-png",
+                description: "PNG output file.",
+                getDefaultValue: () => "output.png");
+
+            var pfm2png = new RootCommand("Sample app for converting a PFM to a PNG.")
+            {
+                factor,
+                gamma,
+                inputPfmFileName,
+                outputPngFileName
+            };
+            
+            pfm2png.SetHandler((float factorValue, float gammaValue, string inputPfmFileNameValue, string outputPngFileNameValue) =>
+            {
+                /*
+                Parameters parameters = new Parameters();
+            
+                // riempio i parametri
+                try { parameters.parse_command_line(argv); }
+                catch (RuntimeError)
+                {
+                    Console.WriteLine("Error: invalid number of parameters. Please, follow usage instructions.");
+                    return;
+                }
+                */
+    
+                HdrImage img = new HdrImage(0,0);
+            
+                // leggo l'immagine HDR in formato PFM
+                using (var inpf = new FileStream(inputPfmFileNameValue, FileMode.Open, FileAccess.Read))
+                { img = img.ReadPFMFile(inpf); }
+    
+                Console.WriteLine($" >> File {inputPfmFileNameValue} has been read from disk.");
+    
+                // converto i dati in formato LDR
+                img.NormalizeImage(factorValue);
+                img.ClampImage();
+    
+                // salvo in file PNG, a seconda delle opzioni
+                try
+                    {
+                        string outf = outputPngFileNameValue;
+                        {
+                            img.WriteLdrImage(outf, "PNG", gammaValue);
+                        }
+    
+                        Console.WriteLine($" >> File {outputPngFileNameValue} has been written to disk.");
+                    }
+                    catch
+                    {
+                        Console.WriteLine(
+                            "Error: couldn't write file {0}.", outputPngFileNameValue);
+                    }
+            },
+            factor, gamma, inputPfmFileName, outputPngFileName);
             
                 
         }
-
-*/        
-        //----------------------------------------------------------------------------------------------------------- 
         
+        /*
+        //----------------------------------------------------------------------------------------------------------- 
         static void Main()
         {
             // 1.World initialization (10 spheres)
@@ -300,9 +378,9 @@ using System.CommandLine;
             }
         }
 
-        //*/
-        //----------------------------------------------------------------------------------------------------------- 
-        /*
+        
+        //-----------------------------------------------------------------------------------------------------------
+        
         static void Main(string[] argv)
         {
             Parameters parameters = new Parameters();
