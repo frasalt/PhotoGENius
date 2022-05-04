@@ -210,6 +210,7 @@ namespace PGENLib
             {
                 for(int col = 0; col< Image.Width; col ++)
                 {
+                    
                     Ray ray = FireRay(col, row);
                     Color color = func(ray);    // una funzione che viene invocata per ogni raggio e
                                                 // restituisca un oggetto di tipo Color.
