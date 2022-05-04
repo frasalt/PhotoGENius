@@ -456,5 +456,5 @@ $RECYCLE.BIN/
 ##
 ## Cose aggiunte da noi
 ##
-*\*\*.json
-*\*\*\*\*.json
+*.json
+*.cache
