@@ -24,12 +24,16 @@ namespace PGENLib
     public class Sphere : Shape
     {
         private Transformation _transf;
-        
+
+        public Sphere()
+        {
+            _transf = new Transformation();
+        }
         public Sphere(Transformation transf)
         {
             _transf = transf;
         }
-        
+
         /// <summary>
         /// Compute the intersection between a ray and the shape.
         /// Returns a HitRecord, or Null if the ray doesn't hit the sphere.
@@ -70,10 +74,11 @@ namespace PGENLib
             return hit;
         }
         /// <summary>
-        /// Normal in intersection point. 
+        /// Computes the normal in the intersection point of a ray and the surface of a unit sphere.
+        /// The normal has always the opposite direction with respect to a given Ray. 
         /// </summary>
         public Normal SphereNormal(Point point,  Vec dir)
-        { 
+        {
             Normal result = new Normal(point.x, point.y, point.z);
             Normal n;
             if (Vec.DotProd(point.PointToVec(),dir) < 0.0)
@@ -88,7 +93,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Convert intersection point in u,v coordinates. 
+        /// Convert the 3D intersection point into a 2D point, of coordinates (u,v). 
         /// </summary>
         public Vec2d SpherePointToUv(Point point)
         {
@@ -111,4 +116,48 @@ namespace PGENLib
         
  
     }
+
+    public class XyPlane : Shape
+    {
+        private Transformation _transf;
+        
+        public XyPlane(Transformation transf)
+        {
+            _transf = transf;
+        }
+        
+        /// <summary>
+        /// Compute the intersection between a ray and the shape.
+        /// Returns a HitRecord object, or Null if the ray doesn't hit the plane.
+        /// </summary>
+        public override HitRecord? RayIntersection(Ray ray)
+        {
+            Ray invRay = ray.Transform(this._transf.Inverse());
+            var originVec = invRay.Origin.PointToVec();
+
+            if (Math.Abs(invRay.Dir.z) < 1E-5)
+            {
+                return null;
+            }
+            var t = - originVec.z/invRay.Dir.z;
+            if (t <= invRay.Tmin || t >= invRay.Tmax)
+            {
+                return null;
+            }
+            var hitPoint = invRay.At(t);
+            var planeNormal = new Normal(0.0f, 0.0f, 1.0f);
+            if (invRay.Dir.z > 0)
+            {
+                planeNormal = planeNormal * -1.0f;
+            } 
+            
+            var surfacePoint = new Vec2d(hitPoint.x - (float)Math.Floor(hitPoint.x),  
+                hitPoint.y - (float)Math.Floor(hitPoint.y));
+            var hit = new HitRecord(_transf*hitPoint, _transf*planeNormal,
+                surfacePoint, t, ray);
+            return hit;
+        }
+        
+    }
+
 }

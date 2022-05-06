@@ -16,17 +16,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
      */
 
-using System.IO.Compression;
-using System.Numerics;
-using PGENLib;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Runtime;
-using SixLabors.ImageSharp.Processing;
-using System.CommandLine;
-using SixLabors.ImageSharp;
-using Color = PGENLib.Color;
+    using System.CommandLine;
+    using PGENLib;
+    using Color = PGENLib.Color;
 
+
+    namespace PhotoGENius; 
 
     class Program
     {
@@ -134,92 +129,92 @@ using Color = PGENLib.Color;
             };
             
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue, string pngOutputValue, string cameraType) =>
-            {
-                // 1.World initialization (10 spheres)
-                var world = new World();
-
-                //   sphere in vertices
-                var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
-                Transformation transformation;
-
-                for (var x = -0.5f; x <= 0.5f; x++)
                 {
-                    for (var y = -0.5f; y <= 0.5f; y++)
-                    {
-                        for (var z = -0.5f; z <= 0.5f; z++)
-                        {
-                            transformation = Transformation.Traslation(new Vec(x, y, z));
+                    // 1.World initialization (10 spheres)
+                    var world = new World();
 
-                            var sphere = new Sphere(transformation * scaling);
-                            world.AddShape(sphere);
+                    //   sphere in vertices
+                    var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
+                    Transformation transformation;
+
+                    for (var x = -0.5f; x <= 0.5f; x++)
+                    {
+                        for (var y = -0.5f; y <= 0.5f; y++)
+                        {
+                            for (var z = -0.5f; z <= 0.5f; z++)
+                            {
+                                transformation = Transformation.Traslation(new Vec(x, y, z));
+
+                                var sphere = new Sphere(transformation * scaling);
+                                world.AddShape(sphere);
+                            }
                         }
                     }
-                }
 
-                //   sphere in faces
-                transformation = Transformation.Traslation(new Vec(0.0f, 0.0f, -0.5f));
-                world.AddShape(new Sphere(transformation * scaling));
+                    //   sphere in faces
+                    transformation = Transformation.Traslation(new Vec(0.0f, 0.0f, -0.5f));
+                    world.AddShape(new Sphere(transformation * scaling));
 
-                transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
-                world.AddShape(new Sphere(transformation * scaling));
+                    transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
+                    world.AddShape(new Sphere(transformation * scaling));
 
 
-                // 2.Camera initialization
-                transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
-                var rotation = Transformation.RotationZ(angleDegValue);
-                float aspectRatio = (float)widthValue/heightValue;
-                //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
+                    // 2.Camera initialization
+                    transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
+                    var rotation = Transformation.RotationZ(angleDegValue);
+                    float aspectRatio = (float)widthValue/heightValue;
+                    //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
 
-                ICamera camera;
-                if (cameraType == "perspective")
-                {
-                    camera = new PerspectiveCamera(1.0f, aspectRatio, transformation*rotation);
-                }
-                else
-                {
-                    camera = new OrthogonalCamera(aspectRatio, transformation * rotation);
-                }
-
-                // 3.(ruotare l'osservatore)
-
-                // 4.Run raytracer
-                var image = new HdrImage(800, 600);
-                var tracer = new ImageTracer(image, camera);
-
-                Color ComputeColor(Ray ray)
-                {
-                    return world.RayIntersection(ray) == null ? BLACK : WHITE;
-                }
-
-                tracer.FireAllRays(ComputeColor);
-
-                // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura su file pfm, per colpa dello stream.
-                var stream = new MemoryStream();
-                image.WritePFMFile(stream, Endianness.BigEndian);
-
-                //image.WritePFMFile(stream, Endianness.LittleEndian);
-
-                // 6.convertire a PNG
-                image.NormalizeImage(1.0f);
-                image.ClampImage();
-
-                // salvo in file PNG, a seconda delle opzioni
-                try
-                {
-                    var outf = "image.png";
+                    ICamera camera;
+                    if (cameraType == "perspective")
                     {
-                        image.WriteLdrImage(outf, "PNG", 0.2f);
+                        camera = new PerspectiveCamera(1.0f, aspectRatio, transformation*rotation);
+                    }
+                    else
+                    {
+                        camera = new OrthogonalCamera(aspectRatio, transformation * rotation);
                     }
 
-                    Console.WriteLine($" >> File image.png has been written to disk.");
-                }
-                catch
-                {
-                    Console.WriteLine(
-                        "Error: couldn't write file image.png.");
-                }
-            },
-            width, height, angleDeg, pfmOutput, pngOutput, cameraType );
+                    // 3.(ruotare l'osservatore)
+
+                    // 4.Run raytracer
+                    var image = new HdrImage(800, 600);
+                    var tracer = new ImageTracer(image, camera);
+
+                    Color ComputeColor(Ray ray)
+                    {
+                        return world.RayIntersection(ray) == null ? BLACK : WHITE;
+                    }
+
+                    tracer.FireAllRays(ComputeColor);
+
+                    // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura su file pfm, per colpa dello stream.
+                    var stream = new MemoryStream();
+                    image.WritePFMFile(stream, Endianness.BigEndian);
+
+                    //image.WritePFMFile(stream, Endianness.LittleEndian);
+
+                    // 6.convertire a PNG
+                    image.NormalizeImage(1.0f);
+                    image.ClampImage();
+
+                    // salvo in file PNG, a seconda delle opzioni
+                    try
+                    {
+                        var outf = "image.png";
+                        {
+                            image.WriteLdrImage(outf, "PNG", 0.2f);
+                        }
+
+                        Console.WriteLine($" >> File image.png has been written to disk.");
+                    }
+                    catch
+                    {
+                        Console.WriteLine(
+                            "Error: couldn't write file image.png.");
+                    }
+                },
+                width, height, angleDeg, pfmOutput, pngOutput, cameraType );
             
             //---------------------------------------------------------------------------------
             var factor = new Option<float>(
@@ -251,33 +246,33 @@ using Color = PGENLib.Color;
             };
             
             pfm2png.SetHandler((float factorValue, float gammaValue, string inputPfmFileNameValue, string outputPngFileNameValue) =>
-            {
-                /*
-                Parameters parameters = new Parameters();
-            
-                // riempio i parametri
-                try { parameters.parse_command_line(argv); }
-                catch (RuntimeError)
                 {
-                    Console.WriteLine("Error: invalid number of parameters. Please, follow usage instructions.");
-                    return;
-                }
-                */
+                    /*
+            Parameters parameters = new Parameters();
+        
+            // riempio i parametri
+            try { parameters.parse_command_line(argv); }
+            catch (RuntimeError)
+            {
+                Console.WriteLine("Error: invalid number of parameters. Please, follow usage instructions.");
+                return;
+            }
+            */
     
-                HdrImage img = new HdrImage(0,0);
+                    HdrImage img = new HdrImage(0,0);
             
-                // leggo l'immagine HDR in formato PFM
-                using (var inpf = new FileStream(inputPfmFileNameValue, FileMode.Open, FileAccess.Read))
-                { img = img.ReadPFMFile(inpf); }
+                    // leggo l'immagine HDR in formato PFM
+                    using (var inpf = new FileStream(inputPfmFileNameValue, FileMode.Open, FileAccess.Read))
+                    { img = img.ReadPFMFile(inpf); }
     
-                Console.WriteLine($" >> File {inputPfmFileNameValue} has been read from disk.");
+                    Console.WriteLine($" >> File {inputPfmFileNameValue} has been read from disk.");
     
-                // converto i dati in formato LDR
-                img.NormalizeImage(factorValue);
-                img.ClampImage();
+                    // converto i dati in formato LDR
+                    img.NormalizeImage(factorValue);
+                    img.ClampImage();
     
-                // salvo in file PNG, a seconda delle opzioni
-                try
+                    // salvo in file PNG, a seconda delle opzioni
+                    try
                     {
                         string outf = outputPngFileNameValue;
                         {
@@ -291,144 +286,143 @@ using Color = PGENLib.Color;
                         Console.WriteLine(
                             "Error: couldn't write file {0}.", outputPngFileNameValue);
                     }
-            },
-            factor, gamma, inputPfmFileName, outputPngFileName);
+                },
+                factor, gamma, inputPfmFileName, outputPngFileName);
             
                 
         }
         
         /*
-        //----------------------------------------------------------------------------------------------------------- 
-        static void Main()
+    //----------------------------------------------------------------------------------------------------------- 
+    static void Main()
+    {
+        // 1.World initialization (10 spheres)
+        World world = new World();
+
+        //   sphere in vertices
+        Transformation scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
+        Transformation transformation;
+
+        for (float x = -0.5f; x <= 0.5f; x++)
         {
-            // 1.World initialization (10 spheres)
-            World world = new World();
-
-            //   sphere in vertices
-            Transformation scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
-            Transformation transformation;
-
-            for (float x = -0.5f; x <= 0.5f; x++)
+            for (float y = -0.5f; y <= 0.5f; y++)
             {
-                for (float y = -0.5f; y <= 0.5f; y++)
+                for (float z = -0.5f; z <= 0.5f; z++)
                 {
-                    for (float z = -0.5f; z <= 0.5f; z++)
-                    {
-                        transformation = Transformation.Traslation(new Vec(x, y, z));
+                    transformation = Transformation.Traslation(new Vec(x, y, z));
 
-                        Sphere sphere = new Sphere(transformation * scaling);
-                        world.AddShape(sphere);
-                    }
+                    Sphere sphere = new Sphere(transformation * scaling);
+                    world.AddShape(sphere);
                 }
             }
+        }
 
-            //   sphere in faces
-            transformation = Transformation.Traslation(new Vec(0.0f, 0.0f, -0.5f));
-            world.AddShape(new Sphere(transformation * scaling));
+        //   sphere in faces
+        transformation = Transformation.Traslation(new Vec(0.0f, 0.0f, -0.5f));
+        world.AddShape(new Sphere(transformation * scaling));
 
-            transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
-            world.AddShape(new Sphere(transformation * scaling));
-
-
-            // 2.Camera initialization
-            transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
-            Transformation rotation = Transformation.RotationZ(53.0f);
-            //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
-            PerspectiveCamera camera = new PerspectiveCamera(1.0f, 4.0f / 3.0f, transformation*rotation);
+        transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
+        world.AddShape(new Sphere(transformation * scaling));
 
 
-            // 3.(ruotare l'osservatore)
+        // 2.Camera initialization
+        transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
+        Transformation rotation = Transformation.RotationZ(53.0f);
+        //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
+        PerspectiveCamera camera = new PerspectiveCamera(1.0f, 4.0f / 3.0f, transformation*rotation);
 
-            // 4.Run raytracer
-            HdrImage image = new HdrImage(800, 600);
-            ImageTracer tracer = new ImageTracer(image, camera);
 
-            Color ComputeColor(Ray ray)
+        // 3.(ruotare l'osservatore)
+
+        // 4.Run raytracer
+        HdrImage image = new HdrImage(800, 600);
+        ImageTracer tracer = new ImageTracer(image, camera);
+
+        Color ComputeColor(Ray ray)
+        {
+            if (world.RayIntersection(ray) == null) return BLACK;
+            else return WHITE;
+        }
+
+        tracer.FireAllRays(ComputeColor);
+
+        // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura su file pfm, per colpa dello stream.
+        MemoryStream stream = new MemoryStream();
+        image.WritePFMFile(stream, Endianness.BigEndian);
+
+        //image.WritePFMFile(stream, Endianness.LittleEndian);
+
+        // 6.convertire a PNG
+        image.NormalizeImage(1.0f);
+        image.ClampImage();
+
+        // salvo in file PNG, a seconda delle opzioni
+        try
+        {
+            string outf = "image.png";
             {
-                if (world.RayIntersection(ray) == null) return BLACK;
-                else return WHITE;
+                image.WriteLdrImage(outf, "PNG", 0.2f);
             }
 
-            tracer.FireAllRays(ComputeColor);
+            Console.WriteLine($" >> File image.png has been written to disk.");
+        }
+        catch
+        {
+            Console.WriteLine(
+                "Error: couldn't write file image.png.");
+        }
+    }
 
-            // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura su file pfm, per colpa dello stream.
-            MemoryStream stream = new MemoryStream();
-            image.WritePFMFile(stream, Endianness.BigEndian);
+    
+    //-----------------------------------------------------------------------------------------------------------
+    
+    static void Main(string[] argv)
+    {
+        Parameters parameters = new Parameters();
+        
+        // riempio i parametri
+        try { parameters.parse_command_line(argv); }
+        catch (RuntimeError)
+        {
+            Console.WriteLine("Error: invalid number of parameters. Please, follow usage instructions.");
+            return;
+        }
 
-            //image.WritePFMFile(stream, Endianness.LittleEndian);
+        HdrImage img = new HdrImage(0,0);
+        
+        // leggo l'immagine HDR in formato PFM
+        using (var inpf = new FileStream(parameters.InputPfmFileName, FileMode.Open, FileAccess.Read))
+        { img = img.ReadPFMFile(inpf); }
 
-            // 6.convertire a PNG
-            image.NormalizeImage(1.0f);
-            image.ClampImage();
+        Console.WriteLine($" >> File {parameters.InputPfmFileName} has been read from disk.");
 
-            // salvo in file PNG, a seconda delle opzioni
+        // converto i dati in formato LDR
+        img.NormalizeImage(parameters.Factor);
+        img.ClampImage();
+
+        // salvo in file PNG, a seconda delle opzioni
+        if (parameters.Options == "")
+        {
             try
             {
-                string outf = "image.png";
+                string outf = parameters.OutputPngFileName;
                 {
-                    image.WriteLdrImage(outf, "PNG", 0.2f);
+                    img.WriteLdrImage(outf, "PNG", parameters.Gamma);
                 }
 
-                Console.WriteLine($" >> File image.png has been written to disk.");
+                Console.WriteLine($" >> File {parameters.OutputPngFileName} has been written to disk.");
             }
             catch
             {
                 Console.WriteLine(
-                    "Error: couldn't write file image.png.");
+                    "Error: couldn't write file {0}.", parameters.OutputPngFileName);
             }
         }
-
-        
-        //-----------------------------------------------------------------------------------------------------------
-        
-        static void Main(string[] argv)
+        else if (parameters.Options != "")
         {
-            Parameters parameters = new Parameters();
-            
-            // riempio i parametri
-            try { parameters.parse_command_line(argv); }
-            catch (RuntimeError)
-            {
-                Console.WriteLine("Error: invalid number of parameters. Please, follow usage instructions.");
-                return;
-            }
-    
-            HdrImage img = new HdrImage(0,0);
-            
-            // leggo l'immagine HDR in formato PFM
-            using (var inpf = new FileStream(parameters.InputPfmFileName, FileMode.Open, FileAccess.Read))
-            { img = img.ReadPFMFile(inpf); }
-    
-            Console.WriteLine($" >> File {parameters.InputPfmFileName} has been read from disk.");
-    
-            // converto i dati in formato LDR
-            img.NormalizeImage(parameters.Factor);
-            img.ClampImage();
-    
-            // salvo in file PNG, a seconda delle opzioni
-            if (parameters.Options == "")
-            {
-                try
-                {
-                    string outf = parameters.OutputPngFileName;
-                    {
-                        img.WriteLdrImage(outf, "PNG", parameters.Gamma);
-                    }
-    
-                    Console.WriteLine($" >> File {parameters.OutputPngFileName} has been written to disk.");
-                }
-                catch
-                {
-                    Console.WriteLine(
-                        "Error: couldn't write file {0}.", parameters.OutputPngFileName);
-                }
-            }
-            else if (parameters.Options != "")
-            {
-                Console.WriteLine("Advanced options not yet implemented: please, do not specify.");
-            }
+            Console.WriteLine("Advanced options not yet implemented: please, do not specify.");
         }
-        */
+    }
+    */
 
     }
-    

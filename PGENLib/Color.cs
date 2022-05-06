@@ -1,5 +1,6 @@
 namespace PGENLib
 {
+    
     public struct Color
     {
         public float r;
