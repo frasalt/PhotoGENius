@@ -18,3 +18,23 @@ C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo s
 C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo semestre\immagini_fotorealistiche\es_1\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.csproj.CopyComplete
 C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo semestre\immagini_fotorealistiche\es_1\PhotoGENius\PhotoGENius\bin\Debug\net6.0\xunit.assert.dll
 C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo semestre\immagini_fotorealistiche\es_1\PhotoGENius\PhotoGENius\bin\Debug\net6.0\SixLabors.ImageSharp.dll
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\bin\Debug\net6.0\PhotoGENius.exe
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\bin\Debug\net6.0\PhotoGENius.deps.json
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\bin\Debug\net6.0\PhotoGENius.runtimeconfig.json
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\bin\Debug\net6.0\PhotoGENius.dll
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\bin\Debug\net6.0\PhotoGENius.pdb
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\bin\Debug\net6.0\SixLabors.ImageSharp.dll
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\bin\Debug\net6.0\xunit.assert.dll
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\bin\Debug\net6.0\PGENLib.dll
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\bin\Debug\net6.0\PGENLib.pdb
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.csproj.AssemblyReference.cache
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.AssemblyInfoInputs.cache
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.AssemblyInfo.cs
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.csproj.CoreCompileInputs.cache
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.csproj.CopyComplete
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.dll
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\refint\PhotoGENius.dll
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.pdb
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\PhotoGENius.genruntimeconfig.cache
+C:\Users\User\RiderProjects\PhotoGENius\PhotoGENius\obj\Debug\net6.0\ref\PhotoGENius.dll
