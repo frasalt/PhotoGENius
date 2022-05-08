@@ -203,3 +203,12 @@ C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo s
 C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo semestre\immagini_fotorealistiche\es_1\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\PGENLib.Tests.csproj.CopyComplete
 C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo semestre\immagini_fotorealistiche\es_1\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\PGENLib.Tests.genruntimeconfig.cache
 C:\Users\Martino\Documents\formazione\università\Magistrale\2021-2022\secondo semestre\immagini_fotorealistiche\es_1\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\ref\PGENLib.Tests.dll
+C:\Users\User\RiderProjects\PhotoGENius\PGENLib.Tests\bin\Debug\net6.0\CoverletSourceRootsMapping
+C:\Users\User\RiderProjects\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\PGENLib.Tests.csproj.AssemblyReference.cache
+C:\Users\User\RiderProjects\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\PGENLib.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\RiderProjects\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\PGENLib.Tests.AssemblyInfoInputs.cache
+C:\Users\User\RiderProjects\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\PGENLib.Tests.AssemblyInfo.cs
+C:\Users\User\RiderProjects\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\PGENLib.Tests.csproj.CoreCompileInputs.cache
+C:\Users\User\RiderProjects\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\PGENLib.Tests.dll
+C:\Users\User\RiderProjects\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\refint\PGENLib.Tests.dll
+C:\Users\User\RiderProjects\PhotoGENius\PGENLib.Tests\obj\Debug\net6.0\PGENLib.Tests.pdb
