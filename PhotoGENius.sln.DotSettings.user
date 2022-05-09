@@ -1,7 +1,12 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0e011b30_002D3c45_002D42fd_002Da732_002De5d31160fc6b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestHitSphere" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.ShapeTests.TestHitSphere&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0e011b30_002D3c45_002D42fd_002Da732_002De5d31160fc6b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestHitSphere" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.ShapeTests.TestHitSphere&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3bad2329_002D8f3b_002D427e_002Da327_002Dc8f739a93627/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="test_are_vector_close" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.GeometryTests.test_are_vector_close&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 </wpf:ResourceDictionary>
