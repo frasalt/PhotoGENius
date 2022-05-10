@@ -12,7 +12,7 @@ namespace PGENLib.Tests
         private readonly Vec Vx = new Vec(1.0f, 0.0f, 0.0f);
         private readonly Vec Vz = new Vec(0.0f, 0.0f, 1.0f);
 
-        /*
+        
         [Fact]
         public void TestHitSphere()
         {
@@ -44,7 +44,7 @@ namespace PGENLib.Tests
             Assert.True(sphere.RayIntersection(new Ray(new Point(0f, 10f, 2f), -Vz)) == null);
             
         }
-        */
+        
         
         [Fact]
         public void TestHitSphereIn()
