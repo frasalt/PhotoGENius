@@ -42,8 +42,7 @@ namespace PGENLib
         public static bool are_close(Vec2d p, Vec2d q)
         {
             var epsilon = 1E-5;
-            if (Math.Abs(p.u - q.u) < epsilon &
-                Math.Abs(p.v - q.v) < epsilon)
+            if (Math.Abs(p.u - q.u) < epsilon && Math.Abs(p.v - q.v) < epsilon)
             {
                 return true;
             }
@@ -88,10 +87,10 @@ namespace PGENLib
         public static bool are_close(HitRecord a, HitRecord b)
         {
             var epsilon = 1E-5;
-            if (Point.are_close(a.WorldPoint, b.WorldPoint) &
-                Normal.are_close(a.Normal, b.Normal) &
-                Vec2d.are_close(a.SurfacePoint, b.SurfacePoint) &
-                Math.Abs(a.t-b.t)<epsilon &
+            if (Point.are_close(a.WorldPoint, b.WorldPoint) &&
+                Normal.are_close(a.Normal, b.Normal) &&
+                Vec2d.are_close(a.SurfacePoint, b.SurfacePoint) &&
+                Math.Abs(a.t-b.t)<epsilon &&
                 Ray.are_close(a.Ray, b.Ray))
             {
                 return true;
