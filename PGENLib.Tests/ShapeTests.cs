@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Numerics;
 using System.Runtime.Intrinsics;
 using PGENLib;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace PGENLib.Tests
 {
@@ -12,11 +14,14 @@ namespace PGENLib.Tests
         private readonly Vec Vx = new Vec(1.0f, 0.0f, 0.0f);
         private readonly Vec Vz = new Vec(0.0f, 0.0f, 1.0f);
 
-        /*
         [Fact]
         public void TestHitSphere()
         {
             Sphere sphere = new Sphere();
+            var epsilon = 1E-5;
+            Vec2d p, q;
+
+            // prova 1
             Ray ray1 = new Ray(origin: new Point(0f, 0f, 2f), dir: -Vz);
             HitRecord? int1 = sphere.RayIntersection(ray1);
             Assert.True(int1 != null);
@@ -27,8 +32,19 @@ namespace PGENLib.Tests
                 1.0f,
                 ray1
             );
-            Assert.True(HitRecord.are_close(hit1,int1.Value));
+            /*
+            Assert.True(int1 != null && Point.are_close(hit1.WorldPoint, int1.Value.WorldPoint)); 
+            Assert.True(int1 != null && Normal.are_close(hit1.Normal, int1.Value.Normal));
+            p = hit1.SurfacePoint;
+            q = int1.Value.SurfacePoint;
+            Assert.True(int1 != null && Vec2d.are_close(p, q));
+            Assert.True(int1 != null && Math.Abs(hit1.t-int1.Value.t)<epsilon);
+            Assert.True(int1 != null && Ray.are_close(hit1.Ray, int1.Value.Ray));
+            */
+            Assert.True(HitRecord.are_close(hit1, int1.Value));
 
+            
+            // prova 2
             Ray ray2 = new Ray(new Point(3f, 0f, 0f), -Vx);
             HitRecord? int2 = sphere.RayIntersection(ray2);
             Assert.True(int2 != null);
@@ -39,16 +55,26 @@ namespace PGENLib.Tests
                 2.0f,
                 ray2
             );
-            Assert.True(HitRecord.are_close(hit2,int2.Value));
+            /*
+            Assert.True(int2 != null && Point.are_close(hit2.WorldPoint, int2.Value.WorldPoint)); 
+            Assert.True(int2 != null && Normal.are_close(hit2.Normal, int2.Value.Normal));
+            p = hit2.SurfacePoint;
+            q = int2.Value.SurfacePoint;
+            Assert.True(int2 != null && Vec2d.are_close(p, q));
+            Assert.True(int2 != null && Math.Abs(hit2.t-int2.Value.t)<epsilon);
+            Assert.True(int2 != null && Ray.are_close(hit2.Ray, int2.Value.Ray));
+            */
+            Assert.True(HitRecord.are_close(hit2, int2.Value));
 
-            Assert.True(sphere.RayIntersection(new Ray(new Point(0f, 10f, 2f), -Vz)) == null);
-            
+
+            Assert.True(sphere.RayIntersection(new Ray(new Point(0f, 10f, 2f), -Vz)) == null); // cosìè questo???
+                       
         }
-        */
-        
+
         [Fact]
         public void TestHitSphereIn()
         {
+            
             Sphere sphere = new Sphere();
             Ray ray = new Ray(origin: new Point(0f, 0f, 0f), dir: Vx);
             HitRecord? int3 = sphere.RayIntersection(ray);
@@ -64,7 +90,6 @@ namespace PGENLib.Tests
             Assert.True(HitRecord.are_close(hit, int3.Value));
         }
 
-        /*
         [Fact]
         public void TestTransformation()
         {
@@ -75,7 +100,7 @@ namespace PGENLib.Tests
             Assert.True(int1 != null);
             HitRecord hit1 = new HitRecord(
                 new Point(10.0f, 0.0f, 1.0f),
-                new Normal(0.0f, 0.0f, 1.0f),
+                new Normal(0.0f, 0.0f, 1.0f),   
                 new Vec2d(0.0f, 0.0f),
                 1.0f,
                 ray1
@@ -98,6 +123,5 @@ namespace PGENLib.Tests
             Assert.True(sphere.RayIntersection(new Ray(new Point(0f, 0f, 2f), -Vz)) == null);
             Assert.True(sphere.RayIntersection(new Ray(new Point(-10f, 0f, 0f), -Vz)) == null);
         }
-        */
     }
 }

@@ -97,19 +97,30 @@ namespace PGENLib
         /// </summary>
         public Vec2d SpherePointToUv(Point point)
         {
-            var arg = point.y / point.x;
-            var u = Math.Atan(arg) / (2.0 * Math.PI);
-            var v = Math.Acos(point.z) / Math.PI;
+            float u = 0.0f;
+            // <<<<<< ho aggiunto questo controllo per evitare divisioni per zero (martin)
+            if (point.x != 0)
+            {
+                double arg = point.y / (double)point.x;
+                u = (float)Math.Atan(arg) / (2.0f * (float)Math.PI);
+            }
+            else if (point.x == 0)
+            {
+                if (point.y > 0) u = 1.0f;
+                else if (point.y < 0) u = -1.0f;
+            }
+            // <<<<<<<<<<
+            float v = (float)Math.Acos(point.z) / (float)Math.PI;
             
             if (u >= 0.0)
             {
-                Vec2d tot = new Vec2d((float)u,(float)v);
+                Vec2d tot = new Vec2d(u,v);
                 return tot;
             }
             else
             {
-                u = u + 1.0f;
-                Vec2d tot = new Vec2d((float) u, (float) v);
+                u += 1.0f;
+                Vec2d tot = new Vec2d(u, v);
                 return tot;
             }
         }
