@@ -11,6 +11,7 @@ namespace PGENLib.Tests
     {
         private readonly Vec Vx = new Vec(1.0f, 0.0f, 0.0f);
         private readonly Vec Vz = new Vec(0.0f, 0.0f, 1.0f);
+        
         [Fact]
         public void TestHitSphere()
         {
