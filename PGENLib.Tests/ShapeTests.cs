@@ -12,12 +12,7 @@ namespace PGENLib.Tests
         private readonly Vec Vx = new Vec(1.0f, 0.0f, 0.0f);
         private readonly Vec Vz = new Vec(0.0f, 0.0f, 1.0f);
 
-        [Fact]
-        public void Dumb()
-        {
-            Assert.True(1 == 1);
-        }
-
+        /*
         [Fact]
         public void TestHitSphere()
         {
@@ -49,6 +44,7 @@ namespace PGENLib.Tests
             Assert.True(sphere.RayIntersection(new Ray(new Point(0f, 10f, 2f), -Vz)) == null);
             
         }
+        */
         
         [Fact]
         public void TestHitSphereIn()
@@ -68,6 +64,7 @@ namespace PGENLib.Tests
             Assert.True(HitRecord.are_close(hit, int3.Value));
         }
 
+        /*
         [Fact]
         public void TestTransformation()
         {
@@ -101,5 +98,6 @@ namespace PGENLib.Tests
             Assert.True(sphere.RayIntersection(new Ray(new Point(0f, 0f, 2f), -Vz)) == null);
             Assert.True(sphere.RayIntersection(new Ray(new Point(-10f, 0f, 0f), -Vz)) == null);
         }
+        */
     }
 }
