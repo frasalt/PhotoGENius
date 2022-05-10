@@ -29,9 +29,4 @@
     <Content Include="reference_le.pfm" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="obj\Shape.cs" />
-    <Compile Include="obj\ShapeTests.cs" />
-  </ItemGroup>
-
 </Project>
