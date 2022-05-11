@@ -8,6 +8,10 @@
       <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="imgs" />
+    </ItemGroup>
+
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
