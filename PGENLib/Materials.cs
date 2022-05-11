@@ -24,6 +24,11 @@ namespace PGENLib;
 /// </summary>
 public class Pigment
 {
+    public Color UColor;
+    public Pigment(Color UColor)
+    {
+        this.UColor = UColor;
+    }
     /// <summary>
     /// Calculate a color (type color) associated with a (u,v) coordinate.
     /// </summary>
@@ -40,12 +45,16 @@ public class Pigment
 /// </summary>
 public class UniformPigment
 {
-    public Color UColor = new();
-    public Color GetColor(Vec2d uv)
+    public Color UColor;
+
+    public UniformPigment(Color UColor)
     {
-        Color pigm = new Color();
-        return pigm;
+        this.UColor = UColor;
     }
+      public Color GetColor(Vec2d uv)
+      {
+          return this.UColor;
+      }
 }
 /// <summary>
 /// A checkered pigment.
@@ -54,27 +63,28 @@ public class UniformPigment
 /// </summary>
 public class CheckeredPigment
 {
-    private readonly Color _col1;
-    private readonly Color _col2;
-    private int NumStep;
-    public CheckeredPigment(Color col1, Color col2, int numStep = 10)
-    {
-        _col1 = col1;
-        _col2 = col2;
-        NumStep = numStep;
-    }
+    public Color _col1;
+    public Color _col2;
+    public int NumStep;
 
-    public Color getColor(Vec2d uv)
+    public CheckeredPigment(Color col1, Color col2, int numStep)
     {
-        double intU = Math.Floor(uv.u * NumStep); 
-        double intV = Math.Floor(uv.u * NumStep);
-        if (Math.Abs((intU % 2) - (intV % 2)) < 1E-5)
+        this._col1 = col1;
+        this._col2 = col2;
+        this.NumStep = numStep;
+    }
+    
+    public Color GetColor(Vec2d uv)
+    {
+        int intU = (int)Math.Floor(uv.u * NumStep); 
+        int intV = (int)Math.Floor(uv.u * NumStep);
+        if((intU % 2) == (intV % 2))
         {
             return _col1;
         }
         else
         {
-            return _col2;
+            return this._col2;
         }
     }
 }
