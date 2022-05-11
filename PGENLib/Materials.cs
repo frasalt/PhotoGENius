@@ -54,8 +54,6 @@ public class UniformPigment
 /// </summary>
 public class CheckeredPigment
 {
-    public Color Col1;
-    public Color Col2;
     private readonly Color _col1;
     private readonly Color _col2;
     private int NumStep;
@@ -70,7 +68,7 @@ public class CheckeredPigment
     {
         double intU = Math.Floor(uv.u * NumStep); 
         double intV = Math.Floor(uv.u * NumStep);
-        if ((intU % 2) == (intV % 2))
+        if (Math.Abs((intU % 2) - (intV % 2)) < 1E-5)
         {
             return _col1;
         }
@@ -80,4 +78,39 @@ public class CheckeredPigment
         }
     }
 }
+
+class ImagePigment
+{
+    private HdrImage _image;
+    public ImagePigment(HdrImage image)
+    {
+        _image = image;
+    }
+
+    public Color getColor(Vec2d uv)
+    {
+        int col = (int)uv.u * _image.Width;
+        int row = (int)uv.v * _image.Height;
+        if (col >= _image.Width)
+        {
+            col = _image.Width - 1;
+        }
+
+        if (row >= _image.Height)
+        {
+            row = _image.Height - 1;
+        }
+
+        return _image.GetPixel(col, row);
+    }
+}
+
+
+
+
+
+
+
+
+
 
