@@ -127,9 +127,7 @@
                 pngOutput,
                 cameraType
             };
-            
-            Console.WriteLine("sono dentro");
-            
+
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue, string pngOutputValue, string cameraType) =>
                 {
 
