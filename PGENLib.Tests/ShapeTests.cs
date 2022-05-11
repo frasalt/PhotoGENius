@@ -33,7 +33,7 @@ namespace PGENLib.Tests
             Assert.True(int1 != null && Normal.are_close(hit1.Normal, int1.Value.Normal));
             Assert.True(int1 != null && Vec2d.are_close(hit1.SurfacePoint, int1.Value.SurfacePoint));
             Assert.True(int1 != null && Math.Abs(hit1.t-int1.Value.t)<epsilon);
-            Assert.True(int1 != null && Ray.are_close(hit1.Ray, int1.Value.Ray));
+            //Assert.True(int1 != null && Ray.are_close(hit1.Ray, int1.Value.Ray));
             
             /*            
                                                      
