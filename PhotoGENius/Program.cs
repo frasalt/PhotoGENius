@@ -86,7 +86,7 @@
         //==============================================================================================================
         //Prova demo con SystemCommandLine
         //==============================================================================================================
-        static void Main()
+        static async Task<int> Main(string[] args)
         {
             var width = new Option<int>(
                 name: "--width",
@@ -128,8 +128,11 @@
                 cameraType
             };
             
+            Console.WriteLine("sono dentro");
+            
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue, string pngOutputValue, string cameraType) =>
                 {
+
                     // 1.World initialization (10 spheres)
                     var world = new World();
 
@@ -168,11 +171,11 @@
                     ICamera camera;
                     if (cameraType == "perspective")
                     {
-                        camera = new PerspectiveCamera(1.0f, aspectRatio, transformation*rotation);
+                        camera = new PerspectiveCamera(1.0f, aspectRatio, rotation*transformation);
                     }
                     else
                     {
-                        camera = new OrthogonalCamera(aspectRatio, transformation * rotation);
+                        camera = new OrthogonalCamera(aspectRatio, rotation*transformation);
                     }
 
                     // 3.(ruotare l'osservatore)
@@ -188,7 +191,7 @@
 
                     tracer.FireAllRays(ComputeColor);
 
-                    // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura su file pfm, per colpa dello stream.
+                    // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura SU FILE. pfm, per colpa dello stream.
                     var stream = new MemoryStream();
                     image.WritePFMFile(stream, Endianness.BigEndian);
 
@@ -201,20 +204,22 @@
                     // salvo in file PNG, a seconda delle opzioni
                     try
                     {
-                        var outf = "image.png";
+                        var outf = pngOutputValue;
                         {
                             image.WriteLdrImage(outf, "PNG", 0.2f);
                         }
 
-                        Console.WriteLine($" >> File image.png has been written to disk.");
+                        Console.WriteLine($" >> File {pngOutputValue} has been written to disk.");
                     }
                     catch
                     {
                         Console.WriteLine(
-                            "Error: couldn't write file image.png.");
+                            $"Error: couldn't write file {pngOutputValue}");
                     }
                 },
                 width, height, angleDeg, pfmOutput, pngOutput, cameraType );
+            
+            return await demo.InvokeAsync(args);
             
             //---------------------------------------------------------------------------------
             var factor = new Option<float>(
