@@ -37,7 +37,7 @@ namespace PGENLib
             var xorShifted = (uint) (((oldState >> 18) ^ oldState) >> 27);
             var rot = (uint) (oldState >> 59);
             
-            var num = xorShifted >> (int)(rot) | (xorShifted << (int)(~rot & 31));
+            var num = xorShifted >> (int)rot | (xorShifted << (int)(-rot & 31));
             
             return num;
         }
