@@ -60,11 +60,11 @@ namespace PGENLib.Tests
         [Fact]
         public void test_ortCameraTransform()
         {
-            var Vy = new Vec(0.0f, 1.0f, 0.0f);
-            var tr = Transformation.Traslation(-Vy * 2.0f)*Transformation.RotationZ(90);
+            var vy = new Vec(0.0f, 1.0f, 0.0f);
+            var tr = Transformation.Traslation(-vy * 2.0f)*Transformation.RotationZ(90);
             var cam = new OrthogonalCamera(2.0f, tr);
-            var Ray = cam.FireRay(0.5f, 0.5f);
-            Assert.True(Point.are_close(Ray.At(1.0f), new Point(0.0f, -2.0f, 0.0f)));
+            var ray = cam.FireRay(0.5f, 0.5f);
+            Assert.True(Point.are_close(ray.At(1.0f), new Point(0.0f, -2.0f, 0.0f)));
         }
         
         [Fact]
@@ -112,14 +112,19 @@ namespace PGENLib.Tests
             public void test_orientation()
             {
                 // Fire a ray against top-left corner of the screen
-                Ray topLeftRay = _tracer.FireRay(0, 0, 0.0f, 0.0f); // perché (u,v) = (0,0) vuol dire in alto a sinistra? ...
-                Assert.True(Point.are_close(new Point(0.0f, 2.0f, 1.0f),(topLeftRay.At(1.0f))));
+
+                Ray topLeftRay = _tracer.FireRay(0, 0, 0.0f, 0.0f);
+                Point point = new Point(0.0f, 2.0f, 1.0f);
+                Point rayPoint = topLeftRay.At(1.0f);
+                Assert.True(Point.are_close(point,rayPoint)); 
 
                 // Fire a ray against bottom-right corner of the screen
-                Ray bottomRightRay = _tracer.FireRay(3, 1, 1.0f, 1.0f); // ... e (u,v) = (1,1) vuol dire in basso a destra?
-                Assert.True(Point.are_close(new Point(0.0f, -2.0f, -1.0f),(bottomRightRay.At(1.0f))));
+                Ray bottomRightRay = _tracer.FireRay(3, 1, 1.0f, 1.0f);
+                point = new Point(0.0f, -2.0f, -1.0f);
+                rayPoint = bottomRightRay.At(1.0f);
+                Assert.True(Point.are_close(point,rayPoint)); 
             }
-            
+
             [Fact]
             public void test_uv_submapping() 
             {
@@ -140,9 +145,9 @@ namespace PGENLib.Tests
                     for (int col = 0; col < _image.Width; col++)
                     {
                         mypixel = _image.GetPixel(col, row);
-                        Assert.True(mypixel.GetR() == mycolor.GetR());
-                        Assert.True(mypixel.GetG() == mycolor.GetG());
-                        Assert.True(mypixel.GetB() == mycolor.GetB());
+                        Assert.True(Math.Abs(mypixel.GetR() - mycolor.GetR()) < 1E-5);
+                        Assert.True(Math.Abs(mypixel.GetG() - mycolor.GetG()) < 1E-5);
+                        Assert.True(Math.Abs(mypixel.GetB() - mycolor.GetB()) < 1E-5);
                     }
                 }
             }

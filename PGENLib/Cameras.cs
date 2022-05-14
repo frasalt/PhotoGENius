@@ -191,7 +191,6 @@ namespace PGENLib
             Camera = camera;
         }
 
-        // There is an error in this function
         public Ray FireRay(int col, int row, float uPixel = 0.5f, float vPixel = 0.5f)
         {
             // A parte convertire le coordinate dallo spazio (u, v) allo spazio dei pixel,
@@ -211,6 +210,7 @@ namespace PGENLib
             {
                 for(int col = 0; col< Image.Width; col ++)
                 {
+                    
                     Ray ray = FireRay(col, row);
                     Color color = func(ray);    // una funzione che viene invocata per ogni raggio e
                                                 // restituisca un oggetto di tipo Color.
