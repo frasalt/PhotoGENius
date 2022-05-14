@@ -214,6 +214,7 @@
                         Console.WriteLine(
                             $"Error: couldn't write file {pngOutputValue}");
                     }
+                    
                 },
                 width, height, angleDeg, pfmOutput, pngOutput, cameraType );
             
