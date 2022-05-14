@@ -38,9 +38,15 @@
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.ShapeTests.TestTransformation&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=816a6b3a_002Dd7b5_002D437e_002D8bc1_002D6fa2e9617ac6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestCheckeredPigment" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=816a6b3a_002Dd7b5_002D437e_002D8bc1_002D6fa2e9617ac6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="TestCheckeredPigment" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.MaterialsTests.TestCheckeredPigment&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ad42ba0b_002Dfb4d_002D483b_002D9ba2_002Dde456bc27796/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestCheckeredPigment #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.MaterialsTests.TestCheckeredPigment&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::70BE53AE-FDDE-44A6-8E21-7BF90EFB5800::net6.0::PGENLib.Tests.MaterialsTests.TestImagePigment&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b157e55e_002D2df5_002D4565_002Da51b_002D630313a40f27/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="TestHitSphere #6" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;

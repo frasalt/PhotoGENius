@@ -78,20 +78,19 @@ public class CheckeredPigment
     {
         int intU = (int)Math.Floor(uv.u * NumStep); 
         int intV = (int)Math.Floor(uv.u * NumStep);
-        if((intU % 2) == (intV % 2))
+        double r1 = (intU % 2);
+        double r2 = (intV % 2);
+        if(r1 - r2 == 0)
         {
             return _col1;
         }
-        else
-        {
-            return this._col2;
-        }
+        return  _col2;
     }
 }
 
-class ImagePigment
+public class ImagePigment
 {
-    private HdrImage _image;
+    public HdrImage _image;
     public ImagePigment(HdrImage image)
     {
         _image = image;
