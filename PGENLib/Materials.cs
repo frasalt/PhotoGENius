@@ -76,15 +76,18 @@ public class CheckeredPigment
     
     public Color GetColor(Vec2d uv)
     {
-        int intU = (int)Math.Floor(uv.u * NumStep); 
-        int intV = (int)Math.Floor(uv.u * NumStep);
-        double r1 = (intU % 2);
-        double r2 = (intV % 2);
-        if(r1 - r2 == 0)
+        int intU = (int)Math.Floor(uv.u * this.NumStep); 
+        int intV = (int)Math.Floor(uv.u * this.NumStep);
+        //double r1 = (intU % 2);
+        //double r2 = (intV % 2);
+        if((intU % 2) == (intV % 2))
         {
-            return _col1;
+            return this._col1;
         }
-        return  _col2;
+        else
+        {
+            return this._col2;
+        }
     }
 }
 
