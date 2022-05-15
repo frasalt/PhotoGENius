@@ -109,17 +109,12 @@ namespace PGENLib
         private float AspectRatio;
         private Transformation Transf;
 
-        public OrthogonalCamera(float aspectRatio)
-        {
-            AspectRatio = aspectRatio;
-            Transf = new Transformation();
-        }
-        public OrthogonalCamera(float aspectRatio, Transformation tr)
+        public OrthogonalCamera(float aspectRatio = 1.0f, Transformation tr = default)
         {
             AspectRatio = aspectRatio;
             Transf = tr;
         }
-
+        
         public Ray FireRay(float u, float v)
         {
             var origin = new Point(-1.0f, (1.0f - 2.0f * u) * this.AspectRatio, 2.0f * v - 1.0f);

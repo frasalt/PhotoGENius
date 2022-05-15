@@ -10,8 +10,8 @@ namespace PGENLib
     /// </summary>
     public abstract class Shape
     {
-        protected Transformation Transf;
-        protected Material Material;
+        public Transformation Transf;
+        public Material Material;
         
         /// <summary>
         /// Compute the intersection between a ray and a shape

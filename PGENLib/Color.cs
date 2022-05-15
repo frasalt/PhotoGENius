@@ -1,6 +1,7 @@
+using PGENLib;
+
 namespace PGENLib
 {
-    
     public struct Color
     {
         public float r;
