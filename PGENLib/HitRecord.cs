@@ -59,8 +59,35 @@ namespace PGENLib
     //==================================================================================================================
     /// <summary>
     /// A class holding information about a ray-shape intersection.
+    /// The parameters defined in this dataclass are the following:
+    /// <list type="table">
+    /// <item>
+    ///     <term>WorldPoint</term>
+    ///     <description> a `Point` object holding the world coordinates of the hit point</description>
+    /// </item>
+    /// <item>
+    ///     <term>Normal</term>
+    ///     <description> a `Normal` object holding the orientation of the normal to the surface where the hit happened</description>
+    /// </item>
+    /// <item>
+    ///     <term>SurfacePoint</term>
+    ///     <description> a `Vec2d` object holding the position of the hit point on the surface of the object</description>
+    /// </item>
+    /// <item>
+    ///     <term>t</term>
+    ///     <description> a floating-point value specifying the distance from the origin of the ray where the hit happened</description>
+    /// </item>
+    /// <item>
+    ///     <term>Ray</term>
+    ///     <description> a `Ray` object that hit the surface</description>
+    /// </item>
+    /// <item>
+    ///     <term>Material</term>
+    ///     <description> the parameter `Material` of the `Shape` object hit by the ray </description>
+    /// </item>
+    /// </list>
     /// </summary>
-    /// 
+    
     public struct HitRecord
     {
         public Point WorldPoint;
@@ -68,16 +95,19 @@ namespace PGENLib
         public Vec2d SurfacePoint;
         public float t;
         public Ray Ray;
+        public Material Material;
+        
         /// <summary>
         /// Constructor with parameters.
         /// </summary>
-        public HitRecord(Point worldPoint, Normal normal, Vec2d surfacePoint, float t, Ray ray)
+        public HitRecord(Point worldPoint, Normal normal, Vec2d surfacePoint, float t, Ray ray, Material material)
         {
             WorldPoint = worldPoint;
-            this.Normal = normal;
+            Normal = normal;
             SurfacePoint = surfacePoint;
             this.t = t;
-            this.Ray = ray;
+            Ray = ray;
+            Material = material;
         }
         
         //METODI========================================================================================================
