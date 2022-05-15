@@ -48,10 +48,10 @@ namespace PGENLib.Tests{
 
             ImagePigment pigm = new ImagePigment(image);
             
-            Assert.True(Color.are_close(pigm.getColor(new Vec2d(0.0f, 0.0f)),new Color(1.0f, 2.0f, 3.0f)));
-            Assert.True(Color.are_close(pigm.getColor(new Vec2d(0.0f, 1.0f)),new Color(2.0f, 1.0f, 3.0f)));
-            Assert.True(Color.are_close(pigm.getColor(new Vec2d(1.0f, 0.0f)),new Color(2.0f, 3.0f, 1.0f)));
-            Assert.True(Color.are_close(pigm.getColor(new Vec2d(1.0f, 1.0f)),new Color(3.0f, 2.0f, 1.0f)));
+            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.0f, 0.0f)),new Color(1.0f, 2.0f, 3.0f)));
+            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.0f, 1.0f)),new Color(2.0f, 1.0f, 3.0f)));
+            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(1.0f, 0.0f)),new Color(2.0f, 3.0f, 1.0f)));
+            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(1.0f, 1.0f)),new Color(3.0f, 2.0f, 1.0f)));
 
         }
         

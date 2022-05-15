@@ -30,7 +30,8 @@ namespace PGENLib.Tests
                 new Normal(0.0f, 0.0f, 1.0f),
                 new Vec2d(0.0f, 0.0f),
                 1.0f,
-                ray1
+                ray1,
+                sphere.Material
             );
             /*
             Assert.True(int1 != null && Point.are_close(hit1.WorldPoint, int1.Value.WorldPoint)); 
@@ -53,7 +54,8 @@ namespace PGENLib.Tests
                 new Normal(1.0f, 0.0f, 0.0f),
                 new Vec2d(0.0f, 0.5f),
                 2.0f,
-                ray2
+                ray2,
+                sphere.Material
             );
             /*
             Assert.True(int2 != null && Point.are_close(hit2.WorldPoint, int2.Value.WorldPoint)); 
@@ -85,7 +87,8 @@ namespace PGENLib.Tests
                 new Normal(-1.0f, 0.0f, 0.0f),
                 new Vec2d(0.0f, 0.5f),
                 1.0f,
-                ray
+                ray,
+                sphere.Material
             );
             Assert.True(HitRecord.are_close(hit, int3.Value));
         }
@@ -103,7 +106,8 @@ namespace PGENLib.Tests
                 new Normal(0.0f, 0.0f, 1.0f),   
                 new Vec2d(0.0f, 0.0f),
                 1.0f,
-                ray1
+                ray1,
+                sphere.Material
             );
             Assert.True(HitRecord.are_close(hit1, int1.Value));
 
@@ -115,7 +119,8 @@ namespace PGENLib.Tests
                 new Normal(1.0f, 0.0f, 0.0f),
                 new Vec2d(0.0f, 0.5f),
                 2.0f,
-                ray2
+                ray2,
+                sphere.Material
             );
             Assert.True(HitRecord.are_close(hit2, int2.Value));
 

@@ -10,10 +10,18 @@ namespace PGENLib
     /// </summary>
     public abstract class Shape
     {
-        private Transformation _transf;
+        public Transformation Transf;
+        public Material Material;
+        
+        /// <summary>
+        /// Compute the intersection between a ray and a shape
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public virtual HitRecord? RayIntersection(Ray ray)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Method Shape.RayIntersection is abstract and cannot be called");
         }
     }
     
@@ -23,24 +31,25 @@ namespace PGENLib
     /// </summary>
     public class Sphere : Shape
     {
-        private Transformation _transf;
-
         public Sphere()
         {
-            _transf = new Transformation();
+            Transf = new Transformation();
+            Material = new Material();
         }
-        public Sphere(Transformation transf)
+        public Sphere(Transformation transf = default, Material material = default)
         {
-            _transf = transf;
+            Transf = transf;
+            Material = material;
         }
 
         /// <summary>
         /// Compute the intersection between a ray and the shape.
-        /// Returns a HitRecord, or Null if the ray doesn't hit the sphere.
         /// </summary>
+        /// <param name="ray"></param>
+        /// <returns>Returns a HitRecord, or Null if the ray doesn't hit the sphere.</returns>
         public override HitRecord? RayIntersection(Ray ray)
         {
-            Ray invRay = ray.Transform(this._transf.Inverse());
+            Ray invRay = ray.Transform(this.Transf.Inverse());
             var originVec = invRay.Origin.PointToVec();
             var a = Vec.SquaredNorm(invRay.Dir);
             var b = 2.0f * Vec.DotProd(originVec, invRay.Dir);
@@ -51,9 +60,9 @@ namespace PGENLib
             {
                 return null;
             }
-            float sqrtDelta = (float) Math.Sqrt(delta);
-            float tmin = (-b - sqrtDelta) / (2.0f * a);
-            float tmax = (-b + sqrtDelta) / (2.0f * a);
+            var sqrtDelta = (float) Math.Sqrt(delta);
+            var tmin = (-b - sqrtDelta) / (2.0f * a);
+            var tmax = (-b + sqrtDelta) / (2.0f * a);
             float tFirstHit;
             if (tmin > invRay.Tmin & tmin < invRay.Tmax)
             {
@@ -69,14 +78,18 @@ namespace PGENLib
             }
 
             var hitPoint = invRay.At(tFirstHit);
-            var hit = new HitRecord(_transf*hitPoint, _transf*SphereNormal(hitPoint, ray.Dir),
-                SpherePointToUv(hitPoint), tFirstHit, ray);
+            var hit = new HitRecord(Transf*hitPoint, Transf*SphereNormal(hitPoint, ray.Dir),
+                SpherePointToUv(hitPoint), tFirstHit, ray, Material);
             return hit;
         }
+        
         /// <summary>
         /// Computes the normal in the intersection point of a ray and the surface of a unit sphere.
         /// The normal has always the opposite direction with respect to a given Ray. 
         /// </summary>
+        /// <param name="point">Type Point</param>
+        /// <param name="dir">Type Vec</param>
+        /// <returns>Normal</returns>
         public Normal SphereNormal(Point point,  Vec dir)
         {
             Normal result = new Normal(point.x, point.y, point.z);
@@ -130,11 +143,24 @@ namespace PGENLib
 
     public class XyPlane : Shape
     {
-        private Transformation _transf;
-        
-        public XyPlane(Transformation transf)
+        /// <summary>
+        /// Constructor without any parameter.
+        /// </summary>
+        public XyPlane()
         {
-            _transf = transf;
+            Transf = new Transformation();
+            Material = new Material();
+        }
+        
+        /// <summary>
+        /// Constructor with parameters. 
+        /// </summary>
+        /// <param name="transf"></param>
+        /// <param name="material"></param>
+        public XyPlane(Transformation transf, Material material)
+        {
+            Transf = transf;
+            Material = material;
         }
         
         /// <summary>
@@ -143,7 +169,7 @@ namespace PGENLib
         /// </summary>
         public override HitRecord? RayIntersection(Ray ray)
         {
-            Ray invRay = ray.Transform(this._transf.Inverse());
+            Ray invRay = ray.Transform(this.Transf.Inverse());
             var originVec = invRay.Origin.PointToVec();
 
             if (Math.Abs(invRay.Dir.z) < 1E-5)
@@ -164,8 +190,8 @@ namespace PGENLib
             
             var surfacePoint = new Vec2d(hitPoint.x - (float)Math.Floor(hitPoint.x),  
                 hitPoint.y - (float)Math.Floor(hitPoint.y));
-            var hit = new HitRecord(_transf*hitPoint, _transf*planeNormal,
-                surfacePoint, t, ray);
+            var hit = new HitRecord(Transf*hitPoint, Transf*planeNormal,
+                surfacePoint, t, ray, Material);
             return hit;
         }
         
