@@ -131,7 +131,7 @@ namespace PGENLib
         /// </summary>
         public abstract class BRDF
         {
-            protected Pigment Pigment;
+            public Pigment Pigment;
 
             public BRDF()
             {
@@ -146,6 +146,7 @@ namespace PGENLib
             {
                 return new Color(0.0f, 0.0f, 0.0f); //BLACK
             }
+            
         }
 
         /// <summary>
@@ -177,18 +178,19 @@ namespace PGENLib
         /// </summary>
         public class Material
         {
-            protected BRDF Brdf; 
-            protected Pigment EmittedRadiance; 
+            protected internal BRDF Brdf; 
+            protected internal Pigment EmittedRadiance; 
             public Material()
             {
                 Brdf = new DiffuseBRDF();
                 EmittedRadiance = new UniformPigment(new Color(0.0f, 0.0f, 0.0f)); //BLACK
             }
-            public Material(BRDF brdf, Pigment emittedRadiance)
+            public Material(Pigment emittedRadiance, BRDF brdf = default)
             {
                 Brdf = brdf;
                 EmittedRadiance = emittedRadiance;
             }
+            
         }
         
 }

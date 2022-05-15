@@ -7,7 +7,7 @@ namespace PGENLib
 
         public World()
         {
-            this.Shapes = new List<Shape>();
+            Shapes = new List<Shape>();
         }
 
         /// <summary>
@@ -32,7 +32,6 @@ namespace PGENLib
                     closest = intersection;
                 }
             }
-
             return closest;
         }
         
