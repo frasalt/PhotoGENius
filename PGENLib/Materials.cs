@@ -185,6 +185,11 @@ namespace PGENLib
                 Brdf = new DiffuseBRDF();
                 EmittedRadiance = new UniformPigment(new Color(0.0f, 0.0f, 0.0f)); //BLACK
             }
+
+            public Material(BRDF brdf = default) : this(new UniformPigment(), brdf)
+            {
+            }
+
             public Material(Pigment emittedRadiance, BRDF brdf = default)
             {
                 Brdf = brdf;

@@ -43,10 +43,10 @@ namespace PGENLib
         {
             Color = color;
         }
-
+        
         public override Color Call(Ray ray)
         {
-            return World.RayIntersection(ray) == null ? Color : BackgroundColor;
+            return World.RayIntersection(ray) == null ? BackgroundColor : Color;
         }
     }
 

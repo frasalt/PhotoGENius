@@ -138,7 +138,7 @@ namespace PGENLib
             return lum/2;
         }
 
-        public Color Black()
+        public static Color Black()
         {
             return new Color();
         }
