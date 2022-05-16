@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj",
+        "projectName": "PGENLib",
+        "projectPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\PGENLib.csproj",
+        "packagesPath": "C:\\Users\\Martino\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Martino\\Documents\\formazione\\università\\Magistrale\\2021-2022\\secondo semestre\\immagini_fotorealistiche\\es_1\\PhotoGENius\\PGENLib\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Martino\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "SixLabors.ImageSharp": {
+              "target": "Package",
+              "version": "[2.1.0, )"
+            },
+            "xunit.assert": {
+              "target": "Package",
+              "version": "[2.4.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
