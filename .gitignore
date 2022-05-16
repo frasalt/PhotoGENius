@@ -1,8 +1,10 @@
 img/
 PhotoGENius.sln.DotSettings.user
 
-bin/
-obj/
+*/bin/
+*/obj/
+.idea/
+
 /packages/
 riderModule.iml
 /_ReSharper.Caches/### JetBrains template
