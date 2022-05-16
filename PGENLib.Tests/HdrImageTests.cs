@@ -153,42 +153,7 @@ namespace PGENLib.Tests
             Assert.True(b == "world!");
             Assert.True(c == "");
         }
-
-        /*
-        // Test alternativo con la funzione readline disponibile per gli oggetti di tipo streamreader
-        [Fact]
-        public void test_ReadLine2()
-        {
-            //Preparo il memory stream da leggere
-            HdrImage img = new HdrImage(1,1);
-            MemoryStream input = new MemoryStream();
-            using (StreamWriter writer = new StreamWriter(input))
-            {
-                writer.Write("Hello\nworld!");
-                //writer.Flush();
-                //input.Position = 0;
-            }
-            
-            //Leggo e confronto 
-            string? a;
-            string? b;
-            string? c;
-            using (StreamReader reader = new StreamReader(input))
-            {
-                a = reader.ReadLine();
-                b = reader.ReadLine();
-                c = reader.ReadLine();
-            }
-            
-            Assert.True(b == "Hello");
-            Assert.True(b == "world!");
-            Assert.True(c == "");
-        }
-        */
-
-
-        /*
-
+        
         [Fact]
         public void test_ReadFilePFM()
         {
@@ -213,8 +178,7 @@ namespace PGENLib.Tests
             Assert.True(Color.are_close(img.GetPixel(2,1), f));
             
         }
-        */
-        
+
 
         [Fact]
         public void test_AverageLum()
