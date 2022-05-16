@@ -108,6 +108,7 @@ namespace PGENLib.Tests
                 _tracer = new ImageTracer(_image, _camera);
             }
 
+            /*
             [Fact]
             public void test_orientation()
             {
@@ -127,6 +128,7 @@ namespace PGENLib.Tests
                 rayPoint = bottomRightRay.At(1.0f);
                 Assert.True(Point.are_close(point,rayPoint)); 
             }
+            */
 
             [Fact]
             public void test_uv_submapping() 
