@@ -26,7 +26,7 @@ namespace PGENLib
     {
         protected Color Color;
 
-        protected Pigment(Color color = default)
+        protected Pigment(Color color = default) //Default(Color)=BLACK
         {
             Color = color;
         }
@@ -186,11 +186,11 @@ namespace PGENLib
                 EmittedRadiance = new UniformPigment(new Color(0.0f, 0.0f, 0.0f)); //BLACK
             }
 
-            public Material(BRDF brdf = default) : this(new UniformPigment(), brdf)
+            public Material(BRDF brdf) : this(new UniformPigment(), brdf)
             {
             }
 
-            public Material(Pigment emittedRadiance, BRDF brdf = default)
+            public Material(Pigment emittedRadiance, BRDF brdf)
             {
                 Brdf = brdf;
                 EmittedRadiance = emittedRadiance;
