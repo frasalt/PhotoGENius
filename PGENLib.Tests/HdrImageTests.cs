@@ -196,10 +196,11 @@ namespace PGENLib.Tests
             Color e = new Color(4.0e2f, 5.0e2f, 6.0e2f);
             Color f = new Color(7.0e2f, 8.0e2f, 9.0e2f);
             HdrImage img = new HdrImage(1, 1);
-            using (Stream fileStream = File.OpenRead(@"../../../../PGENLib.tests/reference_le.pfm"))
+            //using (Stream fileStream = File.OpenRead(@"../../../../PGENLib.tests/reference_le.pfm"))
+            using (Stream fileStream = File.OpenRead(@"..\..\..\..\PGENLib.tests\reference_le.pfm"))
             { img = img.ReadPFMFile(fileStream); }
 
-            Assert.True(img.Width == 3); //Come fa a sapere che voglio controllare Width di img? Alternativa: img.Width togliendo static
+            Assert.True(img.Width == 3);
             Assert.True(img.Height == 2);
 
             Assert.True(Color.are_close(img.GetPixel(0,0), a));
