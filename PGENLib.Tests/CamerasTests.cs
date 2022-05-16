@@ -124,7 +124,6 @@ namespace PGENLib.Tests
                 Assert.True(Point.are_close(point,ray_point)); 
             }
             
-            
             [Fact]
             public void test_uv_submapping() 
             {
