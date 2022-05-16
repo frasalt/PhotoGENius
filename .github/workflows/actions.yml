@@ -26,6 +26,9 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: ${{ matrix.dotnet }}
+      
+    - name: Restore
+      run: dotnet restore
      
     - name: Build
       run: dotnet build 
