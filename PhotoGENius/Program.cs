@@ -121,7 +121,7 @@
             var algorithm = new Option<string>(
                 name: "--algorithm",
                 description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one.",
-                getDefaultValue: () => "flat");
+                getDefaultValue: () => "onoff");
             
             var demo = new RootCommand("Sample app for creating an image")
             {
