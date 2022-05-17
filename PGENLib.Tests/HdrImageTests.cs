@@ -164,7 +164,7 @@ namespace PGENLib.Tests
             Color e = new Color(4.0e2f, 5.0e2f, 6.0e2f);
             Color f = new Color(7.0e2f, 8.0e2f, 9.0e2f);
             HdrImage img = new HdrImage(1, 1);
-            using (Stream fileStream = File.OpenRead(@"../../../../PGENLib.tests/reference_le.pfm")) // <<<<< l'errore per linux sta qui
+            using (Stream fileStream = File.OpenRead(@"../../../../PGENLib.Tests/reference_le.pfm")) // <<<<< l'errore per linux sta qui
             { img = img.ReadPFMFile(fileStream); }
 
             Assert.True(img.Width == 3);
