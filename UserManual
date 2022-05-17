@@ -1,4 +1,4 @@
 User Manual is still empty.
 
 To generate frames use serial computing script ("bash generate-frames.sh")
-or parallel computing ("parallel -j NUM_OF_CORES ./generate-image.sh '{}' ::: $(seq 0 NUM_OF_ANGLES)).
+or parallel computing ("parallel -j NUM_OF_CORES ./generate-image.sh '{}' ::: $(seq 0 NUM_OF_ANGLES)"").
