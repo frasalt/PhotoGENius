@@ -169,10 +169,10 @@ namespace PGENLib
         /// The parameters defined in this dataclass are the following:
         /// <list type="table">
         /// <item>
-        ///     <term>_brdf</term>
+        ///     <term>Brdf</term>
         /// </item>
         /// <item>
-        ///     <term>_emittedRadiance</term>
+        ///     <term>EmittedRadiance</term>
         /// </item>
         /// </list>
         /// </summary>

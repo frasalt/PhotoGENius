@@ -144,6 +144,10 @@
                 //   sphere in vertices
                 var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
                 Transformation transformation;
+                var col1 = new Color(0.5f, 0.5f, 0.5f);
+                var col2 = new Color(0.0f, 1.0f, 0.0f);
+                var emittedRad = new CheckeredPigment(col1, col2, 2);
+                var material = new Material(emittedRad, new DiffuseBRDF());
 
                 for (var x = -0.5f; x <= 0.5f; x++)
                 {
@@ -153,18 +157,25 @@
                         {
                             transformation = Transformation.Traslation(new Vec(x, y, z));
 
-                            var sphere = new Sphere(transformation * scaling);
+                            var sphere = new Sphere(transformation * scaling, material);
                             world.AddShape(sphere);
                         }
                     }
                 }
 
                 //   sphere in faces
+                var red = new Color(1.0f, 0.0f, 0.0f);
+                var blue = new Color(0.0f, 0.0f, 1.0f);
+                var redEmittedRad = new UniformPigment(red);
+                var blueEmittedRad = new UniformPigment(blue);
+                var redMaterial = new Material(redEmittedRad, new DiffuseBRDF());
+                var blueMaterial = new Material(blueEmittedRad, new DiffuseBRDF());
+
                 transformation = Transformation.Traslation(new Vec(0.0f, 0.0f, -0.5f));
-                world.AddShape(new Sphere(transformation * scaling));
+                world.AddShape(new Sphere(transformation * scaling, blueMaterial));
 
                 transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
-                world.AddShape(new Sphere(transformation * scaling));
+                world.AddShape(new Sphere(transformation * scaling, redMaterial));
 
 
                 // 2.Camera initialization

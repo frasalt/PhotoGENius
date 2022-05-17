@@ -29,7 +29,7 @@ namespace PGENLib
     }
 
     /// <summary>
-    /// A on/off renderer, useful for debugging purposes.
+    /// A on/off renderer, produces black and white images and is useful for debugging purposes.
     /// </summary>
     public class OnOffRenderer : Renderer
     {
@@ -61,7 +61,6 @@ namespace PGENLib
             {
                 return BackgroundColor;
             }
-
             var material = hit.Value.Material;
             var tot = material.Brdf.Pigment.GetColor(hit.Value.SurfacePoint);
             var tot2 = material.EmittedRadiance.GetColor(hit.Value.SurfacePoint);
