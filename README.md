@@ -17,7 +17,7 @@ Easy to use: go to PhotoGENius\PhotoGENius directory.
 
 To **convert file**, type
 ```bash
-dotnet run PhotoGENius pfm2png PFM_FILE_PATH/NAME <options>
+dotnet run PhotoGENius pfm2png --input-pfm PFM_FILE_PATH_NAME <options>
 ```
 Pay attention that if your computer is set on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
 
@@ -41,13 +41,13 @@ To **assemble video**, install ffmpeg and type
 ### Easy
 Use alpha=10 and gamma=0.1 : 
 ```bash
- dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 10 --gamma 0.1 --output-png prova.png
+dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 10 --gamma 0.1 --output-png prova1.png
  ```
-![](PhotoGENius/prova.png)
+![](PhotoGENius/prova1.png)
 
 Use alpha=0.01 and gamma=2 : 
 ```bash
- dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 0.01 --gamma 2 --output-png prova2.png
+dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 0.01 --gamma 2 --output-png prova2.png
  ```
 ![](PhotoGENius/prova2.png)
 
