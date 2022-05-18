@@ -12,7 +12,7 @@ In its second release, PhotoGENius can:
 - generate demonstrative scene in both PNG and PFM format, given a set of options, including view angle.
 - assemble different frames to generate a simple animation.
 
-## Examples
+## Usage
 Easy to use: go to PhotoGENius\PhotoGENius directory.
 
 To **convert file**, type
@@ -27,35 +27,34 @@ dotnet run PhotoGENius demo <options>
 ```
 Type anything as option to show further usage information.
 
+## Examples
+
+### Convertion PFM to PGN
+Alpha=10 and gamma=0.1 : 
+```bash
+dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 10 --gamma 0.1 --output-png prova1.png
+ ```
+![](PhotoGENius/prova1.png)
+
+Alpha=0.01 and gamma=2 : 
+```bash
+dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 0.01 --gamma 2 --output-png prova2.png
+ ```
+![](PhotoGENius/prova2.png)
+
+### Generate a brief animation
+
 To **generate frames**, type
 ```bash
 ./generate-frames.sh
 ```
 You can easily adapt the script to your needs and make it executable (chmod +x on Linux and MacOS).
 
-To **assemble video**, install ffmpeg and type
+To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download.html), type
 ```bash
 ./generate-video.sh
 ```
 
-### Easy
-Use alpha=10 and gamma=0.1 : 
-```bash
-dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 10 --gamma 0.1 --output-png prova1.png
- ```
-![](PhotoGENius/prova1.png)
-
-Use alpha=0.01 and gamma=2 : 
-```bash
-dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 0.01 --gamma 2 --output-png prova2.png
- ```
-![](PhotoGENius/prova2.png)
-
-
-<!---
-### Medium
-### Advanced
---->
 
 Full documentation available in the [UserManual](UserManual).
 
