@@ -9,7 +9,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="imgs" />
+      <Folder Include="video" />
+      <Folder Include="imgs_pfm" />
+      <Folder Include="imgs_png" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -18,5 +20,17 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <!-- (these lines are commented)
+        Adding this markup causes the text file to be copied to the
+        bin/debug/net6.0 folder when you build the app. So when you
+        run the executable in that folder, you can access the file
+        by name without specifying a folder path.
+    <ItemGroup>
+        <Content Include="sampleQuotes.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    -->
 
 </Project>
