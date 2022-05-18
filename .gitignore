@@ -7,7 +7,7 @@ PhotoGENius.sln.DotSettings.user
 
 PhotoGENius/imgs_png/*
 PhotoGENius/imgs_pfm/*
-#PhotoGENius/video/*
+PhotoGENius/video/*
 
 /packages/
 riderModule.iml
