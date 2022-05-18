@@ -387,6 +387,16 @@ namespace PGENLib
         }
         
         /// <summary>
+        /// Returns the Normal as a Vec.
+        /// </summary>
+        public Vec ToVec()
+        {
+            return new Vec(x, y, z);
+        }
+        
+        
+        
+        /// <summary>
         /// Check wheater two normal are equals. 
         /// </summary>
         public static bool are_close(Normal p, Normal q)

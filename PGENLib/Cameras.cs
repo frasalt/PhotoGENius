@@ -42,13 +42,13 @@ namespace PGENLib
         /// <summary>
         /// Constructor to create a Ray.
         /// </summary>
-        public Ray(Point origin, Vec dir, float tmin)
+        public Ray(Point origin, Vec dir, float tmin, float tmax = float.PositiveInfinity, int depth = 0)
         {
             this.Origin = origin;
             this.Dir = dir;
             this.Tmin = tmin;
-            this.Tmax = float.PositiveInfinity;
-            this.Depth = 0;
+            this.Tmax = tmax;
+            this.Depth = depth;
         }
 
         public Point get_Origin()

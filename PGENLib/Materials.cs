@@ -133,10 +133,17 @@ namespace PGENLib
         {
             public Pigment Pigment;
 
+            /// <summary>
+            /// Costructor without parameters, sets Pigment to a default UniformPigment(Black).
+            /// </summary>
             public BRDF()
             {
                 Pigment = new UniformPigment();
             }
+            /// <summary>
+            /// Constructor with parameter.
+            /// </summary>
+            /// <param name="pigment">: specify the chosen pigment.</param>
             public BRDF(Pigment pigment)
             {
                 Pigment = pigment;
@@ -145,6 +152,20 @@ namespace PGENLib
             public virtual Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
             {
                 return new Color(0.0f, 0.0f, 0.0f); //BLACK
+            }
+
+            /// <summary>
+            /// Abstract method to be implemented in the BRDF derived classes.
+            /// </summary>
+            /// <param name="pcg"> Used to generate random numbers</param>
+            /// <param name="incomingDir"> Direction of the incoming ray</param>
+            /// <param name="interactionPoint"> Where the ray hit the surface</param>
+            /// <param name="normal"> Normal on interactionPoint</param>
+            /// <param name="depth"> Depth value for the new ray</param>
+            /// <returns></returns>
+            public virtual Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
+            {
+                throw new NotImplementedException("Method BRDF.ScatterRay is abstract and cannot be called");
             }
             
         }
@@ -162,6 +183,73 @@ namespace PGENLib
             {
                 return Pigment.GetColor(uv) * (float) (1.0f / Math.PI);
             }
+            
+            public override Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
+            {
+                var onb = CreateOnbFromz(normal);
+                var cosThetaSq = pcg.RandomFloat();
+                var cosTheta = Math.Sqrt(cosThetaSq);
+                var senTheta = Math.Sqrt(1.0f - cosTheta);
+                var phi = (float)(2.0f * Math.PI * pcg.RandomFloat());
+                var direction = onb.e1 * Math.Cos(phi) * cosTheta + onb.e2 * Math.Sin(phi) * cosTheta + onb.e3 * senTheta;
+                var scatterRay = new Ray(interactionPoint, direction, 1.0E-3f, Single.PositiveInfinity, depth);
+                return scatterRay;
+            }
+        }
+
+        /// <summary>
+        /// A class representing an ideal mirror BRDF.
+        /// </summary>
+        public class SpecularBRDF : BRDF
+        {
+            public double TresholdAngleRad;
+            public SpecularBRDF(double tresholdAngleRad = Math.PI/1800.0)
+            {
+                TresholdAngleRad = tresholdAngleRad;
+            } 
+            
+            public SpecularBRDF(Pigment pigment, double tresholdAngleRad = Math.PI/1800.0) : base(pigment)
+            {
+                TresholdAngleRad = tresholdAngleRad;
+            }
+
+            /// <summary>
+            /// We provide this implementation for reference, but we are not going to use it (neither in the path tracer
+            /// nor in the point-light tracer).
+            /// </summary>
+            /// <param name="normal"></param>
+            /// <param name="inDir"></param>
+            /// <param name="outDir"></param>
+            /// <param name="uv"></param>
+            /// <returns></returns>
+            public override Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
+            {
+                var thetaIn = Math.Acos(Vec.DotProd(normal.ToVec(), inDir));
+                var thetaOut = Math.Acos(Vec.DotProd(normal.ToVec(), outDir));
+
+                if (Math.Abs(thetaIn - thetaOut) < TresholdAngleRad)
+                {
+                    return pigment.get_color(uv);
+                }
+                else
+                {
+                    return new Color(); //BLACK
+                }
+            }
+            
+            
+            public override Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
+            {
+                //There is no need to use the PCG here, as the reflected direction is always completely deterministic
+                // for a perfect mirror.
+                var normalizedIncomingDir = incomingDir.NormalizeVec();
+                var normalizedNormal = normal.ToVec().NormalizeVec();
+                var dotProd = Vec.DotProd(normalizedIncomingDir, normalizedNormal);
+                var direction = normalizedIncomingDir - normalizedNormal * 2.0f * dotProd;
+                var scatterRay = new Ray(interactionPoint, direction, 1.0E-3f, float.PositiveInfinity, depth);
+                return scatterRay;
+            }
+
         }
     
         /// <summary>
