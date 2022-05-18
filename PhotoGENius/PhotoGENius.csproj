@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <ProjectReference Include="..\PGENLib\PGENlib.csproj" />
+      <ProjectReference Include="..\PGENLib\PGENLib.csproj" />
     </ItemGroup>
 
     <ItemGroup>
