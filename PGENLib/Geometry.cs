@@ -204,8 +204,45 @@ namespace PGENLib
             };
             return t;
         }
+        
     }
-    
+    //==========================================================================================================
+    //Tuple 
+    //==========================================================================================================
+    public struct Tuple
+    {
+        public Vec e1;
+        public Vec e2;
+        public Vec e3;
+
+        /// <summary>
+        /// Empty constructor.
+        /// </summary>
+        public Tuple()
+        {
+            e1.x = 0;
+            e2.x = 0;
+            e3.x = 0;
+            e1.y = 0;
+            e2.y = 0;
+            e3.y = 0;
+            e1.z = 0;
+            e2.z = 0;
+            e3.z = 0;
+        }
+
+        /// <summary>
+        /// Constructor with float parameters.
+        /// </summary>
+        public Tuple(Vec e1, Vec e2, Vec e3)
+        {
+            this.e1 = e1;
+            this.e2 = e2;
+            this.e3 = e3;
+        }
+
+    }
+
     //==================================================================================================================
     //Point
     //==================================================================================================================
@@ -745,6 +782,56 @@ namespace PGENLib
             scl.invm.M33 = 1 / v.z;
             return scl;
         }
+        
+    }
+    
+    public struct Onb
+    {    
+        /// <summary>
+        /// Create a orthonormal basis (Onb) from a vector representing the z axis (normalized)
+        /// Return a tuple containing the three vectors (e1, e2, e3) of the basis. The result is such
+        /// that e3 = normal.
+        /// The `normal` vector must be normalized.
+        /// </summary>
+        public Tuple CreateOnbFromZ(Normal n)
+        {
+            Vec e3 = new Vec(0, 0, 1);
+            float sign;
+            if (n.z > 0.0)
+            {
+                sign = 1.0f;
+            }
+            else sign = -1.0f;
+
+            float a = (float) -1.0 / (sign + n.z);
+            float b = n.x * n.y * a;
+            float x1 = (float) 1.0 + sign * n.x * n.x * a;
+            float y1 = (float) sign * b;
+            float z1 = (float) -sign * n.x;
+            Vec e1 = new Vec(x1,y1,z1);
+            Vec e2 = new Vec(b, sign + n.y * n.y * a, -n.y);
+            Vec vecN = new Vec(n.x, n.y, n.z);
+            Tuple T = new Tuple(e1, e2, vecN);
+            
+            return T;
+        }
+        /// <summary>
+        /// Normalize two vectors or normals and apply the dot product.
+        /// The result is the cosine of the angle between the two vectors/normals.
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+        
+        //DEVO IMPLEMENTEARE UNION PER FORZA PERCHè COSì VALE SIA PER I VETTORI CHE PER LE NORMALI
+        public float NormalizeDot(Vec v1, Vec v2)
+        {
+            Vec v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
+            Vec v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
+            float r = Vec.DotProd(v1Vec, v2Vec);
+            return r;
+        }
+        
         
     }
     

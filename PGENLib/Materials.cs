@@ -85,20 +85,20 @@ namespace PGENLib
             Col2 = col2;
             NumStep = numStep;
         }
-            
+         
+        
         public override Color GetColor(Vec2d uv)
         {
             var intU = (int)Math.Floor(uv.u * NumStep); 
             var intV = (int)Math.Floor(uv.v * NumStep);
-            var r1 = (intU % 2);
-            var r2 = (intV % 2);
-            if(r1 == r2)
+            if((intU % 2) == (intV % 2))
             {
                 return Col1;
             }
             return  Col2;
         }
     }
+
 
         public class ImagePigment : Pigment
         {
