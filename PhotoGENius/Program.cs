@@ -133,7 +133,7 @@
                 cameraType,
                 algorithm
             };
-
+            
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
                 string pngOutputValue, string cameraType, string algorithmValue) =>
             {
@@ -237,6 +237,7 @@
                         Console.WriteLine(
                             $"Error: couldn't write file {pngOutputValue}");
                     }
+                    
                 },
                 width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm );
             

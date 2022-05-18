@@ -41,7 +41,10 @@ Use alpha=0.001 and gamma=2 :
 Full documentation available in the [UserManual](UserManual).
 
 ## Requirements
-PhotoGENius can be used both on Windows and MacOS systems. 
+PhotoGENius can be used both on Windows and MacOS systems.
+It requires dotnet 6.0 to run.
+To assemble generated frames in a mp4 video via out script (generate-video.sh) you need 
+to install ffmpeg (for example in the same directory as dotnet).
 
 ## Installation
 
