@@ -26,7 +26,7 @@ namespace PGENLib
     {
         protected Color Color;
 
-        protected Pigment(Color color = default)
+        protected Pigment(Color color = default) //Default(Color)=BLACK
         {
             Color = color;
         }
@@ -79,7 +79,7 @@ namespace PGENLib
         public Color Col2; 
         public int NumStep;
 
-        public CheckeredPigment(Color col1, Color col2, int numStep)
+        public CheckeredPigment(Color col1, Color col2, int numStep = 10)
         {
             Col1 = col1;
             Col2 = col2;
@@ -89,7 +89,7 @@ namespace PGENLib
         public override Color GetColor(Vec2d uv)
         {
             var intU = (int)Math.Floor(uv.u * NumStep); 
-            var intV = (int)Math.Floor(uv.u * NumStep);
+            var intV = (int)Math.Floor(uv.v * NumStep);
             var r1 = (intU % 2);
             var r2 = (intV % 2);
             if(r1 == r2)
@@ -131,7 +131,7 @@ namespace PGENLib
         /// </summary>
         public abstract class BRDF
         {
-            protected Pigment Pigment;
+            public Pigment Pigment;
 
             public BRDF()
             {
@@ -146,6 +146,7 @@ namespace PGENLib
             {
                 return new Color(0.0f, 0.0f, 0.0f); //BLACK
             }
+            
         }
 
         /// <summary>
@@ -168,27 +169,33 @@ namespace PGENLib
         /// The parameters defined in this dataclass are the following:
         /// <list type="table">
         /// <item>
-        ///     <term>_brdf</term>
+        ///     <term>Brdf</term>
         /// </item>
         /// <item>
-        ///     <term>_emittedRadiance</term>
+        ///     <term>EmittedRadiance</term>
         /// </item>
         /// </list>
         /// </summary>
         public class Material
         {
-            protected BRDF Brdf; 
-            protected Pigment EmittedRadiance; 
+            protected internal BRDF Brdf; 
+            protected internal Pigment EmittedRadiance; 
             public Material()
             {
                 Brdf = new DiffuseBRDF();
                 EmittedRadiance = new UniformPigment(new Color(0.0f, 0.0f, 0.0f)); //BLACK
             }
-            public Material(BRDF brdf, Pigment emittedRadiance)
+
+            public Material(BRDF brdf) : this(new UniformPigment(), brdf)
+            {
+            }
+
+            public Material(Pigment emittedRadiance, BRDF brdf)
             {
                 Brdf = brdf;
                 EmittedRadiance = emittedRadiance;
             }
+            
         }
         
 }

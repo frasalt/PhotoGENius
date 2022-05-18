@@ -118,6 +118,11 @@
                 description: "Type of camera to be used: 'orthogonal' or 'perspective'.",
                 getDefaultValue: () => "orthogonal");
             
+            var algorithm = new Option<string>(
+                name: "--algorithm",
+                description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one.",
+                getDefaultValue: () => "onoff");
+            
             var demo = new RootCommand("Sample app for creating an image")
             {
                 width,
@@ -125,71 +130,89 @@
                 angleDeg,
                 pfmOutput,
                 pngOutput,
-                cameraType
+                cameraType,
+                algorithm
             };
 
-            demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue, string pngOutputValue, string cameraType) =>
+            demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
+                string pngOutputValue, string cameraType, string algorithmValue) =>
+            {
+
+                // 1.World initialization (10 spheres)
+                var world = new World();
+
+                //   sphere in vertices
+                var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
+                Transformation transformation;
+                var col1 = new Color(0.5f, 0.5f, 0.5f);
+                var col2 = new Color(0.0f, 1.0f, 0.0f);
+                var emittedRad = new CheckeredPigment(col1, col2, 2);
+                var material = new Material(emittedRad, new DiffuseBRDF());
+
+                for (var x = -0.5f; x <= 0.5f; x++)
                 {
-
-                    // 1.World initialization (10 spheres)
-                    var world = new World();
-
-                    //   sphere in vertices
-                    var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
-                    Transformation transformation;
-
-                    for (var x = -0.5f; x <= 0.5f; x++)
+                    for (var y = -0.5f; y <= 0.5f; y++)
                     {
-                        for (var y = -0.5f; y <= 0.5f; y++)
+                        for (var z = -0.5f; z <= 0.5f; z++)
                         {
-                            for (var z = -0.5f; z <= 0.5f; z++)
-                            {
-                                transformation = Transformation.Traslation(new Vec(x, y, z));
+                            transformation = Transformation.Traslation(new Vec(x, y, z));
 
-                                var sphere = new Sphere(transformation * scaling);
-                                world.AddShape(sphere);
-                            }
+                            var sphere = new Sphere(transformation * scaling, material);
+                            world.AddShape(sphere);
                         }
                     }
+                }
 
-                    //   sphere in faces
-                    transformation = Transformation.Traslation(new Vec(0.0f, 0.0f, -0.5f));
-                    world.AddShape(new Sphere(transformation * scaling));
+                //   sphere in faces
+                var red = new Color(1.0f, 0.0f, 0.0f);
+                var blue = new Color(0.0f, 0.0f, 1.0f);
+                var redEmittedRad = new UniformPigment(red);
+                var blueEmittedRad = new UniformPigment(blue);
+                var redMaterial = new Material(redEmittedRad, new DiffuseBRDF());
+                var blueMaterial = new Material(blueEmittedRad, new DiffuseBRDF());
 
-                    transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
-                    world.AddShape(new Sphere(transformation * scaling));
+                transformation = Transformation.Traslation(new Vec(0.0f, 0.0f, -0.5f));
+                world.AddShape(new Sphere(transformation * scaling, blueMaterial));
+
+                transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
+                world.AddShape(new Sphere(transformation * scaling, redMaterial));
 
 
-                    // 2.Camera initialization
-                    transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
-                    var rotation = Transformation.RotationZ(angleDegValue);
-                    float aspectRatio = (float)widthValue/heightValue;
-                    //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
+                // 2.Camera initialization
+                transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
+                var rotation = Transformation.RotationZ(angleDegValue);
+                float aspectRatio = (float) widthValue / heightValue;
+                //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
 
-                    ICamera camera;
-                    if (cameraType == "perspective")
-                    {
-                        camera = new PerspectiveCamera(1.0f, aspectRatio, rotation*transformation);
-                    }
-                    else
-                    {
-                        camera = new OrthogonalCamera(aspectRatio, rotation*transformation);
-                    }
+                ICamera camera;
+                if (cameraType == "perspective")
+                {
+                    camera = new PerspectiveCamera(1.0f, aspectRatio, rotation * transformation);
+                }
+                else
+                {
+                    camera = new OrthogonalCamera(aspectRatio, rotation * transformation);
+                }
 
-                    // 3.(ruotare l'osservatore)
+                // 3.(ruotare l'osservatore)
 
-                    // 4.Run raytracer
-                    var image = new HdrImage(800, 600);
-                    var tracer = new ImageTracer(image, camera);
+                // 4.Run raytracer
+                var image = new HdrImage(800, 600);
+                var tracer = new ImageTracer(image, camera);
 
-                    Color ComputeColor(Ray ray)
-                    {
-                        return world.RayIntersection(ray) == null ? BLACK : WHITE;
-                    }
+                if (algorithmValue == "onoff")
+                {
+                    var renderer = new OnOffRenderer(world);
+                    tracer.FireAllRays(renderer.Call);
+                }
+                else
+                {
+                    var renderer = new FlatRenderer(world);
+                    tracer.FireAllRays(renderer.Call);
+                }
+            
 
-                    tracer.FireAllRays(ComputeColor);
-
-                    // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura SU FILE. pfm, per colpa dello stream.
+            // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura SU FILE. pfm, per colpa dello stream.
                     var stream = new MemoryStream();
                     image.WritePFMFile(stream, Endianness.BigEndian);
 
@@ -215,7 +238,7 @@
                             $"Error: couldn't write file {pngOutputValue}");
                     }
                 },
-                width, height, angleDeg, pfmOutput, pngOutput, cameraType );
+                width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm );
             
             return await demo.InvokeAsync(args);
             

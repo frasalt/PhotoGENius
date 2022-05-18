@@ -103,13 +103,19 @@ namespace PGENLib
         Ray FireRay(float u, float v);
 
     }
-
+  
     public struct OrthogonalCamera : ICamera
     {
         private float AspectRatio;
         private Transformation Transf;
 
-        public OrthogonalCamera(float aspectRatio = 1.0f, Transformation tr = default)
+        public OrthogonalCamera(float aspectRatio = 1.0f)
+        {
+            AspectRatio = aspectRatio;
+            Transf = new Transformation();
+        }
+        
+        public OrthogonalCamera(float aspectRatio, Transformation tr)
         {
             AspectRatio = aspectRatio;
             Transf = tr;
