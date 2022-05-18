@@ -76,10 +76,8 @@ namespace PGENLib
         public int RussianRouletteLimit;
         
         public PathTracer(World world, PCG pcg, int numbOfRays = 10, int maxDepth = 2, int russianRouletteLimit = 3,
-            Color backgroundColor = default)
+            Color backgroundColor = default) : base(world, backgroundColor)
         {
-            World = world;
-            BackgroundColor = backgroundColor;
             Pcg = pcg;
             NumbOfRays = numbOfRays;
             MaxDepth = maxDepth;

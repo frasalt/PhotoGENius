@@ -9,14 +9,14 @@ namespace PGENLib.Tests{
     public class MaterialsTests
     {
         [Fact]
-        public void testUniformPigment()
+        public void TestUniformPigment()
         {
-            Color UColor = new Color(1.0f, 2.0f, 3.0f);
-            UniformPigment pigm = new UniformPigment(UColor);
-            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.0f,1.0f)),UColor));
-            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.0f,0.0f)),UColor));
-            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(1.0f,0.0f)),UColor));
-            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(1.0f,1.0f)),UColor));
+            Color uColor = new Color(1.0f, 2.0f, 3.0f);
+            UniformPigment pigm = new UniformPigment(uColor);
+            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.0f,1.0f)),uColor));
+            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.0f,0.0f)),uColor));
+            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(1.0f,0.0f)),uColor));
+            Assert.True(Color.are_close(pigm.GetColor(new Vec2d(1.0f,1.0f)),uColor));
         }
 
         [Fact]
@@ -137,7 +137,6 @@ namespace PGENLib.Tests{
                 var reflectance = pcg.RandomFloat();
                 var brdf = new DiffuseBRDF(new UniformPigment(Color.White() * reflectance));
                 var enclosureMaterial = new Material(new UniformPigment(Color.White() * emittedRadiance), brdf);
-                var shape = new Sphere(enclosureMaterial);
                 world.AddShape(new Sphere(enclosureMaterial));
                 var pathTracer = new PathTracer(world, pcg, 1, 100, 101);
                 var ray = new Ray(new Point(0, 0, 0), new Vec(1, 0, 0));

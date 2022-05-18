@@ -48,6 +48,13 @@ namespace PGENLib
             Material = material;
         }
 
+        public Sphere(Transformation transformation)
+        {
+            Transf = transformation;
+            Material = new Material();
+            
+        }
+
         /// <summary>
         /// Compute the intersection between a ray and the shape.
         /// </summary>

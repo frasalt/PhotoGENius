@@ -793,7 +793,7 @@ namespace PGENLib
         /// that e3 = normal.
         /// The `normal` vector must be normalized.
         /// </summary>
-        public Tuple CreateOnbFromZ(Normal n)
+        public static Tuple CreateOnbFromZ(Normal n)
         {
             Vec e3 = new Vec(0, 0, 1);
             float sign;

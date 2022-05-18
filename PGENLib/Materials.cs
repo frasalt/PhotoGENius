@@ -186,12 +186,12 @@ namespace PGENLib
             
             public override Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
             {
-                var onb = CreateOnbFromz(normal);
+                var onb = Onb.CreateOnbFromZ(normal);
                 var cosThetaSq = pcg.RandomFloat();
-                var cosTheta = Math.Sqrt(cosThetaSq);
-                var senTheta = Math.Sqrt(1.0f - cosTheta);
+                var cosTheta = (float)Math.Sqrt(cosThetaSq);
+                var senTheta = (float)Math.Sqrt(1.0f - cosTheta);
                 var phi = (float)(2.0f * Math.PI * pcg.RandomFloat());
-                var direction = onb.e1 * Math.Cos(phi) * cosTheta + onb.e2 * Math.Sin(phi) * cosTheta + onb.e3 * senTheta;
+                var direction = onb.e1 * (float)Math.Cos(phi) * cosTheta + onb.e2 * (float)Math.Sin(phi) * cosTheta + onb.e3 * senTheta;
                 var scatterRay = new Ray(interactionPoint, direction, 1.0E-3f, Single.PositiveInfinity, depth);
                 return scatterRay;
             }
@@ -229,12 +229,10 @@ namespace PGENLib
 
                 if (Math.Abs(thetaIn - thetaOut) < TresholdAngleRad)
                 {
-                    return pigment.get_color(uv);
+                    return Pigment.GetColor(uv);
                 }
-                else
-                {
-                    return new Color(); //BLACK
-                }
+
+                return new Color(); //BLACK
             }
             
             
