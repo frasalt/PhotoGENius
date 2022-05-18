@@ -29,68 +29,12 @@
         static Color WHITE = new Color(1.0f, 1.0f, 1.0f);
         static Color BLACK = new Color(0.0f, 0.0f, 0.0f);
 
-        /*
-        class Parameters
-        {
-            public string InputPfmFileName = "";
-            public float Factor = 0.2f;
-            public float Gamma = 1.0f;
-            public string OutputPngFileName = "";
-            public string Options = "";
-
-            /// <summary>
-            /// Constructor of parameters
-            /// </summary>
-            public Parameters()
-            {
-                InputPfmFileName = "";
-                Factor = 0.2f;
-                Gamma = 1.0f;
-                OutputPngFileName = "";
-                Options = "";
-            }
-
-            public void parse_command_line(string[] argv)
-            {
-                if (argv.Length != 4 && argv.Length != 5)
-                {
-                    throw new RuntimeError(
-                        "Usage: ./PhotoGENius.exe INPUT_PFM_FILE.pfm FACTOR GAMMA OUTPUT_PNG_FILE OPTIONS");
-                }
-
-                // associo i comandi dell'utente ai parametri di funzionamento del programma
-                InputPfmFileName = argv[0];
-
-                try
-                {
-                    Factor = Convert.ToSingle(argv[1]);
-                }
-                catch
-                {
-                    throw new RuntimeError($"Invalid factor ('{argv[1]}'), it must be a floating-point number.");
-                }
-
-                try
-                {
-                    Gamma = Convert.ToSingle(argv[2]);
-                }
-                catch
-                {
-                    throw new RuntimeError($"Invalid gamma ('{argv[2]}'), it must be a floating-point number.");
-                }
-
-                OutputPngFileName = argv[3];
-                if (argv.Length == 5) Options = argv[4];
-            }
-        }
-        */
-        
-
-        //==============================================================================================================
-        //Prova demo con SystemCommandLine
-        //==============================================================================================================
         static async Task<int> Main(string[] args)
         {
+            //==============================================================================================================
+            //Demo con SystemCommandLine
+            //==============================================================================================================
+
             var width = new Option<int>(
                 name: "--width",
                 description: "Width of the image to render.",
@@ -121,7 +65,6 @@
                 description: "Type of camera to be used: 'orthogonal' or 'perspective'.",
                 getDefaultValue: () => "orthogonal");
 
-            // ----- << linee cambiate da martin
             var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
             var demo = new Command("demo", "Create an image.")
             {
@@ -133,7 +76,6 @@
                 cameraType
             };
             rootCommand.AddCommand(demo);
-            // ----- >>
             
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue, string pngOutputValue, string cameraType) =>
                 {
@@ -239,7 +181,10 @@
                 },
                 width, height, angleDeg, pfmOutput, pngOutput, cameraType );
             
-            //---------------------------------------------------------------------------------
+            //==============================================================================================================
+            //Pfm2png con SystemCommandLine
+            //==============================================================================================================
+
             var factor = new Option<float>(
                 name: "--factor",
                 description: "Multiplicative factor.",
