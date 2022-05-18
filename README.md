@@ -39,19 +39,17 @@ To **assemble video**, install ffmpeg and type
 ```
 
 ### Easy
-File `memorial.pfm` in the same directory of the executable.
-
 Use alpha=10 and gamma=0.01 : 
 ```bash
- dotnet run PhotoGENius pfm2png memorial.pfm 10 0.01 prova.png
+ dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 10 --gamma 0.01 --output-png prova.png
  ```
-![](img/prova.png)
+![](PhotoGENius/prova.png)
 
 Use alpha=0.001 and gamma=2 : 
 ```bash
- dotnet run PhotoGENius pfm2png memorial.pfm 0.001 2 prova2.png
+ dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 0.001 --gamma 2 --output-png prova2.png
  ```
-![](img/prova2.png)
+![](PhotoGENius/prova2.png)
 
 
 <!---
