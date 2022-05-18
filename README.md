@@ -39,15 +39,15 @@ To **assemble video**, install ffmpeg and type
 ```
 
 ### Easy
-Use alpha=10 and gamma=0.01 : 
+Use alpha=10 and gamma=0.1 : 
 ```bash
- dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 10 --gamma 0.01 --output-png prova.png
+ dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 10 --gamma 0.1 --output-png prova.png
  ```
 ![](PhotoGENius/prova.png)
 
-Use alpha=0.001 and gamma=2 : 
+Use alpha=0.01 and gamma=2 : 
 ```bash
- dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 0.001 --gamma 2 --output-png prova2.png
+ dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 0.01 --gamma 2 --output-png prova2.png
  ```
 ![](PhotoGENius/prova2.png)
 
