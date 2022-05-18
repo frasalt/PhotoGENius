@@ -57,7 +57,8 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ./generate-video.sh
 ```
 This is the result with 90 frames at angles from 0° to 89°:
-![](PhotoGENius/video/animation.mp4)
+
+![](https://github.com/frasalt/PhotoGENius/blob/fd2d075096b5d7245f448f3c12d129136049598c/PhotoGENius/video/animation.mp4)
 
 ## Full documentation
 See the [UserManual](UserManual).
