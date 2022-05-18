@@ -211,34 +211,34 @@ namespace PGENLib
     //==========================================================================================================
     public struct Tuple
     {
-        public Vec a;
-        public Vec b;
-        public Vec c;
+        public Vec e1;
+        public Vec e2;
+        public Vec e3;
 
         /// <summary>
         /// Empty constructor.
         /// </summary>
         public Tuple()
         {
-            a.x = 0;
-            b.x = 0;
-            c.x = 0;
-            a.y = 0;
-            b.y = 0;
-            c.y = 0;
-            a.z = 0;
-            b.z = 0;
-            c.z = 0;
+            e1.x = 0;
+            e2.x = 0;
+            e3.x = 0;
+            e1.y = 0;
+            e2.y = 0;
+            e3.y = 0;
+            e1.z = 0;
+            e2.z = 0;
+            e3.z = 0;
         }
 
         /// <summary>
         /// Constructor with float parameters.
         /// </summary>
-        public Tuple(Vec a, Vec b, Vec c)
+        public Tuple(Vec e1, Vec e2, Vec e3)
         {
-            this.a = a;
-            this.b = b;
-            this.c = c;
+            this.e1 = e1;
+            this.e2 = e2;
+            this.e3 = e3;
         }
 
     }
