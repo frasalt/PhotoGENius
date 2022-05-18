@@ -7,28 +7,49 @@
 
 ## Features
 
-In its first release, PhotoGENius can:
+In its second release, PhotoGENius can:
 - read a PFM file and convert it to a PNG file, given an output luminosity parameter `alpha` and a calibration factor `gamma`.
+- generate demonstrative scene in both PNG and PFM format, given a set of options, including view angle.
+- assemble different frames to generate a simple animation.
 
 ## Examples
-Extremely easy to use: chose your PFM file to convert and type
+Easy to use: go to PhotoGENius\PhotoGENius directory.
+
+To **convert file**, type
 ```bash
-.\PhotoGENius.exe path_to\my_pfm_file_name.pfm <alpha> <gamma> my_png_gile_name.png
+dotnet run PhotoGENius pfm2png PFM_FILE_PATH/NAME <options>
 ```
-Pay attention that if your computer is setted on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
+Pay attention that if your computer is set on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
+
+To **generate demo image**, 
+```bash
+dotnet run PhotoGENius demo <options>
+```
+Type anything as option to show further usage information.
+
+To **generate frames**, type
+```bash
+./generate-frames.sh
+```
+You can easily adapt the script to your needs and make it executable (chmod +x on Linux and MacOS).
+
+To **assemble video**, install ffmpeg and type
+```bash
+./generate-video.sh
+```
 
 ### Easy
 File `memorial.pfm` in the same directory of the executable.
 
 Use alpha=10 and gamma=0.01 : 
 ```bash
- .\PhotoGENius.exe memorial.pfm 10 0.01 prova.png
+ dotnet run PhotoGENius pfm2png memorial.pfm 10 0.01 prova.png
  ```
 ![](img/prova.png)
 
 Use alpha=0.001 and gamma=2 : 
 ```bash
- .\PhotoGENius.exe memorial.pfm 0.001 2 prova2.png
+ dotnet run PhotoGENius pfm2png memorial.pfm 0.001 2 prova2.png
  ```
 ![](img/prova2.png)
 
@@ -41,7 +62,7 @@ Use alpha=0.001 and gamma=2 :
 Full documentation available in the [UserManual](UserManual).
 
 ## Requirements
-PhotoGENius can be used both on Windows and MacOS systems.
+PhotoGENius can be used on Windows, Linux and MacOS systems.
 It requires dotnet 6.0 to run.
 To assemble generated frames in a mp4 video via out script (generate-video.sh) you need 
 to install ffmpeg (for example in the same directory as dotnet).
