@@ -228,5 +228,36 @@ namespace PGENLib.Tests
             Transformation expected = Transformation.Scaling(new Vec(6.0f, 10.0f, 40.0f));
             Assert.True(Transformation.are_close(expected, tr1*tr2));
         }
+        
+        [Fact]
+        public void test_OnbFromNormal()
+        {
+            PCG pcg = new PCG();
+            
+            for (int i = 0; i < 1; i++)
+            {
+                Vec v = new Vec(pcg.Random(), pcg.Random(), pcg.Random());
+                v = v.NormalizeVec();
+                Normal normal = new Normal();
+                normal = v.VecToNorm();
+                
+                Tuple T = new Tuple();
+                T = Vec.CreateOnbFromZ(normal);
+                Assert.True(Vec.are_close(T.e3,normal.ToVec()));
+                Assert.True((float) Vec.DotProd(T.e1, T.e2)< 1E-5f);
+                Assert.True((float) Vec.DotProd(T.e2, T.e3)< 1E-5f);
+                Assert.True((float) Vec.DotProd(T.e3, T.e1)< 1E-5f);
+        
+
+                Assert.True(((float)Vec.SquaredNorm(T.e1)-1f)<1E-5f);
+                Assert.True(((float)Vec.SquaredNorm(T.e2)-1f)<1E-5f);
+                Assert.True(((float)Vec.SquaredNorm(T.e3)-1f)<1E-5f);
+            }
+            
+        }
+        
+        
+        
     }
+    
 }
