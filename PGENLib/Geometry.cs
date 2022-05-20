@@ -795,7 +795,8 @@ namespace PGENLib
         /// </summary>
         public static Tuple CreateOnbFromZ(Normal n)
         {
-            Vec e3 = new Vec(0, 0, 1);
+            Vec e3 = new Vec();
+            e3 = e3.NormalizeVec();
             float sign;
             if (n.z > 0.0)
             {
@@ -803,12 +804,9 @@ namespace PGENLib
             }
             else sign = -1.0f;
 
-            float a = (float) -1.0 / (sign + n.z);
+            float a = (float) -1.0f / (sign + n.z);
             float b = n.x * n.y * a;
-            float x1 = (float) 1.0 + sign * n.x * n.x * a;
-            float y1 = (float) sign * b;
-            float z1 = (float) -sign * n.x;
-            Vec e1 = new Vec(x1,y1,z1);
+            Vec e1 = new Vec( 1.0f + sign * n.x * n.x * a,sign * b,-sign * n.x);
             Vec e2 = new Vec(b, sign + n.y * n.y * a, -n.y);
             Vec vecN = new Vec(n.x, n.y, n.z);
             Tuple T = new Tuple(e1, e2, vecN);
