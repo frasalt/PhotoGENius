@@ -186,7 +186,7 @@ namespace PGENLib
             
             public override Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
             {
-                var onb = Onb.CreateOnbFromZ(normal);
+                var onb = Vec.CreateOnbFromZ(normal);
                 var cosThetaSq = pcg.RandomFloat();
                 var cosTheta = (float)Math.Sqrt(cosThetaSq);
                 var senTheta = (float)Math.Sqrt(1.0f - cosTheta);

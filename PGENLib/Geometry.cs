@@ -189,6 +189,7 @@ namespace PGENLib
                 z = this.z/Norm(this)
             };
             return t;
+            
         }
         
         /// <summary>
@@ -203,6 +204,49 @@ namespace PGENLib
                 z = this.z
             };
             return t;
+        }
+        
+           
+        /// <summary>
+        /// Create a orthonormal basis (Onb) from a vector representing the z axis (normalized)
+        /// Return a tuple containing the three vectors (e1, e2, e3) of the basis. The result is such
+        /// that e3 = normal.
+        /// The `normal` vector must be normalized.
+        /// </summary>
+        public static Tuple CreateOnbFromZ(Normal e3)
+        {
+            float sign;
+            if (e3.z > 0.0)
+            {
+                sign = 1.0f;
+            }
+            else sign = -1.0f;
+
+            float a = (float) -1.0f / (sign + e3.z);
+            float b = e3.x * e3.y * a;
+            Vec e1 = new Vec( 1.0f + sign * e3.x * e3.x * a,sign * b,-sign * e3.x);
+            Vec e2 = new Vec(b, sign + e3.y * e3.y * a, -e3.y);
+            Vec vecN = new Vec(e3.x, e3.y, e3.z);
+            Tuple T = new Tuple(e1, e2, vecN);
+            
+            return T;
+        }
+        
+        /// <summary>
+        /// Normalize two vectors or normals and apply the dot product.
+        /// The result is the cosine of the angle between the two vectors/normals.
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+        
+        //DEVO IMPLEMENTEARE UNION PER FORZA PERCHè COSì VALE SIA PER I VETTORI CHE PER LE NORMALI
+        public float NormalizeDot(Vec v1, Vec v2)
+        {
+            Vec v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
+            Vec v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
+            float r = Vec.DotProd(v1Vec, v2Vec);
+            return r;
         }
         
     }
@@ -785,55 +829,10 @@ namespace PGENLib
         
     }
     
-    public struct Onb
-    {    
-        /// <summary>
-        /// Create a orthonormal basis (Onb) from a vector representing the z axis (normalized)
-        /// Return a tuple containing the three vectors (e1, e2, e3) of the basis. The result is such
-        /// that e3 = normal.
-        /// The `normal` vector must be normalized.
-        /// </summary>
-        public static Tuple CreateOnbFromZ(Normal n)
-        {
-            Vec e3 = new Vec(0, 0, 1);
-            float sign;
-            if (n.z > 0.0)
-            {
-                sign = 1.0f;
-            }
-            else sign = -1.0f;
 
-            float a = (float) -1.0 / (sign + n.z);
-            float b = n.x * n.y * a;
-            float x1 = (float) 1.0 + sign * n.x * n.x * a;
-            float y1 = (float) sign * b;
-            float z1 = (float) -sign * n.x;
-            Vec e1 = new Vec(x1,y1,z1);
-            Vec e2 = new Vec(b, sign + n.y * n.y * a, -n.y);
-            Vec vecN = new Vec(n.x, n.y, n.z);
-            Tuple T = new Tuple(e1, e2, vecN);
-            
-            return T;
-        }
-        /// <summary>
-        /// Normalize two vectors or normals and apply the dot product.
-        /// The result is the cosine of the angle between the two vectors/normals.
-        /// </summary>
-        /// <param name="v1"></param>
-        /// <param name="v2"></param>
-        /// <returns></returns>
-        
-        //DEVO IMPLEMENTEARE UNION PER FORZA PERCHè COSì VALE SIA PER I VETTORI CHE PER LE NORMALI
-        public float NormalizeDot(Vec v1, Vec v2)
-        {
-            Vec v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
-            Vec v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
-            float r = Vec.DotProd(v1Vec, v2Vec);
-            return r;
-        }
         
         
-    }
+    
     
     
 
