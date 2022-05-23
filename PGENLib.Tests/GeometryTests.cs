@@ -234,7 +234,7 @@ namespace PGENLib.Tests
         {
             PCG pcg = new PCG();
             
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 1E5; i++)
             {
                 Vec v = new Vec(pcg.Random(), pcg.Random(), pcg.Random());
                 v = v.NormalizeVec();

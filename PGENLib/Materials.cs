@@ -264,7 +264,7 @@ namespace PGENLib
         /// </summary>
         public class Material
         {
-            protected internal BRDF Brdf; 
+            protected internal BRDF Brdf;
             protected internal Pigment EmittedRadiance; 
             public Material()
             {
@@ -278,8 +278,9 @@ namespace PGENLib
 
             public Material(Pigment emittedRadiance, BRDF brdf)
             {
-                Brdf = brdf;
                 EmittedRadiance = emittedRadiance;
+                Brdf = brdf;
+                
             }
             
         }

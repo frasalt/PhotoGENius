@@ -120,7 +120,7 @@
             
             var algorithm = new Option<string>(
                 name: "--algorithm",
-                description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one.",
+                description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one, 'pathtracer'  ",
                 getDefaultValue: () => "onoff");
             
             var demo = new RootCommand("Sample app for creating an image")
@@ -137,13 +137,40 @@
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
                 string pngOutputValue, string cameraType, string algorithmValue) =>
             {
-
+                
                 // 1.World initialization (10 spheres)
                 var world = new World();
+
+                Material SkyMaterial = new Material(
+                    new UniformPigment(new Color(1.0f, 0.9f, 0.5f)),
+                    new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
+                );
+                Material GroundMaterial = new Material(
+                    new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), new Color(0.1f, 0.2f, 0.5f)))
+                );
+
+                Material SphereMaterial = new Material(new DiffuseBRDF(new UniformPigment(new Color(0.3f, 0.4f, 0.8f))));
+                Material MirrorMaterial = new Material(new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f))));
+                
+                world.AddShape(
+                        new Sphere(Transformation.Scaling(new Vec(200f, 200f, 200f)) * Transformation.Traslation(new Vec(0f, 0f, 0.4f)),SkyMaterial)
+                );
+
+                world.AddShape(new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),GroundMaterial)
+                );
+
+                world.AddShape(new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)), SphereMaterial)
+                );
+                
+                world.AddShape(new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),MirrorMaterial)
+                );
+                
+                /*
 
                 //   sphere in vertices
                 var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
                 Transformation transformation;
+                
                 var col1 = new Color(0.5f, 0.5f, 0.5f);
                 var col2 = new Color(0.0f, 1.0f, 0.0f);
                 var emittedRad = new CheckeredPigment(col1, col2, 2);
@@ -177,9 +204,9 @@
                 transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
                 world.AddShape(new Sphere(transformation * scaling, redMaterial));
 
-
+                */
                 // 2.Camera initialization
-                transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
+                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
                 //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
@@ -205,11 +232,19 @@
                     var renderer = new OnOffRenderer(world);
                     tracer.FireAllRays(renderer.Call);
                 }
-                else
+                else if(algorithmValue == "flat")
                 {
                     var renderer = new FlatRenderer(world);
                     tracer.FireAllRays(renderer.Call);
                 }
+                else
+                {
+                    var renderer = new PathTracer(
+                        world,
+                        new PCG()
+                    );
+                }
+                
             
 
             // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura SU FILE. pfm, per colpa dello stream.
