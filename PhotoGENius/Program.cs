@@ -120,8 +120,8 @@
             
             var algorithm = new Option<string>(
                 name: "--algorithm",
-                description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one, 'pathtracer'  ",
-                getDefaultValue: () => "onoff");
+                description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one or 'pathtracing'  ",
+                getDefaultValue: () => "pathtracing");
             
             var demo = new RootCommand("Sample app for creating an image")
             {
@@ -141,28 +141,28 @@
                 // 1.World initialization (10 spheres)
                 var world = new World();
 
-                Material SkyMaterial = new Material(
+                var skyMaterial = new Material(
                     new UniformPigment(new Color(1.0f, 0.9f, 0.5f)),
                     new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                 );
-                Material GroundMaterial = new Material(
+                var groundMaterial = new Material(
                     new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), new Color(0.1f, 0.2f, 0.5f)))
                 );
 
-                Material SphereMaterial = new Material(new DiffuseBRDF(new UniformPigment(new Color(0.3f, 0.4f, 0.8f))));
-                Material MirrorMaterial = new Material(new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f))));
+                var sphereMaterial = new Material(new DiffuseBRDF(new UniformPigment(new Color(0.3f, 0.4f, 0.8f))));
+                var mirrorMaterial = new Material(new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f))));
                 
                 world.AddShape(
-                        new Sphere(Transformation.Scaling(new Vec(200f, 200f, 200f)) * Transformation.Traslation(new Vec(0f, 0f, 0.4f)),SkyMaterial)
+                        new Sphere(Transformation.Scaling(new Vec(200f, 200f, 200f)) * Transformation.Traslation(new Vec(0f, 0f, 0.4f)),skyMaterial)
                 );
 
-                world.AddShape(new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),GroundMaterial)
+                world.AddShape(new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
 
-                world.AddShape(new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)), SphereMaterial)
+                world.AddShape(new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)), sphereMaterial)
                 );
                 
-                world.AddShape(new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),MirrorMaterial)
+                world.AddShape(new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
                 
                 /*
@@ -243,6 +243,7 @@
                         world,
                         new PCG()
                     );
+                    tracer.FireAllRays(renderer.Call);
                 }
                 
             
