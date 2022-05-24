@@ -36,10 +36,23 @@ namespace PGENLib
             Transf = new Transformation();
             Material = new Material();
         }
-        public Sphere(Transformation transf = default, Material material = default)
+        public Sphere(Transformation transf, Material material)
         {
             Transf = transf;
             Material = material;
+        }
+        
+        public Sphere(Material material)
+        {
+            Transf = new Transformation();
+            Material = material;
+        }
+
+        public Sphere(Transformation transformation)
+        {
+            Transf = transformation;
+            Material = new Material();
+            
         }
 
         /// <summary>

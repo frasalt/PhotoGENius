@@ -42,13 +42,13 @@ namespace PGENLib
         /// <summary>
         /// Constructor to create a Ray.
         /// </summary>
-        public Ray(Point origin, Vec dir, float tmin)
+        public Ray(Point origin, Vec dir, float tmin, float tmax = float.PositiveInfinity, int depth = 0)
         {
             this.Origin = origin;
             this.Dir = dir;
             this.Tmin = tmin;
-            this.Tmax = float.PositiveInfinity;
-            this.Depth = 0;
+            this.Tmax = tmax;
+            this.Depth = depth;
         }
 
         public Point get_Origin()
@@ -180,31 +180,93 @@ namespace PGENLib
     /// <summary>
     /// Send rays from the Camera (observer) to corresponding pixels of an HdrImage (screen),
     /// converting "u-v" Camera coordinates to "column-raw" index of the HdrImage.
+    /// <list type="table">
+    /// <item>
+    ///     <term>Image</term>
+    ///     <description> must be a :class:`.HdrImage` object that has already been initialized</description>
+    /// </item>
+    /// <item>
+    ///     <term>Camera</term>
+    ///     <description> must be a descendeant of the :class:`.Camera` object</description>
+    /// </item>
+    /// <item>
+    ///     <term>Pcg</term>
+    ///     <description> </description>
+    /// </item>
+    /// <item>
+    ///     <term>SamplePerSize</term>
+    ///     <description> If `SamplesPerSide` is larger than zero, stratified sampling will be applied to each pixel in the
+    ///     image, using the random number generator `pcg`</description>
+    /// </item>
+    /// </list>
     /// </summary>
     public struct ImageTracer
     {
         public HdrImage Image;
         public ICamera Camera;
-
+        
         public ImageTracer(HdrImage image, ICamera camera)
         {
             Image = image;
             Camera = camera;
         }
 
+        /// <summary>
+        /// Shoot one light ray through image pixel of coordinates (col, row), which are measured in the
+        /// same way as in HdrImage: the bottom left corner is placed at (0, 0). The parameters (uPixel, vPixel) specify
+        /// where the ray should cross the pixel: (0.5f, 0.5f) represents the pixel's center.
+        /// </summary>
+        /// <param name="col"> Type int</param> 
+        /// <param name="row"> Type int</param>
+        /// <param name="uPixel"> Type float in the range [0, 1], default = 0.5 </param>
+        /// <param name="vPixel"> Type float in the range [0, 1], default = 0.5</param>
+        /// <returns></returns>
         public Ray FireRay(int col, int row, float uPixel = 0.5f, float vPixel = 0.5f)
         {
-            // A parte convertire le coordinate dallo spazio (u, v) allo spazio dei pixel,
-            // c’è il problema della superficie del pixel.
-            // Un pixel ha una certa area: in quale punto del pixel deve passare il raggio?
-            // Per il momento nel centro, ma lasciamo che si possa specificare una
-            // posizione relativa tramite le coordinate (uPixel, vPixel)
-            
             float u = (col + uPixel) / (Image.Width);
             float v = 1.0f - (row + vPixel) / (Image.Height);
             return Camera.FireRay(u, v);
         }
 
+        /// <summary>
+        /// Shoot several light rays crossing each of the pixels in the image. For each pixel of the `HdrImage`
+        /// object, fire one ray and pass it to the function `func`, which must accept a `Ray` as its only
+        /// parameter and must return a `Color` object, representing the color to assign to that pixel in the image.
+        /// If `callback` is not none, it must be a function accepting at least two parameters named `col` and `row`.
+        /// This function is called periodically during the rendering, and the two mandatory arguments are the row and
+        /// column number of the last pixel that has been traced. (Both the row and column are increased by one starting
+        /// from zero: first the row and then the column.) The time between two consecutive calls to the callback can be
+        /// tuned using the parameter `callback_time_s`. Any keyword argument passed to `fire_all_rays` is passed to
+        /// the callback.
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="???"></param>
+        /*
+        public void FireAllRays (Func<Ray,Color> func, Func callback=None, callback_time_s: float = 2.0, **callback_kwargs)
+        {
+            var lastCallTime = process_time();
+            if (callback != null)
+            {
+                callback(col=0, row=0, **callback_kwargs)
+            }
+        
+            for(int row = 0; row< Image.Height; row ++)
+            {
+                for(int col = 0; col< Image.Width; col ++)
+                {
+                    
+                    Ray ray = FireRay(col, row);
+                    Color color = func(ray);    
+                    Image.SetPixel(col, row, color);
+                    
+                    current_time = process_time()
+                    if callback and (current_time - last_call_time > callback_time_s):
+                    callback(row, col, **callback_kwargs)
+                    last_call_time = current_time
+                }
+            }
+        }
+        */    
         public void FireAllRays (Func<Ray,Color> func)
         {
             for(int row = 0; row< Image.Height; row ++)
@@ -214,7 +276,7 @@ namespace PGENLib
                     
                     Ray ray = FireRay(col, row);
                     Color color = func(ray);    // una funzione che viene invocata per ogni raggio e
-                                                // restituisca un oggetto di tipo Color.
+                    // restituisca un oggetto di tipo Color.
                     Image.SetPixel(col, row, color);
                 }
             }
