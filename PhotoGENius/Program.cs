@@ -123,6 +123,28 @@
                 description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one or 'pathtracing'  ",
                 getDefaultValue: () => "pathtracing");
             
+            var raysNum = new Option<int>(
+                name: "--num-of-rays",
+                description: "Number of rays departing from each surface point (only applicable with --algorithm=pathtracing).",
+                getDefaultValue: () => 10);
+            
+            var maxDepth = new Option<int>(
+                name: "--max-depth",
+                description: "Maximum allowed ray depth (only applicable with --algorithm=pathtracing).",
+                getDefaultValue: () => 3);
+            
+            var initState = new Option<ulong>(
+                name: "--init-state",
+                description: "Initial seed for the random number generator (positive number, only applicable " +
+                             "with --algorithm=pathtracing).",
+                getDefaultValue: () => 45);
+            
+            var initSeq = new Option<ulong>(
+                name: "--init-seq",
+                description: "Identifier of the sequence produced by the random number generator (positive number, " +
+                             "only applicable with --algorithm=pathtracing).",
+                getDefaultValue: () => 54);
+            
             var demo = new RootCommand("Sample app for creating an image")
             {
                 width,
@@ -135,10 +157,11 @@
             };
             
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
-                string pngOutputValue, string cameraType, string algorithmValue) =>
+                string pngOutputValue, string cameraType, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
+                ulong initSeqValue) =>
             {
                 
-                // 1.World initialization (10 spheres)
+                // 1.World initialization 
                 var world = new World();
 
                 var skyMaterial = new Material(
@@ -146,7 +169,8 @@
                     new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                 );
                 var groundMaterial = new Material(
-                    new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), new Color(0.1f, 0.2f, 0.5f)))
+                    new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), 
+                        new Color(0.1f, 0.2f, 0.5f)))
                 );
 
                 var sphereMaterial = new Material(new DiffuseBRDF(new UniformPigment(new Color(0.3f, 0.4f, 0.8f))));
@@ -173,7 +197,7 @@
                 
                 var col1 = new Color(0.5f, 0.5f, 0.5f);
                 var col2 = new Color(0.0f, 1.0f, 0.0f);
-                var emittedRad = new CheckeredPigment(col1, col2, 2);
+                var emittedRad = new CheckeredPigment(col1, col2, 4);
                 var material = new Material(emittedRad, new DiffuseBRDF());
 
                 for (var x = -0.5f; x <= 0.5f; x++)
@@ -225,30 +249,36 @@
 
                 // 4.Run raytracer
                 var image = new HdrImage(800, 600);
+                Console.WriteLine($"Generating a {widthValue}×{widthValue} image, with the camera tilted by {angleDegValue}°");
                 var tracer = new ImageTracer(image, camera);
-
+                
                 if (algorithmValue == "onoff")
                 {
+                    Console.WriteLine("Using on/off renderer");
                     var renderer = new OnOffRenderer(world);
                     tracer.FireAllRays(renderer.Call);
                 }
                 else if(algorithmValue == "flat")
                 {
+                    Console.WriteLine("Using flat renderer");
                     var renderer = new FlatRenderer(world);
                     tracer.FireAllRays(renderer.Call);
                 }
-                else
+                else if (algorithmValue == "pathtracing")
                 {
+                    Console.WriteLine("Using pathtracing");
                     var renderer = new PathTracer(
                         world,
-                        new PCG()
+                        new PCG(initStateValue, initSeqValue), 
+                        raysNumValue, 
+                        maxDepthValue
                     );
                     tracer.FireAllRays(renderer.Call);
                 }
                 
-            
+                
 
-            // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura SU FILE. pfm, per colpa dello stream.
+                // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura SU FILE. pfm, per colpa dello stream.
                     var stream = new MemoryStream();
                     image.WritePFMFile(stream, Endianness.BigEndian);
 
@@ -275,7 +305,8 @@
                     }
                     
                 },
-                width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm );
+                width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
+                initState, initSeq );
             
             return await demo.InvokeAsync(args);
             
@@ -287,7 +318,7 @@
             
             var gamma = new Option<float>(
                 name: "--gamma",
-                description: "Value to be used for gamma correction.",
+                description: "Exponent for gamma correction.",
                 getDefaultValue: () => 1.0f);
             
             var inputPfmFileName = new Option<string>(
