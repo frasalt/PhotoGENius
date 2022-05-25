@@ -77,8 +77,21 @@ namespace PGENLib
        Perspective = 18,
        Float = 19
    }
-   
-   
-   
-   
+
+   public class KeywordToken : Token
+   {
+       public KeywordToken(SourceLocation location) : base(location){}
+       public Keyword Keyword;
+       public static Dictionary<string, Keyword> Dictionary = new Dictionary<string, Keyword>()
+       {
+           
+       }
+
    }
+   
+
+
+
+
+
+}
