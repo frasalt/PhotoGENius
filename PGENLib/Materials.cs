@@ -100,189 +100,182 @@ namespace PGENLib
     }
 
 
-        public class ImagePigment : Pigment
+    public class ImagePigment : Pigment
+    {
+        public HdrImage Image;
+        public ImagePigment(HdrImage image)
         {
-            public HdrImage Image;
-            public ImagePigment(HdrImage image)
+            Image = image;
+        }
+
+        public override Color GetColor(Vec2d uv)
+        {
+            int col = (int)uv.u * Image.Width;
+            int row = (int)uv.v * Image.Height;
+            if (col >= Image.Width)
             {
-                Image = image;
+                col = Image.Width - 1;
             }
-
-            public override Color GetColor(Vec2d uv)
+            if (row >= Image.Height)
             {
-                int col = (int)uv.u * Image.Width;
-                int row = (int)uv.v * Image.Height;
-                if (col >= Image.Width)
-                {
-                    col = Image.Width - 1;
-                }
-
-                if (row >= Image.Height)
-                {
-                    row = Image.Height - 1;
-                }
-
-                return Image.GetPixel(col, row);
+                row = Image.Height - 1; 
             }
+            return Image.GetPixel(col, row);
+        }
+    }
+
+    /// <summary>
+    /// An abstract class representing a Bidirectional Reflectance Distribution Function (BRDF.
+    /// </summary>
+    public abstract class BRDF
+    {
+        public Pigment Pigment;
+
+        /// <summary>
+        /// Costructor without parameters, sets Pigment to a default UniformPigment(Black).
+        /// </summary>
+        public BRDF() 
+        { 
+            Pigment = new UniformPigment();
+        }
+        /// <summary>
+        /// Constructor with parameter.
+        /// </summary>
+        /// <param name="pigment">: specify the chosen pigment.</param>
+        public BRDF(Pigment pigment)
+        {
+            Pigment = pigment;
+        }
+
+        public virtual Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
+        {
+            return new Color(0.0f, 0.0f, 0.0f); //BLACK
         }
 
         /// <summary>
-        /// An abstract class representing a Bidirectional Reflectance Distribution Function (BRDF.
+        /// Abstract method to be implemented in the BRDF derived classes.
         /// </summary>
-        public abstract class BRDF
+        /// <param name="pcg"> Used to generate random numbers</param>
+        /// <param name="incomingDir"> Direction of the incoming ray</param>
+        /// <param name="interactionPoint"> Where the ray hit the surface</param>
+        /// <param name="normal"> Normal on interactionPoint</param>
+        /// <param name="depth"> Depth value for the new ray</param>
+        /// <returns></returns>
+        public virtual Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
         {
-            public Pigment Pigment;
+            throw new NotImplementedException("Method BRDF.ScatterRay is abstract and cannot be called");
+        }
+    }
 
-            /// <summary>
-            /// Costructor without parameters, sets Pigment to a default UniformPigment(Black).
-            /// </summary>
-            public BRDF()
-            {
-                Pigment = new UniformPigment();
-            }
-            /// <summary>
-            /// Constructor with parameter.
-            /// </summary>
-            /// <param name="pigment">: specify the chosen pigment.</param>
-            public BRDF(Pigment pigment)
-            {
-                Pigment = pigment;
-            }
-
-            public virtual Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
-            {
-                return new Color(0.0f, 0.0f, 0.0f); //BLACK
-            }
-
-            /// <summary>
-            /// Abstract method to be implemented in the BRDF derived classes.
-            /// </summary>
-            /// <param name="pcg"> Used to generate random numbers</param>
-            /// <param name="incomingDir"> Direction of the incoming ray</param>
-            /// <param name="interactionPoint"> Where the ray hit the surface</param>
-            /// <param name="normal"> Normal on interactionPoint</param>
-            /// <param name="depth"> Depth value for the new ray</param>
-            /// <returns></returns>
-            public virtual Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
-            {
-                throw new NotImplementedException("Method BRDF.ScatterRay is abstract and cannot be called");
-            }
+    /// <summary>
+    /// A class representing an ideal diffuse BRDF.
+    /// </summary>
+    public class DiffuseBRDF : BRDF
+    {
+        public DiffuseBRDF() {} //Uses the BRDF default constructor
             
+        public DiffuseBRDF(Pigment pigment) : base(pigment){}
+
+        public override Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
+        {
+            return Pigment.GetColor(uv) * (float) (1.0f / Math.PI);
+        }
+            
+        public override Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
+        {
+            var onb = Vec.CreateOnbFromZ(normal);
+            var cosThetaSq = pcg.RandomFloat();
+            var cosTheta = (float)Math.Sqrt(cosThetaSq);
+            var senTheta = (float)Math.Sqrt(1.0f - cosTheta);
+            var phi = (float)(2.0f * Math.PI * pcg.RandomFloat());
+            var direction = onb.e1 * (float)Math.Cos(phi) * cosTheta + onb.e2 * (float)Math.Sin(phi) * cosTheta + onb.e3 * senTheta;
+            var scatterRay = new Ray(interactionPoint, direction, 1.0E-3f, Single.PositiveInfinity, depth);
+            return scatterRay;
+        }
+    }
+
+    /// <summary>
+    /// A class representing an ideal mirror BRDF.
+    /// </summary>
+    public class SpecularBRDF : BRDF
+    {
+        public double TresholdAngleRad;
+        public SpecularBRDF(double tresholdAngleRad = Math.PI/1800.0)
+        {
+            TresholdAngleRad = tresholdAngleRad;
+        } 
+            
+        public SpecularBRDF(Pigment pigment, double tresholdAngleRad = Math.PI/1800.0) : base(pigment)
+        {
+            TresholdAngleRad = tresholdAngleRad;
         }
 
         /// <summary>
-        /// A class representing an ideal diffuse BRDF.
+        /// We provide this implementation for reference, but we are not going to use it (neither in the path tracer
+        /// nor in the point-light tracer).
         /// </summary>
-        public class DiffuseBRDF : BRDF
+        /// <param name="normal"></param>
+        /// <param name="inDir"></param>
+        /// <param name="outDir"></param>
+        /// <param name="uv"></param>
+        /// <returns></returns>
+        public override Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
         {
-            public DiffuseBRDF() {} //Uses the BRDF default constructor
-            
-            public DiffuseBRDF(Pigment pigment) : base(pigment){}
+            var thetaIn = Math.Acos(Vec.DotProd(normal.ToVec(), inDir));
+            var thetaOut = Math.Acos(Vec.DotProd(normal.ToVec(), outDir));
 
-            public override Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
+            if (Math.Abs(thetaIn - thetaOut) < TresholdAngleRad)
             {
-                return Pigment.GetColor(uv) * (float) (1.0f / Math.PI);
+                return Pigment.GetColor(uv);
             }
-            
-            public override Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
-            {
-                var onb = Vec.CreateOnbFromZ(normal);
-                var cosThetaSq = pcg.RandomFloat();
-                var cosTheta = (float)Math.Sqrt(cosThetaSq);
-                var senTheta = (float)Math.Sqrt(1.0f - cosTheta);
-                var phi = (float)(2.0f * Math.PI * pcg.RandomFloat());
-                var direction = onb.e1 * (float)Math.Cos(phi) * cosTheta + onb.e2 * (float)Math.Sin(phi) * cosTheta + onb.e3 * senTheta;
-                var scatterRay = new Ray(interactionPoint, direction, 1.0E-3f, Single.PositiveInfinity, depth);
-                return scatterRay;
-            }
+
+            return new Color(); //BLACK
         }
-
-        /// <summary>
-        /// A class representing an ideal mirror BRDF.
-        /// </summary>
-        public class SpecularBRDF : BRDF
+        
+        public override Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
         {
-            public double TresholdAngleRad;
-            public SpecularBRDF(double tresholdAngleRad = Math.PI/1800.0)
-            {
-                TresholdAngleRad = tresholdAngleRad;
-            } 
-            
-            public SpecularBRDF(Pigment pigment, double tresholdAngleRad = Math.PI/1800.0) : base(pigment)
-            {
-                TresholdAngleRad = tresholdAngleRad;
-            }
-
-            /// <summary>
-            /// We provide this implementation for reference, but we are not going to use it (neither in the path tracer
-            /// nor in the point-light tracer).
-            /// </summary>
-            /// <param name="normal"></param>
-            /// <param name="inDir"></param>
-            /// <param name="outDir"></param>
-            /// <param name="uv"></param>
-            /// <returns></returns>
-            public override Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
-            {
-                var thetaIn = Math.Acos(Vec.DotProd(normal.ToVec(), inDir));
-                var thetaOut = Math.Acos(Vec.DotProd(normal.ToVec(), outDir));
-
-                if (Math.Abs(thetaIn - thetaOut) < TresholdAngleRad)
-                {
-                    return Pigment.GetColor(uv);
-                }
-
-                return new Color(); //BLACK
-            }
-            
-            
-            public override Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
-            {
-                //There is no need to use the PCG here, as the reflected direction is always completely deterministic
-                // for a perfect mirror.
-                var normalizedIncomingDir = incomingDir.NormalizeVec();
-                var normalizedNormal = normal.ToVec().NormalizeVec();
-                var dotProd = Vec.DotProd(normalizedIncomingDir, normalizedNormal);
-                var direction = normalizedIncomingDir - normalizedNormal * 2.0f * dotProd;
-                var scatterRay = new Ray(interactionPoint, direction, 1.0E-3f, float.PositiveInfinity, depth);
-                return scatterRay;
-            }
-
+            //There is no need to use the PCG here, as the reflected direction is always completely deterministic
+            // for a perfect mirror.
+            var normalizedIncomingDir = incomingDir.NormalizeVec();
+            var normalizedNormal = normal.ToVec().NormalizeVec();
+            var dotProd = Vec.DotProd(normalizedIncomingDir, normalizedNormal);
+            var direction = normalizedIncomingDir - normalizedNormal * 2.0f * dotProd;
+            var scatterRay = new Ray(interactionPoint, direction, 1.0E-3f, float.PositiveInfinity, depth);
+            return scatterRay;
         }
+    }
     
-        /// <summary>
-        /// A class representing a Material.
-        /// The parameters defined in this dataclass are the following:
-        /// <list type="table">
-        /// <item>
-        ///     <term>Brdf</term>
-        /// </item>
-        /// <item>
-        ///     <term>EmittedRadiance</term>
-        /// </item>
-        /// </list>
-        /// </summary>
-        public class Material
+    /// <summary>
+    /// A class representing a Material.
+    /// The parameters defined in this dataclass are the following:
+    /// <list type="table">
+    /// <item>
+    ///     <term>Brdf</term>
+    /// </item>
+    /// <item>
+    ///     <term>EmittedRadiance</term>
+    /// </item>
+    /// </list>
+    /// </summary>
+    public class Material
+    {
+        protected internal BRDF Brdf;
+        protected internal Pigment EmittedRadiance; 
+        public Material()
         {
-            protected internal BRDF Brdf;
-            protected internal Pigment EmittedRadiance; 
-            public Material()
-            {
-                Brdf = new DiffuseBRDF();
-                EmittedRadiance = new UniformPigment(new Color(0.0f, 0.0f, 0.0f)); //BLACK
-            }
-
-            public Material(BRDF brdf) : this(new UniformPigment(), brdf)
-            {
-            }
-
-            public Material(Pigment emittedRadiance, BRDF brdf)
-            {
-                EmittedRadiance = emittedRadiance;
-                Brdf = brdf;
-                
-            }
-            
+            Brdf = new DiffuseBRDF();
+            EmittedRadiance = new UniformPigment(new Color(0.0f, 0.0f, 0.0f)); //BLACK
         }
+
+        public Material(BRDF brdf) : this(new UniformPigment(), brdf)
+        {
+        }
+
+        public Material(Pigment emittedRadiance, BRDF brdf)
+        {
+            EmittedRadiance = emittedRadiance;
+            Brdf = brdf;
+        }
+    }
         
 }

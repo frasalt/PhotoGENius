@@ -165,32 +165,42 @@
                 ulong initSeqValue) =>
             {
                 
-                // 1.World initialization 
+
+                // 1.World initialization
+
                 var world = new World();
-
+                
+                // materials
                 var skyMaterial = new Material(
-                    new UniformPigment(new Color(1.0f, 0.9f, 0.5f)),
+                    new UniformPigment(new Color(2*1.0f, 2*0.9f, 2*0.5f)),
                     new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
-                );
+                    );
                 var groundMaterial = new Material(
-                    new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), 
-                        new Color(0.1f, 0.2f, 0.5f)))
-                );
+                    new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), new Color(0.1f, 0.2f, 0.5f)))
+                    );
+                var sphereMaterial = new Material(
+                    new DiffuseBRDF(new UniformPigment(new Color(0.3f, 0.4f, 0.8f)))
+                    );
+                var mirrorMaterial = new Material(
+                    new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f)))
+                    );
 
-                var sphereMaterial = new Material(new DiffuseBRDF(new UniformPigment(new Color(0.3f, 0.4f, 0.8f))));
-                var mirrorMaterial = new Material(new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f))));
                 
+                // sky
                 world.AddShape(
-                        new Sphere(Transformation.Scaling(new Vec(200f, 200f, 200f)) * Transformation.Traslation(new Vec(0f, 0f, 0.4f)),skyMaterial)
+                    new Sphere(Transformation.Scaling(new Vec(200f, 200f, 200f)) * Transformation.Traslation(new Vec(0f, 0f, 0.4f)),skyMaterial)
                 );
-
-                world.AddShape(new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
+                // ground
+                world.AddShape(
+                    new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
-
-                world.AddShape(new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)), sphereMaterial)
+                // sphere in the middle
+                world.AddShape(
+                    new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)), sphereMaterial)
                 );
-                
-                world.AddShape(new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
+                // sphere aside
+                world.AddShape(
+                    new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
                 
                 /*
@@ -233,11 +243,11 @@
                 world.AddShape(new Sphere(transformation * scaling, redMaterial));
 
                 */
+                
                 // 2.Camera initialization
-                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
+                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.0f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
-                //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
 
                 ICamera camera;
                 if (cameraType == "perspective")
@@ -252,8 +262,10 @@
                 // 3.(ruotare l'osservatore)
 
                 // 4.Run raytracer
-                var image = new HdrImage(800, 600);
+
+                var image = new HdrImage(widthValue, heightValue);
                 Console.WriteLine($"Generating a {widthValue}×{widthValue} image, with the camera tilted by {angleDegValue}°");
+
                 var tracer = new ImageTracer(image, camera);
                 
                 if (algorithmValue == "onoff")
