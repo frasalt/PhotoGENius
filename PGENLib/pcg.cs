@@ -4,7 +4,7 @@ namespace PGENLib
     /// <summary>
     /// PCG Uniform Pseudo-random Number Generator.
     /// </summary>
-    public class Pcg
+    public class PCG
     {
         public ulong State;
         public ulong Inc;
@@ -14,7 +14,7 @@ namespace PGENLib
         /// </summary>
         /// <param name="initState"></param>
         /// <param name="initSeq"></param>
-        public Pcg(ulong initState = 42, ulong initSeq = 54)
+        public PCG(ulong initState = 42, ulong initSeq = 54)
         {
             State = 0;
             Inc = (initSeq << 1) | 1;

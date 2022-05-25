@@ -1,6 +1,7 @@
+using PGENLib;
+
 namespace PGENLib
 {
-    
     public struct Color
     {
         public float r;
@@ -135,6 +136,16 @@ namespace PGENLib
         {
             float lum = Math.Max((Math.Max(this.r, this.b)), this.g) + Math.Min((Math.Min(this.r, this.b)), this.g);
             return lum/2;
+        }
+
+        public static Color Black()
+        {
+            return new Color();
+        }
+
+        public static Color White()
+        {
+            return new Color(1.0f, 1.0f, 1.0f);
         }
     }
 }

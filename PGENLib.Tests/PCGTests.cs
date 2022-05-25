@@ -8,7 +8,7 @@ namespace PGENLib.Tests
 
         public void TestRandom()
         {
-            var pcg = new Pcg();
+            var pcg = new PCG();
             Assert.True(pcg.State == 1753877967969059832);
             Assert.True(pcg.Inc == 109);
             
