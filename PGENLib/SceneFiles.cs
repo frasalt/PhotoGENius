@@ -20,121 +20,127 @@ using System.Net.Mail;
 
 namespace PGENLib
 {
-   /// <summary>
-   /// A specific position in a source file.
-   /// </summary>
-   public class SourceLocation
-   {
-      public string FileName;
-      public int LineNum;
-      public int ColNum;
-      public SourceLocation(string fileName, int lineNum = 0, int colNum= 0)
-      {
-          FileName = fileName;
-          LineNum = lineNum;
-          ColNum = colNum;
-      }
-      public SourceLocation(int lineNum = 0, int colNum= 0)
-      {
-          FileName = new string("");
-          LineNum = lineNum;
-          ColNum = colNum;
-      }
-   }
-   //A lexical token, used when parsing a scene file
-   public class Token
-   {
-       public SourceLocation Location;
+    /// <summary>
+    /// A specific position in a source file.
+    /// </summary>
+    public class SourceLocation
+    {
+        public string FileName;
+        public int LineNum;
+        public int ColNum;
 
-       public Token(SourceLocation location)
-       {
-           Location = location;
-       }
-   }
+        public SourceLocation(string fileName, int lineNum = 0, int colNum = 0)
+        {
+            FileName = fileName;
+            LineNum = lineNum;
+            ColNum = colNum;
+        }
 
-   public class StopToken : Token
-   {
-       public StopToken(SourceLocation location) : base(location) {}
-   }
-   
-   public enum Keyword
-   {
-       New = 1,
-       Material = 2,
-       Plane = 3,
-       Sphere = 4,
-       Diffuse = 5,
-       Specular = 6,
-       Uniform = 7,
-       Checkered = 8,
-       Image = 9,
-       Identity = 10,
-       Translation = 11,
-       RotationX = 12,
-       RotationY = 13,
-       RotationZ = 14,
-       Scaling = 15,
-       Camera = 16,
-       Orthogonal =17,
-       Perspective = 18,
-       Float = 19
-   }
+        public SourceLocation(int lineNum = 0, int colNum = 0)
+        {
+            FileName = new string("");
+            LineNum = lineNum;
+            ColNum = colNum;
+        }
+    }
 
-   /// <summary>
-   /// A token containing a keyword
-   /// </summary>
-   public class KeywordToken : Token
-   {
-       public Keyword; 
-       public KeywordToken(SourceLocation location, Keyword keyword) : base(location)
-       {
-           Keyword = keyword;
-       }
+    //A lexical token, used when parsing a scene file
+    public class Token
+    {
+        public SourceLocation Location;
 
-       public override string ToString()
-       {
-           return $"{Keyword}";
-       }
-       
-   }
+        public Token(SourceLocation location)
+        {
+            Location = location;
+        }
+    }
 
-   /// <summary>
-   /// A token containing an identifier
-   /// </summary>
-   public class IdentifierToken : Token
-   {
-       public string Identifier;
+    public class StopToken : Token
+    {
+        public StopToken(SourceLocation location) : base(location)
+        {
+        }
+    }
+
+    public enum Keyword
+    {
+        New = 1,
+        Material = 2,
+        Plane = 3,
+        Sphere = 4,
+        Diffuse = 5,
+        Specular = 6,
+        Uniform = 7,
+        Checkered = 8,
+        Image = 9,
+        Identity = 10,
+        Translation = 11,
+        RotationX = 12,
+        RotationY = 13,
+        RotationZ = 14,
+        Scaling = 15,
+        Camera = 16,
+        Orthogonal = 17,
+        Perspective = 18,
+        Float = 19
+    }
+
+    /// <summary>
+    /// A token containing a keyword
+    /// </summary>
+    public class KeywordToken : Token
+    {
+        public Keyword;
+
+        public KeywordToken(SourceLocation location, Keyword keyword) : base(location)
+        {
+            Keyword = keyword;
+        }
+
+        public override string ToString()
+        {
+            return $"{Keyword}";
+        }
+
+    }
+
+    /// <summary>
+    /// A token containing an identifier
+    /// </summary>
+    public class IdentifierToken : Token
+    {
+        public string Identifier;
 
 
-       public IdentifierToken(SourceLocation location, string identifier) : base(location)
-       {
-           Identifier = identifier;
-       }
+        public IdentifierToken(SourceLocation location, string identifier) : base(location)
+        {
+            Identifier = identifier;
+        }
 
-       public override string ToString()
-       {
-           return Identifier;
-       }
-   }
+        public override string ToString()
+        {
+            return Identifier;
+        }
+    }
 
-   /// <summary>
-   /// A token containing a literal string.
-   /// </summary>
-   public class StringToken : Token 
-   {
-       public string String;
-       
-       public StringToken(SourceLocation location, string s) : base(location)
-       {
-           String = s;
-       }
+    /// <summary>
+    /// A token containing a literal string.
+    /// </summary>
+    public class StringToken : Token
+    {
+        public string String;
 
-       public override string ToString()
-       { 
-           return String;
-       }
-           
-   }
+        public StringToken(SourceLocation location, string s) : base(location)
+        {
+            String = s;
+        }
+
+        public override string ToString()
+        {
+            return String;
+        }
+
+    }
 
     /// <summary>
     /// A token containing a literal number.
@@ -153,7 +159,7 @@ namespace PGENLib
             return $"{Value}";
         }
     }
-    
+
     /// <summary>
     /// A token containing a symbol (i.e., a variable name).
     /// </summary>
@@ -171,8 +177,14 @@ namespace PGENLib
             return Symbol;
         }
     }
-    
-    
-       
 
-   }
+
+
+
+
+}
+
+
+
+
+
