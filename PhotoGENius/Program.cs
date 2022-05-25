@@ -91,6 +91,16 @@
                 description: "Identifier of the sequence produced by the random number generator (positive number, " +
                              "only applicable with --algorithm=pathtracing).",
                 getDefaultValue: () => 54);
+            
+            var luminosityFactor = new Option<float>(
+                name: "--lum-fac",
+                description: "Regulates luminosity of rendered image.",
+                getDefaultValue: () => 1.0f);
+            
+            var gammaFactor = new Option<float>(
+                name: "--gamma-fac",
+                description: "Regulates gamma compression of rendered image.",
+                getDefaultValue: () => 1.8f);
 
             var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
             var demo = new Command("demo", "Create an image.")
@@ -105,21 +115,26 @@
                 raysNum,
                 maxDepth,
                 initState,
-                initSeq
+                initSeq,
+                luminosityFactor,
+                gammaFactor
             };
             rootCommand.AddCommand(demo);
             
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
                 string pngOutputValue, string cameraType, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
-                ulong initSeqValue) =>
-            {
-                
+                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue) =>
+                {
 
                 // 1.World initialization
 
                 var world = new World();
                 
                 // materials
+                Console.WriteLine("");
+                Console.WriteLine("=====================================");
+                Console.WriteLine("Initializing materials...");
+                
                 var skyMaterial = new Material(
                     //new UniformPigment(new Color(1.0f, 0.9f, 0.5f)),
                     new UniformPigment(new Color(2*1f, 2*0.9f, 2*0.5f)),
@@ -135,7 +150,9 @@
                     new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f)))
                     );
 
-                
+                // shapes
+                Console.WriteLine("Initializing shapes...");
+
                 // sky
                 world.AddShape(
                     new Sphere(Transformation.Scaling(new Vec(200f, 200f, 200f)) * Transformation.Traslation(new Vec(0f, 0f, 0.4f)),skyMaterial)
@@ -200,6 +217,8 @@
                 */
                 
                 // 2.Camera initialization
+                Console.WriteLine("Initializing camera...");
+
                 Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.2f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
@@ -217,27 +236,28 @@
                 // 3.(ruotare l'osservatore)
 
                 // 4.Run raytracer
+                Console.WriteLine("Running raytracer...");
 
                 var image = new HdrImage(widthValue, heightValue);
-                Console.WriteLine($"Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
+                Console.WriteLine($"    Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
 
                 var tracer = new ImageTracer(image, camera);
                 
                 if (algorithmValue == "onoff")
                 {
-                    Console.WriteLine("Using on/off renderer");
+                    Console.WriteLine("    Using on/off renderer");
                     var renderer = new OnOffRenderer(world);
                     tracer.FireAllRays(renderer.Call);
                 }
                 else if(algorithmValue == "flat")
                 {
-                    Console.WriteLine("Using flat renderer");
+                    Console.WriteLine("    Using flat renderer");
                     var renderer = new FlatRenderer(world);
                     tracer.FireAllRays(renderer.Call);
                 }
                 else if (algorithmValue == "pathtracing")
                 {
-                    Console.WriteLine("Using pathtracing");
+                    Console.WriteLine("    Using pathtracing");
                     var renderer = new PathTracer(
                         world,
                         new PCG(initStateValue, initSeqValue), 
@@ -251,6 +271,8 @@
 
 
                     // 5.salvare PFM 
+                    Console.WriteLine("Saving PFM image...");
+
                     var stream = new MemoryStream();
                     using FileStream fstream = File.OpenWrite(pfmOutputValue);
 
@@ -262,7 +284,7 @@
                             image.WritePFMFile(fstream, Endianness.BigEndian);
                         }
 
-                        Console.WriteLine($" >> File {pfmOutputValue} has been written to disk.");
+                        Console.WriteLine($"    File {pfmOutputValue} has been written to disk.");
                     }
                     catch
                     {
@@ -271,7 +293,9 @@
                     }
                     
                     // 6.convertire a PNG
-                    image.NormalizeImage(1.0f);
+                    Console.WriteLine("Converting and saving PNG image...");
+
+                    image.NormalizeImage(luminosityFactorValue);
                     image.ClampImage();
 
                     // salvo in file PNG, a seconda delle opzioni
@@ -279,10 +303,10 @@
                     {
                         var outf = pngOutputValue;
                         {
-                            image.WriteLdrImage(outf, "PNG", 0.2f);
+                            image.WriteLdrImage(outf, "PNG", gammaFactorValue);
                         }
 
-                        Console.WriteLine($" >> File {pngOutputValue} has been written to disk.");
+                        Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
                     }
                     catch
                     {
@@ -292,7 +316,7 @@
                     
                 },
                 width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
-                initState, initSeq );
+                initState, initSeq, luminosityFactor, gammaFactor );
             
             //==============================================================================================================
             //Pfm2png con SystemCommandLine

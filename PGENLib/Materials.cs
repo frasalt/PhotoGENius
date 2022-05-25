@@ -186,9 +186,11 @@ namespace PGENLib
             var onb = Vec.CreateOnbFromZ(normal);
             var cosThetaSq = pcg.RandomFloat();
             var cosTheta = (float)Math.Sqrt(cosThetaSq);
-            var senTheta = (float)Math.Sqrt(1.0f - cosTheta);
+            var senTheta = (float)Math.Sqrt(1.0f - cosThetaSq);
             var phi = (float)(2.0f * Math.PI * pcg.RandomFloat());
-            var direction = onb.e1 * (float)Math.Cos(phi) * cosTheta + onb.e2 * (float)Math.Sin(phi) * cosTheta + onb.e3 * senTheta;
+            var direction = onb.e1 * (float)Math.Cos(phi) * cosTheta
+                              + onb.e2 * (float)Math.Sin(phi) * cosTheta 
+                              + onb.e3 * senTheta;
             var scatterRay = new Ray(interactionPoint, direction, 1.0E-3f, Single.PositiveInfinity, depth);
             return scatterRay;
         }

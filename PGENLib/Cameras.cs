@@ -271,12 +271,14 @@ namespace PGENLib
         {
             for(int row = 0; row< Image.Height; row ++)
             {
+                if(row%20 == 0) Console.WriteLine($"        Fill row {row}/{Image.Height}");
+                
                 for(int col = 0; col< Image.Width; col ++)
                 {
                     
                     Ray ray = FireRay(col, row);
                     Color color = func(ray);    // una funzione che viene invocata per ogni raggio e
-                    // restituisca un oggetto di tipo Color.
+                                                // restituisce un oggetto di tipo Color.
                     Image.SetPixel(col, row, color);
                 }
             }
