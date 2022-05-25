@@ -153,7 +153,11 @@
                 pfmOutput,
                 pngOutput,
                 cameraType,
-                algorithm
+                algorithm,
+                raysNum,
+                maxDepth,
+                initState,
+                initSeq
             };
             
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
