@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System.Net.Mail;
+
 namespace PGENLib
 {
    /// <summary>
@@ -54,7 +56,7 @@ namespace PGENLib
    {
        public StopToken(SourceLocation location) : base(location) {}
    }
-
+   
    public enum Keyword
    {
        New = 1,
@@ -77,8 +79,100 @@ namespace PGENLib
        Perspective = 18,
        Float = 19
    }
-   
-   
-   
-   
+
+   /// <summary>
+   /// A token containing a keyword
+   /// </summary>
+   public class KeywordToken : Token
+   {
+       public Keyword; 
+       public KeywordToken(SourceLocation location, Keyword keyword) : base(location)
+       {
+           Keyword = keyword;
+       }
+
+       public override string ToString()
+       {
+           return $"{Keyword}";
+       }
+       
+   }
+
+   /// <summary>
+   /// A token containing an identifier
+   /// </summary>
+   public class IdentifierToken : Token
+   {
+       public string Identifier;
+
+
+       public IdentifierToken(SourceLocation location, string identifier) : base(location)
+       {
+           Identifier = identifier;
+       }
+
+       public override string ToString()
+       {
+           return Identifier;
+       }
+   }
+
+   /// <summary>
+   /// A token containing a literal string.
+   /// </summary>
+   public class StringToken : Token 
+   {
+       public string String;
+       
+       public StringToken(SourceLocation location, string s) : base(location)
+       {
+           String = s;
+       }
+
+       public override string ToString()
+       { 
+           return String;
+       }
+           
+   }
+
+    /// <summary>
+    /// A token containing a literal number.
+    /// </summary>
+    public class LiteralNumberToken : Token
+    {
+        public float Value;
+
+        public LiteralNumberToken(SourceLocation location, float value) : base(location)
+        {
+            Value = value;
+        }
+
+        public override string ToString()
+        {
+            return $"{Value}";
+        }
+    }
+    
+    /// <summary>
+    /// A token containing a symbol (i.e., a variable name).
+    /// </summary>
+    public class SymbolToken : Token
+    {
+        public string Symbol;
+
+        public SymbolToken(SourceLocation location, string symbol) : base(location)
+        {
+            Symbol = symbol;
+        }
+
+        public override string ToString()
+        {
+            return Symbol;
+        }
+    }
+    
+    
+       
+
    }
