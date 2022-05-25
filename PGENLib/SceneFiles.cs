@@ -178,7 +178,36 @@ namespace PGENLib
         }
     }
 
+    /// <summary>
+    /// An error found by the lexer/parser while reading a scene file.
+    /// The fields of this type are the following:
+    /// <list type="table">
+    /// <item>
+    ///     <term>Message</term>
+    ///     <description> a user-frendly error message</description>
+    /// </item>
+    /// <item>
+    ///     <term>sourceLocation</term>
+    ///     <description> a sourceLocation object pointing out the name of the file, the line number and the column
+    ///     number where the error occured</description>
+    /// </item>
+    /// </list>
+    /// </summary>
+    class GrammarErrorException : Exception
+    {
+        public SourceLocation SourceLocation;
 
+        public GrammarErrorException() : base()
+        {
+            SourceLocation = new SourceLocation();
+        }
+
+        public GrammarErrorException(string msg, SourceLocation sourceLocation) : base(msg)
+        {
+            SourceLocation = sourceLocation;
+        }
+
+    }
 
 
 
