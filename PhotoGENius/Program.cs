@@ -17,6 +17,7 @@
      */
 
     using System.CommandLine;
+    using System.Runtime;
     using System.Text;
     using PGENLib;
     using Color = PGENLib.Color;
@@ -247,7 +248,10 @@
                 {
                     Console.WriteLine("    Using on/off renderer");
                     var renderer = new OnOffRenderer(world);
+                    // >>> PROFILING
+                    // https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/performance-counters
                     tracer.FireAllRays(renderer.Call);
+                    // >>>
                 }
                 else if(algorithmValue == "flat")
                 {
