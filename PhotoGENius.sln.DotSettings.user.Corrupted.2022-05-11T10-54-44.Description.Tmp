@@ -1,0 +1,116 @@
+﻿<CorruptedSettingsDescription>
+  <Exception Message="Name cannot begin with the '&lt;' character, hexadecimal value 0x3C. Line 2, position 2." Kind="Error">Name cannot begin with the '&lt;' character, hexadecimal value 0x3C. Line 2, position 2.
+
+--- EXCEPTION #1/2 [XmlException]
+Message = “Name cannot begin with the '&lt;' character, hexadecimal value 0x3C. Line 2, position 2.”
+ExceptionPath = Root.InnerException
+ClassName = System.Xml.XmlException
+Data.ThreadLocalDebugInfo = PriorityRdDispatcher
+HResult = Xml=80131940
+Source = System.Private.Xml
+res = “Name cannot begin with the '{0}' character, hexadecimal value {1}.”
+args.#0 = &lt;
+args.#1 = 0x3C
+lineNumber = 2
+linePosition = 2
+version = 2.0
+StackTraceString = “
+  at System.Xml.XmlTextReaderImpl.ParseQName(Boolean isQName, Int32 startOffset, Int32&amp; colonPos)
+     at System.Xml.XmlTextReaderImpl.ParseElement()
+     at System.Xml.XmlTextReaderImpl.ParseElementContent()
+     at JetBrains.Application.Settings.Storage.Persistence.EntriesReader.Step_GenericRead_SkipToElement()
+”
+
+--- Outer ---
+
+--- EXCEPTION #2/2 [LoggerException]
+Message = “Name cannot begin with the '&lt;' character, hexadecimal value 0x3C. Line 2, position 2.”
+ExceptionPath = Root
+ClassName = JetBrains.Util.LoggerException
+InnerException = “Exception #1 at Root.InnerException”
+HResult = COR_E_APPLICATION=80131600
+StackTraceString = “
+  at JetBrains.Util.ILoggerEx.LogException(ILogger this, LoggingLevel level, Exception exception, ExceptionOrigin exceptionOrigin, String comment)
+     at JetBrains.Util.ILoggerEx.Error(ILogger this, Exception exception, ExceptionOrigin origin, String comment)
+     at JetBrains.Util.ILoggerEx.LogOuterDataException(ILogger thіs, Exception ex, String comment)
+     at JetBrains.Application.Settings.Storage.Persistence.EntriesReader.Step_GenericRead_SkipToElement()
+     at JetBrains.Application.Settings.Storage.Persistence.EntriesReader.Step_GenericRead()
+     at JetBrains.Application.Settings.Storage.Persistence.EntriesReader.Run(XmlReader reader, EntryPositionsFlag entryPositionsFlag)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.&lt;&gt;c__DisplayClass35_2.&lt;Save_WriteFile_BackupOldCorruptedFile&gt;b__5(XmlReader xmlreader)
+     at JetBrains.Util.XmlReaderEx.ReadXml(Stream stream, Action`1 FRead)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.&lt;&gt;c__DisplayClass35_2.&lt;Save_WriteFile_BackupOldCorruptedFile&gt;b__4(Stream streamR)
+     at JetBrains.Util.FileSystemPathOpenEx.ReadStream[T,TFile,TDir](FileSystemPathBase`3 path, Action`1 λRead)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.&lt;&gt;c__DisplayClass35_1.&lt;Save_WriteFile_BackupOldCorruptedFile&gt;b__2()
+     at JetBrains.Util.Logging.Logger.Catch(Action action)
+     at JetBrains.Util.XmlWriterEx.InElement(XmlWriter writer, String name, Action nested, Boolean writeFullEndElement)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.&lt;&gt;c__DisplayClass35_0.&lt;Save_WriteFile_BackupOldCorruptedFile&gt;b__1(XmlWriter xmlwriter)
+     at JetBrains.Util.XmlWriterEx.WriteXml(Stream stream, Action`1 FWrite)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.&lt;&gt;c__DisplayClass35_0.&lt;Save_WriteFile_BackupOldCorruptedFile&gt;b__0(Stream stream)
+     at JetBrains.Util.FileSystemPathOpenEx.WriteStream[T,TFile,TDir](FileSystemPathBase`3 path, Action`1 λWrite)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.Save_WriteFile_BackupOldCorruptedFile(FileSystemPath path)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.&lt;&gt;c__DisplayClass32_0.&lt;Save_WriteFile&gt;b__0()
+     at JetBrains.Util.ILoggerEx.Catch(ILogger thіs, Action F, ExceptionOrigin origin, LoggingLevel loggingLevel)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.Save_WriteFile(SaveDiffFlags flagsDiff, SaveForcedFlags flagsForced)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.Save(SaveDiffFlags flagsDiff, SaveForcedFlags flagsForced)
+     at JetBrains.Application.Settings.Storage.Persistence.SettingsStoreSerializationToXmlDiskFile.&lt;&gt;c__DisplayClass9_0.&lt;Init_FirstLoadLastSave&gt;b__1()
+     at JetBrains.DataFlow.IPropertySignalEx.&lt;&gt;c__DisplayClass0_0`1.&lt;Advise_FallingFront&gt;b__0(PropertyChangedEventArgs`1 args)
+     at JetBrains.DataFlow.Property`1.PropertyChangeSignal.Acknowledge(Action`1 handler, AddRemove addremove)
+     at JetBrains.DataFlow.Property`1.PropertyChangeSignal.OnAfterUnadvise(Action`1 handler)
+     at JetBrains.Lifetimes.LifetimeDefinition.Destruct()
+     at JetBrains.Lifetimes.LifetimeDefinition.Terminate()
+     at JetBrains.Application.Components.LifetimeValueResolver.LifetimeDescriptor.Dispose()
+     at JetBrains.Application.Components.SingletonDescriptorBindings`1.Dispose()
+     at JetBrains.Application.Components.SingletonDescriptor`1.DisposeInternalResources()
+     at JetBrains.Application.Components.AsyncDescriptorBase.DoDisposeSafe(Object instance)
+     at JetBrains.Application.Components.AsyncDescriptorBase.Dispose()
+     at JetBrains.Application.Components.ComponentStorage.DisposeDescriptor(IComponentDescriptor descriptor)
+     at JetBrains.Application.Components.ComponentStorage.Terminate()
+     at JetBrains.Lifetimes.LifetimeDefinition.Destruct()
+     at JetBrains.Lifetimes.LifetimeDefinition.Terminate()
+     at JetBrains.ProjectModel.SolutionInstance.CloseSolutionInstance()
+     at JetBrains.ProjectModel.SolutionManagerBase.CloseSolutionInstance(SolutionInstance instance)
+     at JetBrains.ProjectModel.ProjectsHost.SolutionHost.Impl.SolutionHostManager.CloseSolution()
+     at JetBrains.RdBackend.Common.Features.ProjectModel.RiderSolutionManager.CloseSolution()
+     at JetBrains.Rider.Backend.Features.ProjectModel.RiderSolutionWatcher.&lt;&gt;c__DisplayClass3_0.&lt;.ctor&gt;g__CloseSolutionBySignal|2(SolutionInstance solutionInstance)
+     at JetBrains.Rider.Backend.Features.ProjectModel.RiderSolutionWatcher.&lt;&gt;c__DisplayClass3_1.&lt;.ctor&gt;b__4()
+     at JetBrains.Util.Concurrency.ExecutionContextEx.&lt;&gt;c__DisplayClass0_0.&lt;Run&gt;b__0(Object _)
+     at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+     at JetBrains.Util.Concurrency.ExecutionContextEx.Run(ExecutionContext context, ContextCallback callback, Object state)
+     at JetBrains.Threading.ReentrancyGuard.Execute(String name, Action action)
+     at JetBrains.Threading.ReentrancyGuard.ExecutePendingActions()
+     at JetBrains.Util.Concurrency.ExecutionContextEx.&lt;&gt;c__DisplayClass0_0.&lt;Run&gt;b__0(Object _)
+     at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+     at JetBrains.Util.Concurrency.ExecutionContextEx.Run(ExecutionContext context, ContextCallback callback, Object state)
+     at JetBrains.Threading.JetDispatcher.Closure.Execute()
+     at JetBrains.Threading.JetDispatcher.Run()
+     at JetBrains.Rider.Backend.Product.RiderMain.Main(Lifetime lifetime, IRiderSettings settings, ILogger logger, ProtocolComponent protocol, RdShellModel shellModel, ApplicationShutdownRequests shutdownRequests)
+     at System.RuntimeMethodHandle.InvokeMethod(Object target, Span`1&amp; arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+     at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+     at JetBrains.Application.Environment.RunsPublicStaticIntMain.&lt;&gt;c__DisplayClass0_0.&lt;.ctor&gt;b__0()
+     at JetBrains.Application.Environment.RunsPublicStaticIntMain.&lt;&gt;c__DisplayClass0_2.&lt;.ctor&gt;b__5()
+     at JetBrains.Util.Logging.Logger.Catch(Action action)
+     at JetBrains.Application.Threading.IThreadingEx.&lt;&gt;c__DisplayClass18_1.&lt;ExecuteOrQueueWhenNotGuarded&gt;b__4()
+     at JetBrains.Util.Concurrency.ExecutionContextEx.&lt;&gt;c__DisplayClass1_0.&lt;Run&gt;b__0(Object _)
+     at JetBrains.Util.Concurrency.ExecutionContextEx.&lt;&gt;c__DisplayClass0_0.&lt;Run&gt;b__0(Object _)
+     at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+     at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+     at JetBrains.Util.Concurrency.ExecutionContextEx.Run(ExecutionContext context, ContextCallback callback, Object state)
+     at JetBrains.Util.Concurrency.ExecutionContextEx.Run(ExecutionContext context, Action action)
+     at JetBrains.Threading.JetDispatcher.Closure.&lt;&gt;c__DisplayClass10_1.&lt;.ctor&gt;b__0()
+     at JetBrains.Threading.JetDispatcher.Closure.Execute()
+     at JetBrains.Threading.JetDispatcher.Run(Func`1 condition, TimeSpan timeout, Boolean bThrowOnTimeout)
+     at JetBrains.Application.Environment.IJetHostEx.RunHostMessageLoop(IComponentContainer containerEnv)
+     at JetBrains.Application.Environment.HostParameters.MessagePumpMainLoopHostMixin.JetBrains.Application.Environment.HostParameters.IRunMainLoopHostMixin.RunMainLoop(ComponentContainer containerEnv)
+     at JetBrains.Application.Environment.HostParameters.JetHostParametersCaller.RunMainLoop(ComponentContainer containerEnv)
+     at JetBrains.Application.Environment.JetEnvironment.InternalRun(JetHostParametersCaller host, ComponentContainer containerEnv)
+     at JetBrains.Application.Environment.JetEnvironment.CreateAndRun(Full hostparams)
+     at JetBrains.Application.Environment.JetHostItems.CreateAndRun(Full input)
+     at JetBrains.Rider.Backend.Product.RiderBackendProgram.MainX(Assembly assembly, HostInfo hostInfo, String[] args)
+     at JetBrains.Rider.Backend.Product.RiderBackendProgram.&lt;&gt;c.&lt;Main&gt;b__3_0(Lifetime lifetime)
+     at JetBrains.Lifetimes.Lifetime.Using[T](Func`2 action)
+     at JetBrains.Rider.Backend.Product.RiderBackendProgram.Main()
+”
+</Exception>
+  <!--The backup file has been created before writing in-memory changes to the settings file. As the existing settings file is corrupted, many settings might get lost when writing the new content. If you'd like to restore the settings from the previous version, here're the changes against the backed-up version (note: subsequent changes are not reflected here).-->
+  <InMemoryChanges></InMemoryChanges>
+</CorruptedSettingsDescription>

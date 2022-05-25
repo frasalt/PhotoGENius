@@ -189,6 +189,7 @@ namespace PGENLib
                 z = this.z/Norm(this)
             };
             return t;
+            
         }
         
         /// <summary>
@@ -204,8 +205,88 @@ namespace PGENLib
             };
             return t;
         }
+        
+           
+        /// <summary>
+        /// Create a orthonormal basis (Onb) from a vector representing the z axis (normalized)
+        /// Return a tuple containing the three vectors (e1, e2, e3) of the basis. The result is such
+        /// that e3 = normal.
+        /// The `normal` vector must be normalized.
+        /// </summary>
+        public static Tuple CreateOnbFromZ(Normal e3)
+        {
+            float sign;
+            if (e3.z > 0.0)
+            {
+                sign = 1.0f;
+            }
+            else sign = -1.0f;
+
+            float a = (float) -1.0f / (sign + e3.z);
+            float b = e3.x * e3.y * a;
+            Vec e1 = new Vec( 1.0f + sign * e3.x * e3.x * a,sign * b,-sign * e3.x);
+            Vec e2 = new Vec(b, sign + e3.y * e3.y * a, -e3.y);
+            Vec vecN = new Vec(e3.x, e3.y, e3.z);
+            Tuple T = new Tuple(e1, e2, vecN);
+            
+            return T;
+        }
+        
+        /// <summary>
+        /// Normalize two vectors or normals and apply the dot product.
+        /// The result is the cosine of the angle between the two vectors/normals.
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+        
+        //DEVO IMPLEMENTEARE UNION PER FORZA PERCHè COSì VALE SIA PER I VETTORI CHE PER LE NORMALI
+        public float NormalizeDot(Vec v1, Vec v2)
+        {
+            Vec v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
+            Vec v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
+            float r = Vec.DotProd(v1Vec, v2Vec);
+            return r;
+        }
+        
     }
-    
+    //==========================================================================================================
+    //Tuple 
+    //==========================================================================================================
+    public struct Tuple
+    {
+        public Vec e1;
+        public Vec e2;
+        public Vec e3;
+
+        /// <summary>
+        /// Empty constructor.
+        /// </summary>
+        public Tuple()
+        {
+            e1.x = 0;
+            e2.x = 0;
+            e3.x = 0;
+            e1.y = 0;
+            e2.y = 0;
+            e3.y = 0;
+            e1.z = 0;
+            e2.z = 0;
+            e3.z = 0;
+        }
+
+        /// <summary>
+        /// Constructor with float parameters.
+        /// </summary>
+        public Tuple(Vec e1, Vec e2, Vec e3)
+        {
+            this.e1 = e1;
+            this.e2 = e2;
+            this.e3 = e3;
+        }
+
+    }
+
     //==================================================================================================================
     //Point
     //==================================================================================================================
@@ -385,6 +466,16 @@ namespace PGENLib
         {
             return $"Normal(x={x}, y={y}, z={z})";
         }
+        
+        /// <summary>
+        /// Returns the Normal as a Vec.
+        /// </summary>
+        public Vec ToVec()
+        {
+            return new Vec(x, y, z);
+        }
+        
+        
         
         /// <summary>
         /// Check wheater two normal are equals. 
@@ -737,6 +828,11 @@ namespace PGENLib
         }
         
     }
+    
+
+        
+        
+    
     
     
 
