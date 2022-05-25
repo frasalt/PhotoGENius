@@ -143,7 +143,7 @@
                 
                 // materials
                 var skyMaterial = new Material(
-                    new UniformPigment(new Color(2*1.0f, 2*0.9f, 2*0.5f)),
+                    new UniformPigment(new Color(5*1.0f, 5*0.9f, 5*0.5f)),
                     new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                     );
                 var groundMaterial = new Material(
@@ -215,7 +215,7 @@
                 */
                 
                 // 2.Camera initialization
-                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.0f));
+                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.5f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
 
