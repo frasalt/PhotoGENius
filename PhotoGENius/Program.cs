@@ -172,7 +172,8 @@
                 
                 // materials
                 var skyMaterial = new Material(
-                    new UniformPigment(new Color(50*1.0f, 50*0.9f, 50*0.5f)),
+                    //new UniformPigment(new Color(1.0f, 0.9f, 0.5f)),
+                    new UniformPigment(new Color(2*1f, 2*0.9f, 2*0.5f)),
                     new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                     );
                 var groundMaterial = new Material(
@@ -196,12 +197,17 @@
                 );
                 // sphere in the middle
                 world.AddShape(
-                    new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)), sphereMaterial)
+                    new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial)
                 );
                 // sphere aside
                 world.AddShape(
                     new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
+                
+                // sphere in the middle
+                //world.AddShape(
+                //    new Sphere(Transformation.Traslation(new Vec(0f, -2.5f, 1f)),sphereMaterial)
+                //);
                 
                 /*
 
@@ -245,7 +251,7 @@
                 */
                 
                 // 2.Camera initialization
-                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.5f));
+                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.2f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
 
@@ -264,7 +270,7 @@
                 // 4.Run raytracer
 
                 var image = new HdrImage(widthValue, heightValue);
-                Console.WriteLine($"Generating a {widthValue}×{widthValue} image, with the camera tilted by {angleDegValue}°");
+                Console.WriteLine($"Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
 
                 var tracer = new ImageTracer(image, camera);
                 
