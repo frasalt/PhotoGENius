@@ -5,6 +5,10 @@ PhotoGENius.sln.DotSettings.user
 */obj/
 .idea/
 
+PhotoGENius/imgs_png/*
+PhotoGENius/imgs_pfm/*
+PhotoGENius/video/*
+
 /packages/
 riderModule.iml
 /_ReSharper.Caches/### JetBrains template

@@ -17,6 +17,7 @@
      */
 
     using System.CommandLine;
+    using System.Text;
     using PGENLib;
     using Color = PGENLib.Color;
 
@@ -28,66 +29,12 @@
         static Color WHITE = new Color(1.0f, 1.0f, 1.0f);
         static Color BLACK = new Color(0.0f, 0.0f, 0.0f);
 
-        class Parameters
-        {
-            public string InputPfmFileName = "";
-            public float Factor = 0.2f;
-            public float Gamma = 1.0f;
-            public string OutputPngFileName = "";
-            public string Options = "";
-
-            /// <summary>
-            /// Constructor of parameters
-            /// </summary>
-            public Parameters()
-            {
-                InputPfmFileName = "";
-                Factor = 0.2f;
-                Gamma = 1.0f;
-                OutputPngFileName = "";
-                Options = "";
-            }
-
-            public void parse_command_line(string[] argv)
-            {
-                if (argv.Length != 4 && argv.Length != 5)
-                {
-                    throw new RuntimeError(
-                        "Usage: ./PhotoGENius.exe INPUT_PFM_FILE.pfm FACTOR GAMMA OUTPUT_PNG_FILE OPTIONS");
-                }
-
-                // associo i comandi dell'utente ai parametri di funzionamento del programma
-                InputPfmFileName = argv[0];
-
-                try
-                {
-                    Factor = Convert.ToSingle(argv[1]);
-                }
-                catch
-                {
-                    throw new RuntimeError($"Invalid factor ('{argv[1]}'), it must be a floating-point number.");
-                }
-
-                try
-                {
-                    Gamma = Convert.ToSingle(argv[2]);
-                }
-                catch
-                {
-                    throw new RuntimeError($"Invalid gamma ('{argv[2]}'), it must be a floating-point number.");
-                }
-
-                OutputPngFileName = argv[3];
-                if (argv.Length == 5) Options = argv[4];
-            }
-        }
-        
-
-        //==============================================================================================================
-        //Prova demo con SystemCommandLine
-        //==============================================================================================================
         static async Task<int> Main(string[] args)
         {
+            //==============================================================================================================
+            //Demo con SystemCommandLine
+            //==============================================================================================================
+
             var width = new Option<int>(
                 name: "--width",
                 description: "Width of the image to render.",
@@ -144,8 +91,9 @@
                 description: "Identifier of the sequence produced by the random number generator (positive number, " +
                              "only applicable with --algorithm=pathtracing).",
                 getDefaultValue: () => 54);
-            
-            var demo = new RootCommand("Sample app for creating an image")
+
+            var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
+            var demo = new Command("demo", "Create an image.")
             {
                 width,
                 height,
@@ -159,6 +107,7 @@
                 initState,
                 initSeq
             };
+            rootCommand.AddCommand(demo);
             
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
                 string pngOutputValue, string cameraType, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
@@ -300,12 +249,27 @@
                 
                 
 
-                // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura SU FILE. pfm, per colpa dello stream.
+
+                    // 5.salvare PFM 
                     var stream = new MemoryStream();
-                    image.WritePFMFile(stream, Endianness.BigEndian);
+                    using FileStream fstream = File.OpenWrite(pfmOutputValue);
 
-                    //image.WritePFMFile(stream, Endianness.LittleEndian);
+                    image.WritePFMFile(stream, Endianness.BigEndian); // salvo le immagini in memoria...
+                    try // ... e le scrivo su file
+                    {
+                        var outf = pfmOutputValue;
+                        {
+                            image.WritePFMFile(fstream, Endianness.BigEndian);
+                        }
 
+                        Console.WriteLine($" >> File {pfmOutputValue} has been written to disk.");
+                    }
+                    catch
+                    {
+                        Console.WriteLine(
+                            $"Error: couldn't write file {pfmOutputValue}");
+                    }
+                    
                     // 6.convertire a PNG
                     image.NormalizeImage(1.0f);
                     image.ClampImage();
@@ -330,9 +294,10 @@
                 width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
                 initState, initSeq );
             
-            return await demo.InvokeAsync(args);
-            
-            //---------------------------------------------------------------------------------
+            //==============================================================================================================
+            //Pfm2png con SystemCommandLine
+            //==============================================================================================================
+
             var factor = new Option<float>(
                 name: "--factor",
                 description: "Multiplicative factor.",
@@ -353,14 +318,17 @@
                 description: "PNG output file.",
                 getDefaultValue: () => "output.png");
 
-            var pfm2png = new RootCommand("Sample app for converting a PFM to a PNG.")
+            // ----- << linee cambiate da martin
+            var pfm2png = new Command("pfm2png", "Convert a PFM file to a PNG")
             {
                 factor,
                 gamma,
                 inputPfmFileName,
                 outputPngFileName
             };
-            
+            rootCommand.AddCommand(pfm2png);
+            // ----- >>
+
             pfm2png.SetHandler((float factorValue, float gammaValue, string inputPfmFileNameValue, string outputPngFileNameValue) =>
                 {
                     /*
@@ -405,140 +373,7 @@
                 },
                 factor, gamma, inputPfmFileName, outputPngFileName);
             
-                
+            return await rootCommand.InvokeAsync(args);
         }
-        
-        /*
-    //----------------------------------------------------------------------------------------------------------- 
-    static void Main()
-    {
-        // 1.World initialization (10 spheres)
-        World world = new World();
-
-        //   sphere in vertices
-        Transformation scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
-        Transformation transformation;
-
-        for (float x = -0.5f; x <= 0.5f; x++)
-        {
-            for (float y = -0.5f; y <= 0.5f; y++)
-            {
-                for (float z = -0.5f; z <= 0.5f; z++)
-                {
-                    transformation = Transformation.Traslation(new Vec(x, y, z));
-
-                    Sphere sphere = new Sphere(transformation * scaling);
-                    world.AddShape(sphere);
-                }
-            }
-        }
-
-        //   sphere in faces
-        transformation = Transformation.Traslation(new Vec(0.0f, 0.0f, -0.5f));
-        world.AddShape(new Sphere(transformation * scaling));
-
-        transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
-        world.AddShape(new Sphere(transformation * scaling));
-
-
-        // 2.Camera initialization
-        transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 0.0f));
-        Transformation rotation = Transformation.RotationZ(53.0f);
-        //OrthogonalCamera camera = new OrthogonalCamera(4.0f / 3.0f, transformation);
-        PerspectiveCamera camera = new PerspectiveCamera(1.0f, 4.0f / 3.0f, transformation*rotation);
-
-
-        // 3.(ruotare l'osservatore)
-
-        // 4.Run raytracer
-        HdrImage image = new HdrImage(800, 600);
-        ImageTracer tracer = new ImageTracer(image, camera);
-
-        Color ComputeColor(Ray ray)
-        {
-            if (world.RayIntersection(ray) == null) return BLACK;
-            else return WHITE;
-        }
-
-        tracer.FireAllRays(ComputeColor);
-
-        // 5.salvare PFM : <<<<<<<<<<<<<<<<<<< ATTENZIONE QUI: non funizona la scrittura su file pfm, per colpa dello stream.
-        MemoryStream stream = new MemoryStream();
-        image.WritePFMFile(stream, Endianness.BigEndian);
-
-        //image.WritePFMFile(stream, Endianness.LittleEndian);
-
-        // 6.convertire a PNG
-        image.NormalizeImage(1.0f);
-        image.ClampImage();
-
-        // salvo in file PNG, a seconda delle opzioni
-        try
-        {
-            string outf = "image.png";
-            {
-                image.WriteLdrImage(outf, "PNG", 0.2f);
-            }
-
-            Console.WriteLine($" >> File image.png has been written to disk.");
-        }
-        catch
-        {
-            Console.WriteLine(
-                "Error: couldn't write file image.png.");
-        }
-    }
-
-    
-    //-----------------------------------------------------------------------------------------------------------
-    
-    static void Main(string[] argv)
-    {
-        Parameters parameters = new Parameters();
-        
-        // riempio i parametri
-        try { parameters.parse_command_line(argv); }
-        catch (RuntimeError)
-        {
-            Console.WriteLine("Error: invalid number of parameters. Please, follow usage instructions.");
-            return;
-        }
-
-        HdrImage img = new HdrImage(0,0);
-        
-        // leggo l'immagine HDR in formato PFM
-        using (var inpf = new FileStream(parameters.InputPfmFileName, FileMode.Open, FileAccess.Read))
-        { img = img.ReadPFMFile(inpf); }
-
-        Console.WriteLine($" >> File {parameters.InputPfmFileName} has been read from disk.");
-
-        // converto i dati in formato LDR
-        img.NormalizeImage(parameters.Factor);
-        img.ClampImage();
-
-        // salvo in file PNG, a seconda delle opzioni
-        if (parameters.Options == "")
-        {
-            try
-            {
-                string outf = parameters.OutputPngFileName;
-                {
-                    img.WriteLdrImage(outf, "PNG", parameters.Gamma);
-                }
-
-                Console.WriteLine($" >> File {parameters.OutputPngFileName} has been written to disk.");
-            }
-            catch
-            {
-                Console.WriteLine(
-                    "Error: couldn't write file {0}.", parameters.OutputPngFileName);
-            }
-        }
-        else if (parameters.Options != "")
-        {
-            Console.WriteLine("Advanced options not yet implemented: please, do not specify.");
-        }
-    }
-    */
-
+   
     }

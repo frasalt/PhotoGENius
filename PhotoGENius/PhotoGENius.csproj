@@ -9,8 +9,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="imgs\animation.mp4" />
-      <Folder Include="imgs" />
+      <Folder Include="video" />
+      <Folder Include="imgs_pfm" />
+      <Folder Include="imgs_png" />
     </ItemGroup>
 
     <PropertyGroup>
