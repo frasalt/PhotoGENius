@@ -172,7 +172,7 @@
                 
                 // materials
                 var skyMaterial = new Material(
-                    new UniformPigment(new Color(5*1.0f, 5*0.9f, 5*0.5f)),
+                    new UniformPigment(new Color(50*1.0f, 50*0.9f, 50*0.5f)),
                     new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                     );
                 var groundMaterial = new Material(
