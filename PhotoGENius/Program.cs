@@ -250,6 +250,7 @@
                     var renderer = new OnOffRenderer(world);
                     // >>> PROFILING
                     // https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/performance-counters
+                    // https://www.speedscope.app/ << online app for output visualization
                     tracer.FireAllRays(renderer.Call);
                     // >>>
                 }
