@@ -128,5 +128,55 @@ namespace PGENLib.Tests
             Assert.True(sphere.RayIntersection(new Ray(new Point(0f, 0f, 2f), -Vz)) == null);
             Assert.True(sphere.RayIntersection(new Ray(new Point(-10f, 0f, 0f), -Vz)) == null);
         }
+        
     }
+
+/*
+    public class PlaneTests
+    {
+        private readonly Vec Vx = new Vec(1.0f, 0.0f, 0.0f);
+        private readonly Vec Vz = new Vec(0.0f, 0.0f, 1.0f);
+
+        public void TestHit()
+        {
+            var plane = new XyPlane();
+
+            var ray1 = new Ray(new Point(0.0f, 0.0f, 1.0f), -Vz);
+            var intersection1 = plane.RayIntersection(ray1);
+            Assert.True(intersection1.HasValue);
+            var hit = new HitRecord(new Point(0.0f, 0.0f, 0.0f), 
+                new Normal(0.0f, 0.0f, 1.0f), 
+                new Vec2d(0.0f, 0.0f),
+                1.0f, ray1, plane.Material);
+            
+            HitRecord.are_close()
+                
+            assert HitRecord(
+                world_point=Point(0.0, 0.0, 0.0),
+            normal=Normal(0.0, 0.0, 1.0),
+            surface_point=Vec2d(0.0, 0.0),
+            t=1.0,
+            ray=ray1,
+            material=plane.material,
+                ).is_close(intersection1)
+
+            ray2 = Ray(origin=Point(0, 0, 1), dir=VEC_Z)
+            intersection2 = plane.ray_intersection(ray2)
+            assert not intersection2
+
+                ray3 = Ray(origin=Point(0, 0, 1), dir=VEC_X)
+            intersection3 = plane.ray_intersection(ray3)
+            assert not intersection3
+
+                ray4 = Ray(origin=Point(0, 0, 1), dir=VEC_Y)
+            intersection4 = plane.ray_intersection(ray4)
+            assert not intersection4
+
+        }
+        
+
+    }
+*/
+
 }
+
