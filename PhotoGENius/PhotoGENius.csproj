@@ -9,6 +9,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="imgs_pfm" />
       <Folder Include="video" />
       <Folder Include="imgs_pfm" />
       <Folder Include="imgs_png" />
