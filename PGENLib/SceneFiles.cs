@@ -82,7 +82,9 @@ namespace PGENLib
         Camera = 16,
         Orthogonal = 17,
         Perspective = 18,
-        Float = 19
+        //Cylinder
+        Float = 19,
+        Pointlight = 20
     }
 
     /// <summary>
@@ -96,6 +98,33 @@ namespace PGENLib
         {
             Keyword = keyword;
         }
+        /// <summary>
+        ///  Dictionary linking the keyword to its string identifier.
+        /// </summary>
+        public static Dictionary<string, Keyword> dictionary = new Dictionary<string, Keyword>(){
+
+            {  "new", Keyword.New },
+            {  "material", Keyword.Material },
+            {  "plane" , Keyword.Plane},
+            {  "sphere" , Keyword.Sphere},
+            //{  "cylinder" , Keyword.Cylinder},
+            {  "diffuse" , Keyword.Diffuse},
+            {  "specular" , Keyword.Specular},
+            {  "uniform" , Keyword.Uniform},
+            {  "checkered" , Keyword.Checkered},
+            {  "image" , Keyword.Image},
+            {  "identity" , Keyword.Identity},
+            {  "translation" , Keyword.Translation},
+            {  "rotation_x" , Keyword.RotationX},
+            {  "rotation_y" , Keyword.RotationY},
+            {  "rotation_z" , Keyword.RotationZ},
+            {  "scaling" , Keyword.Scaling},
+            {  "camera" , Keyword.Camera},
+            {  "orthogonal" , Keyword.Orthogonal},
+            {  "perspective" , Keyword.Perspective},
+            {  "float" , Keyword.Float},
+            {  "pointlight", Keyword.Pointlight}
+        };
 
         public override string ToString()
         {
