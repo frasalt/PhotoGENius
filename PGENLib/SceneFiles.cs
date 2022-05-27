@@ -42,7 +42,27 @@ namespace PGENLib
             LineNum = lineNum;
             ColNum = colNum;
         }
+        /// <summary>
+        /// Copy constructor for the class.
+        /// </summary>
+        /// <returns></returns>
+        public SourceLocation shallowCopy()
+        {
+            return (SourceLocation)this.MemberwiseClone();
+        }
+        /// <summary>
+        /// Print a source location
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"({LineNum}, {ColNum})";
+        }
+        
     }
+    
+
+
 
     //A lexical token, used when parsing a scene file
     public class Token
@@ -62,7 +82,7 @@ namespace PGENLib
         }
     }
 
-    public enum Keyword
+    public enum KeywordList
     {
         New = 1,
         Material = 2,
@@ -92,38 +112,38 @@ namespace PGENLib
     /// </summary>
     public class KeywordToken : Token
     {
-        public Keyword;
+        public KeywordList Keyword;
 
-        public KeywordToken(SourceLocation location, Keyword keyword) : base(location)
+        public KeywordToken(SourceLocation location, KeywordList keyword) : base(location)
         {
             Keyword = keyword;
         }
         /// <summary>
         ///  Dictionary linking the keyword to its string identifier.
         /// </summary>
-        public static Dictionary<string, Keyword> dictionary = new Dictionary<string, Keyword>(){
+        public static Dictionary<string, KeywordList> dictionary = new Dictionary<string, KeywordList>(){
 
-            {  "new", Keyword.New },
-            {  "material", Keyword.Material },
-            {  "plane" , Keyword.Plane},
-            {  "sphere" , Keyword.Sphere},
+            {  "new", KeywordList.New },
+            {  "material", KeywordList.Material },
+            {  "plane" , KeywordList.Plane},
+            {  "sphere" , KeywordList.Sphere},
             //{  "cylinder" , Keyword.Cylinder},
-            {  "diffuse" , Keyword.Diffuse},
-            {  "specular" , Keyword.Specular},
-            {  "uniform" , Keyword.Uniform},
-            {  "checkered" , Keyword.Checkered},
-            {  "image" , Keyword.Image},
-            {  "identity" , Keyword.Identity},
-            {  "translation" , Keyword.Translation},
-            {  "rotation_x" , Keyword.RotationX},
-            {  "rotation_y" , Keyword.RotationY},
-            {  "rotation_z" , Keyword.RotationZ},
-            {  "scaling" , Keyword.Scaling},
-            {  "camera" , Keyword.Camera},
-            {  "orthogonal" , Keyword.Orthogonal},
-            {  "perspective" , Keyword.Perspective},
-            {  "float" , Keyword.Float},
-            {  "pointlight", Keyword.Pointlight}
+            {  "diffuse" , KeywordList.Diffuse},
+            {  "specular" , KeywordList.Specular},
+            {  "uniform" , KeywordList.Uniform},
+            {  "checkered" , KeywordList.Checkered},
+            {  "image" , KeywordList.Image},
+            {  "identity" , KeywordList.Identity},
+            {  "translation" , KeywordList.Translation},
+            {  "rotation_x" , KeywordList.RotationX},
+            {  "rotation_y" , KeywordList.RotationY},
+            {  "rotation_z" , KeywordList.RotationZ},
+            {  "scaling" , KeywordList.Scaling},
+            {  "camera" ,KeywordList.Camera},
+            {  "orthogonal" , KeywordList.Orthogonal},
+            {  "perspective" , KeywordList.Perspective},
+            {  "float" , KeywordList.Float},
+            {  "pointlight",KeywordList.Pointlight}
         };
 
         public override string ToString()
@@ -235,8 +255,87 @@ namespace PGENLib
         {
             SourceLocation = sourceLocation;
         }
+        
+        /// <summary>
+        /// A high-level wrapper around a stream, used to parse scene files.
+        /// This class implements a wrapper around a stream, with the following additional capabilities:
+        /// - It tracks the line number and column number;
+        /// - It permits to "un-read" characters and tokens.
+        /// </summary>
+        
+        
+        public class InputStream
+        {
+            public Stream stream;
 
-    }
+            public SourceLocation location;
+
+            public char savedChar;
+
+            public SourceLocation savedLocation;
+
+            public int tabulations;
+ 
+            public Token? savedToken;
+
+            /// <summary>
+            /// Basic contructor for the class.
+            /// </summary>
+            public InputStream(Stream stream, SourceLocation location, char savedChar, SourceLocation savedLocation, int tabulations, Token? savedToken)
+            {
+                this.stream = stream;
+                this.location = location;
+                this.savedChar = savedChar;
+                this.savedLocation = savedLocation;
+                this.tabulations = tabulations;
+                this.savedToken = savedToken;
+            }
+            /// <summary>
+            /// Shift the cursor one position ahead.
+            /// </summary>
+            private void _updatePosition(char ch)
+            {
+                if (ch == '\0')
+                    return;
+                else if (ch == '\n')
+                {
+                    this.location.LineNum += 1;
+                    this.location.ColNum = 1;
+                }
+                else if (ch == '\t')
+                    this.location.ColNum += this.tabulations;
+                else
+                    this.location.ColNum += 1;
+            }
+            
+            /// <summary>
+            /// Read a new character from the stream
+            /// </summary>
+            public char readChar()
+            {
+                char ch;
+                if (this.savedChar != '\0')
+                {
+                    ch = this.savedChar;
+                    this.savedChar = '\0';
+                }
+                else
+                {
+                    int byteRead = this.stream.ReadByte();
+                    if (byteRead == -1)
+                        ch = '\0';
+                    else
+                        ch = Convert.ToChar(byteRead);
+                }
+                this.savedLocation = this.location.shallowCopy();
+                this._updatePosition(ch);
+                return ch;
+            }
+            
+            
+            
+            
+        }
 
 
 
