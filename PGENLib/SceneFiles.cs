@@ -20,6 +20,7 @@ using System.Net.Mail;
 
 namespace PGENLib
 {
+
     /// <summary>
     /// A specific position in a source file.
     /// </summary>
@@ -42,14 +43,16 @@ namespace PGENLib
             LineNum = lineNum;
             ColNum = colNum;
         }
+
         /// <summary>
         /// Copy constructor for the class.
         /// </summary>
         /// <returns></returns>
         public SourceLocation shallowCopy()
         {
-            return (SourceLocation)this.MemberwiseClone();
+            return (SourceLocation) this.MemberwiseClone();
         }
+
         /// <summary>
         /// Print a source location
         /// </summary>
@@ -58,9 +61,9 @@ namespace PGENLib
         {
             return $"({LineNum}, {ColNum})";
         }
-        
+
     }
-    
+
 
 
 
@@ -102,6 +105,7 @@ namespace PGENLib
         Camera = 16,
         Orthogonal = 17,
         Perspective = 18,
+
         //Cylinder
         Float = 19,
         Pointlight = 20
@@ -118,32 +122,34 @@ namespace PGENLib
         {
             Keyword = keyword;
         }
+
         /// <summary>
         ///  Dictionary linking the keyword to its string identifier.
         /// </summary>
-        public static Dictionary<string, KeywordList> dictionary = new Dictionary<string, KeywordList>(){
+        public static Dictionary<string, KeywordList> dictionary = new Dictionary<string, KeywordList>()
+        {
 
-            {  "new", KeywordList.New },
-            {  "material", KeywordList.Material },
-            {  "plane" , KeywordList.Plane},
-            {  "sphere" , KeywordList.Sphere},
+            {"new", KeywordList.New},
+            {"material", KeywordList.Material},
+            {"plane", KeywordList.Plane},
+            {"sphere", KeywordList.Sphere},
             //{  "cylinder" , Keyword.Cylinder},
-            {  "diffuse" , KeywordList.Diffuse},
-            {  "specular" , KeywordList.Specular},
-            {  "uniform" , KeywordList.Uniform},
-            {  "checkered" , KeywordList.Checkered},
-            {  "image" , KeywordList.Image},
-            {  "identity" , KeywordList.Identity},
-            {  "translation" , KeywordList.Translation},
-            {  "rotation_x" , KeywordList.RotationX},
-            {  "rotation_y" , KeywordList.RotationY},
-            {  "rotation_z" , KeywordList.RotationZ},
-            {  "scaling" , KeywordList.Scaling},
-            {  "camera" ,KeywordList.Camera},
-            {  "orthogonal" , KeywordList.Orthogonal},
-            {  "perspective" , KeywordList.Perspective},
-            {  "float" , KeywordList.Float},
-            {  "pointlight",KeywordList.Pointlight}
+            {"diffuse", KeywordList.Diffuse},
+            {"specular", KeywordList.Specular},
+            {"uniform", KeywordList.Uniform},
+            {"checkered", KeywordList.Checkered},
+            {"image", KeywordList.Image},
+            {"identity", KeywordList.Identity},
+            {"translation", KeywordList.Translation},
+            {"rotation_x", KeywordList.RotationX},
+            {"rotation_y", KeywordList.RotationY},
+            {"rotation_z", KeywordList.RotationZ},
+            {"scaling", KeywordList.Scaling},
+            {"camera", KeywordList.Camera},
+            {"orthogonal", KeywordList.Orthogonal},
+            {"perspective", KeywordList.Perspective},
+            {"float", KeywordList.Float},
+            {"pointlight", KeywordList.Pointlight}
         };
 
         public override string ToString()
@@ -255,15 +261,15 @@ namespace PGENLib
         {
             SourceLocation = sourceLocation;
         }
-        
+
         /// <summary>
         /// A high-level wrapper around a stream, used to parse scene files.
         /// This class implements a wrapper around a stream, with the following additional capabilities:
         /// - It tracks the line number and column number;
         /// - It permits to "un-read" characters and tokens.
         /// </summary>
-        
-        
+
+
         public class InputStream
         {
             public Stream stream;
@@ -275,13 +281,14 @@ namespace PGENLib
             public SourceLocation savedLocation;
 
             public int tabulations;
- 
+
             public Token? savedToken;
 
             /// <summary>
             /// Basic contructor for the class.
             /// </summary>
-            public InputStream(Stream stream, SourceLocation location, char savedChar, SourceLocation savedLocation, int tabulations, Token? savedToken)
+            public InputStream(Stream stream, SourceLocation location, char savedChar, SourceLocation savedLocation,
+                int tabulations, Token? savedToken)
             {
                 this.stream = stream;
                 this.location = location;
@@ -290,6 +297,7 @@ namespace PGENLib
                 this.tabulations = tabulations;
                 this.savedToken = savedToken;
             }
+
             /// <summary>
             /// Shift the cursor one position ahead.
             /// </summary>
@@ -307,7 +315,7 @@ namespace PGENLib
                 else
                     this.location.ColNum += 1;
             }
-            
+
             /// <summary>
             /// Read a new character from the stream
             /// </summary>
@@ -327,18 +335,58 @@ namespace PGENLib
                     else
                         ch = Convert.ToChar(byteRead);
                 }
+
                 this.savedLocation = this.location.shallowCopy();
                 this._updatePosition(ch);
                 return ch;
             }
-            
-            
-            
-            
+
+            /// <summary>
+            /// Push a character back to the stream
+            /// </summary>
+            public char unreadChar(char ch)
+            {
+                this.savedChar = ch;
+                this.location = this.savedLocation;
+            }
+
+            /// <summary>
+            /// Push a character back to the stream
+            /// </summary>
+            public void SkipWhitespacesAndComments()
+            {
+                char ch = this.readChar();
+                while (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == '#')
+                {
+                    if (ch == '#')
+                    {
+                        while (ch != '\r' || ch != '\n' || ch != ' ')
+                        {
+                            continue;
+                        }
+
+                    }
+
+                    ch = this.readChar();
+                    if (ch == ' ')
+                    {
+                        return;
+                    }
+                }
+
+                unreadChar(ch);
+            }
+
+
+
+
+
+
+
+
         }
 
-
-
+    }
 }
 
 
