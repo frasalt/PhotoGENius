@@ -368,16 +368,44 @@ namespace PGENLib
             return new StringToken(tokenLocation, token);
         }
 
-        public FloatToken ParseFloatToken(string firstChar, SourceLocation tokenLocation)
+        public LiteralNumberToken ParseFloatToken(string firstChar, SourceLocation tokenLocation)
         {
             var token = firstChar;
-            var value = null;
+            float value;
             while (true)
             {
                 var ch = ReadChar();
-                if (Char.IsDigit(ch) || ch == '.' || ch in ["e", "E"])
+                char[] E = { 'e', 'E' };
+                if (Char.IsDigit(ch) || ch == '.' || E.Contains(ch))
                 {
                     UnreadChar(ch);
+                    break;
+                }
+                token += ch;
+            }
+            
+            try
+            {
+                value = float.Parse(token);
+            }
+            catch
+            {
+                throw new GrammarErrorException($"'{token}' is an invalid floating-point number", tokenLocation);
+            }
+
+            return new LiteralNumberToken(tokenLocation, value);
+        }
+        
+        private Token ParseKeywordOrIdentifierToken(char firstChar, SourceLocation tokenLocation)
+        {
+            string token = firstChar.ToString();
+            while (true)
+            {
+                char ch = this.ReadChar();
+
+                if (!(Char.IsLetterOrDigit(ch) || ch == '_'))
+                {
+                    this.UnreadChar(ch);
                     break;
                 }
                 token += ch;
@@ -385,18 +413,15 @@ namespace PGENLib
 
             try
             {
-                value = float(token);
+                return new KeywordToken(tokenLocation, KeywordToken.dictionary[token]);
             }
-            catch
+            catch (System.Exception)
             {
-                throw new GrammarErrorException($"'{token}' is an invalid floating-point number", tokenLocation);
+                return new IdentifierToken(tokenLocation, token);
             }
 
-            return LiteralNumberToken(tokenLocation, value);
         }
         
-            
-
     }
 
     
