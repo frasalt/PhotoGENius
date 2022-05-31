@@ -376,13 +376,7 @@ namespace PGENLib
 
                 unreadChar(ch);
             }
-
-
-
-
-
-
-
+            
 
         }
 
