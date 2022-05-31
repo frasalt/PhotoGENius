@@ -204,11 +204,19 @@ namespace PGENLib
     {
         public HdrImage Image;
         public ICamera Camera;
-        
-        public ImageTracer(HdrImage image, ICamera camera)
+        /*
+        public PCG Pcg;
+        public int SamplePerSide;
+        */
+
+        public ImageTracer(HdrImage image, ICamera camera /*, PCG pcg, int samplePerSide = 0*/)
         {
             Image = image;
             Camera = camera;
+            /*
+            Pcg = pcg;
+            SamplePerSide = samplePerSide;
+            */
         }
 
         /// <summary>

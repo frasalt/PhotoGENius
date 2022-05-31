@@ -25,7 +25,9 @@ namespace PGENLib
         }
     }
     
-    
+    //==============================================================================================================
+    //Sphere
+    //==============================================================================================================
     /// <summary>
     /// A 3D unit sphere centered on the axes origin.
     /// </summary>
@@ -64,6 +66,7 @@ namespace PGENLib
         {
             Ray invRay = ray.Transform(this.Transf.Inverse());
             var originVec = invRay.Origin.PointToVec();
+            //Calculate the coefficients for the intersection equation and solve the equation
             var a = Vec.SquaredNorm(invRay.Dir);
             var b = 2.0f * Vec.DotProd(originVec, invRay.Dir);
             var c = Vec.SquaredNorm(originVec) - 1;
@@ -76,6 +79,7 @@ namespace PGENLib
             var sqrtDelta = (float) Math.Sqrt(delta);
             var tmin = (-b - sqrtDelta) / (2.0f * a);
             var tmax = (-b + sqrtDelta) / (2.0f * a);
+            //Choose the correct solution
             float tFirstHit;
             if (tmin > invRay.Tmin & tmin < invRay.Tmax)
             {
@@ -89,7 +93,7 @@ namespace PGENLib
             {
                 return null;
             }
-
+            //Calculate the hit point
             var hitPoint = invRay.At(tFirstHit);
             var hit = new HitRecord(Transf*hitPoint, Transf*SphereNormal(hitPoint, ray.Dir),
                 SpherePointToUv(hitPoint), tFirstHit, ray, Material);
@@ -154,6 +158,9 @@ namespace PGENLib
  
     }
 
+    //==============================================================================================================
+    //Plane
+    //==============================================================================================================
     public class XyPlane : Shape
     {
         /// <summary>
@@ -207,6 +214,188 @@ namespace PGENLib
                 surfacePoint, t, ray, Material);
             return hit;
         }
+        
+    }
+    
+    //==============================================================================================================
+    //Cilinder
+    //==============================================================================================================
+    public class Cilinder : Shape
+    {
+        public float R;
+        public float Zmin;
+        public float Zmax;
+        public float Phimax;
+        
+        
+        /// <summary>
+        /// Constructor without any parameter.
+        /// </summary>
+        public Cilinder(float zmin = 0.0f, float zmax = 2.0f, float r=1.0f)
+        {
+            Phimax = (float) (2*Math.PI);
+            Zmin = zmin;
+            Zmax = zmax;
+            Transf = new Transformation();
+            Material = new Material();
+        }
+        
+        /// <summary>
+        /// Constructor with parameters.
+        /// </summary>
+        public Cilinder(Material material, float zmin = 0.0f, float zmax = 2.0f, float r=1.0f)
+        {
+            Phimax = (float) (2*Math.PI);
+            Zmin = zmin;
+            Zmax = zmax;
+            Transf = new Transformation();
+            Material = material;
+        }
+        
+        /// <summary>
+        /// Constructor with parameters. 
+        /// </summary>
+        /// <param name="transf"></param>
+        /// <param name="material"></param>
+        /// <param name="zmin"></param>
+        /// <param name="zmax"></param>
+        /// <param name="r"></param>
+        public Cilinder(Transformation transf, Material material, float zmin = 0f, float zmax = 2f, float r = 1.0f)
+        {
+            Zmin = zmin;
+            Zmax = zmax;
+            Phimax = (float) (2*Math.PI);
+            R = r;
+            Transf = transf;
+            Material = material;
+        }
+
+        /// <summary>
+        /// Constructor with parameters. 
+        /// </summary>
+        /// <param name="transf"></param>
+        /// <param name="material"></param>
+        /// <param name="zmin"></param>
+        /// <param name="zmax"></param>
+        /// <param name="phimax"></param>
+        /// <param name="r"></param>
+        public Cilinder(Transformation transf, Material material, float zmin, float zmax, float phimax, float r = 1.0f)
+        {
+            Zmin = zmin;
+            Zmax = zmax;
+            Phimax = phimax;
+            R = r;
+            Transf = transf;
+            Material = material;
+        }
+        
+        /// <summary>
+        /// Compute the intersection between a ray and the shape.
+        /// Returns a HitRecord object, or Null if the ray doesn't hit the plane.
+        /// </summary>
+        public override HitRecord? RayIntersection(Ray ray)
+        {
+            Ray invRay = ray.Transform(this.Transf.Inverse());
+            var originVec = invRay.Origin.PointToVec();
+            
+            //if (originVec.z < Zmin | originVec.z > Zmax)
+            //{
+            //    return null;
+            //}
+            //Calculate the coefficients for the intersection equation and solve the equation
+            var a = invRay.Dir.x*invRay.Dir.x + invRay.Dir.y*invRay.Dir.y;
+            var b = 2*(originVec.x * invRay.Dir.x + originVec.y * invRay.Dir.y);
+            var c = originVec.x * originVec.x + originVec.y * originVec.y - R * R;
+            var delta = b * b - 4.0f * a * c;
+            
+            if (delta <= 0)
+            {
+                return null;
+            }
+            var sqrtDelta = (float) Math.Sqrt(delta);
+            var tmin = (-b - sqrtDelta) / (2.0f * a);
+            var tmax = (-b + sqrtDelta) / (2.0f * a);
+            ////Choose the correct solution
+            float tFirstHit;
+            if (tmin > invRay.Tmin & tmin < invRay.Tmax)
+            {
+                tFirstHit = tmin;
+            }
+            else if (tmax > invRay.Tmin & tmax < invRay.Tmax)
+            {
+                tFirstHit = tmax;
+            }
+            else
+            {
+                return null;
+            }
+
+            var hitPoint = invRay.At(tFirstHit);
+            var phi = (float)Math.Atan2(hitPoint.y, hitPoint.x);
+            if (phi < 0)
+            {
+                phi += (float)(2 * Math.PI);
+            }
+
+            if (hitPoint.z < Zmin || hitPoint.z > Zmax || phi > Phimax)
+            {
+                if (Math.Abs(tFirstHit - tmin) < 1E-5) return null;
+
+                tFirstHit = tmin;
+                if (tFirstHit > invRay.Tmax) return null;
+
+                hitPoint = invRay.At(tFirstHit);
+                phi = (float)Math.Atan2(hitPoint.y, hitPoint.x);
+
+                if (phi < 0) phi += (float)(2 * Math.PI);
+                if (hitPoint.z < Zmin || hitPoint.z > Zmax || phi > Phimax) return null;
+            }
+
+            
+            var hit = new HitRecord(Transf*hitPoint, Transf*CilinderNormal(hitPoint, ray.Dir),
+                new Vec2d(phi / Phimax, (hitPoint.z - Zmin) / (Zmax - Zmin)), tFirstHit, ray, Material);
+            return hit;
+        }
+        
+        
+        /// <summary>
+        /// Convert the 3D intersection point into a 2D point, of coordinates (u,v). 
+        /// </summary>
+        public Vec2d CilinderPointToUv(Point point)
+        {
+            
+            float u = (float) (Math.Atan(point.y/point.x) / Phimax); 
+            float v = (point.z - Zmin) / (Zmax - Zmin);
+            if (u < 0.0)
+            {
+                u++;
+            }
+
+            return new Vec2d(u,v);
+        }
+        
+        /// <summary>
+        /// Computes the normal in the intersection point of a ray and the surface of a cilinder.
+        /// The normal has always the opposite direction with respect to a given Ray. 
+        /// </summary>
+        /// <param name="point">Type Point</param>
+        /// <param name="dir">Type Vec</param>
+        /// <returns>Normal</returns>
+        public Normal CilinderNormal(Point point,  Vec dir)
+        {
+            Normal result = new Normal(point.x, point.y, 0.0f);
+            Normal n;
+            if (Vec.DotProd(point.PointToVec(),dir) < 0.0)
+            {
+                n = result;
+            }
+            else
+            {
+                n = result*(-1);
+            }
+            return n;
+        }
+
         
     }
 
