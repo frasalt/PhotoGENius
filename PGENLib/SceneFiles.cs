@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System.Diagnostics;
 using System.Net.Mail;
 
 namespace PGENLib
@@ -48,7 +49,7 @@ namespace PGENLib
         /// Copy constructor for the class.
         /// </summary>
         /// <returns></returns>
-        public SourceLocation shallowCopy()
+        public SourceLocation ShallowCopy()
         {
             return (SourceLocation) this.MemberwiseClone();
         }
@@ -66,8 +67,9 @@ namespace PGENLib
 
 
 
-
-    //A lexical token, used when parsing a scene file
+    /// <summary>
+    /// A lexical token, used when parsing a scene file
+    /// </summary>
     public class Token
     {
         public SourceLocation Location;
@@ -232,155 +234,172 @@ namespace PGENLib
             return Symbol;
         }
     }
+    
 
     /// <summary>
-    /// An error found by the lexer/parser while reading a scene file.
-    /// The fields of this type are the following:
-    /// <list type="table">
-    /// <item>
-    ///     <term>Message</term>
-    ///     <description> a user-frendly error message</description>
-    /// </item>
-    /// <item>
-    ///     <term>sourceLocation</term>
-    ///     <description> a sourceLocation object pointing out the name of the file, the line number and the column
-    ///     number where the error occured</description>
-    /// </item>
-    /// </list>
+    /// A high-level wrapper around a stream, used to parse scene files.
+    /// This class implements a wrapper around a stream, with the following additional capabilities:
+    /// - It tracks the line number and column number;
+    /// - It permits to "un-read" characters and tokens.
     /// </summary>
-    class GrammarErrorException : Exception
+    public class InputStream
     {
-        public SourceLocation SourceLocation;
+        public Stream Stream;
 
-        public GrammarErrorException() : base()
-        {
-            SourceLocation = new SourceLocation();
-        }
+        public SourceLocation Location;
 
-        public GrammarErrorException(string msg, SourceLocation sourceLocation) : base(msg)
+        public char SavedChar;
+
+        public SourceLocation SavedLocation;
+
+        public int Tabulations;
+
+        public Token? SavedToken;
+
+        /// <summary>
+        /// Basic contructor for the class.
+        /// </summary>
+        public InputStream(Stream stream, SourceLocation location, char savedChar, SourceLocation savedLocation,
+            int tabulations, Token? savedToken)
         {
-            SourceLocation = sourceLocation;
+            Stream = stream;
+            Location = location;
+            SavedChar = savedChar;
+            SavedLocation = savedLocation;
+            Tabulations = tabulations;
+            SavedToken = savedToken;
         }
 
         /// <summary>
-        /// A high-level wrapper around a stream, used to parse scene files.
-        /// This class implements a wrapper around a stream, with the following additional capabilities:
-        /// - It tracks the line number and column number;
-        /// - It permits to "un-read" characters and tokens.
+        /// Shift the cursor one position ahead.
         /// </summary>
-
-
-        public class InputStream
-        {
-            public Stream stream;
-
-            public SourceLocation location;
-
-            public char savedChar;
-
-            public SourceLocation savedLocation;
-
-            public int tabulations;
-
-            public Token? savedToken;
-
-            /// <summary>
-            /// Basic contructor for the class.
-            /// </summary>
-            public InputStream(Stream stream, SourceLocation location, char savedChar, SourceLocation savedLocation,
-                int tabulations, Token? savedToken)
-            {
-                this.stream = stream;
-                this.location = location;
-                this.savedChar = savedChar;
-                this.savedLocation = savedLocation;
-                this.tabulations = tabulations;
-                this.savedToken = savedToken;
+        private void UpdatePosition(char ch)
+        { 
+            if (ch == '\0')
+                return;
+            else if (ch == '\n')
+            { 
+                Location.LineNum += 1;
+                Location.ColNum = 1;
             }
-
-            /// <summary>
-            /// Shift the cursor one position ahead.
-            /// </summary>
-            private void _updatePosition(char ch)
-            {
-                if (ch == '\0')
-                    return;
-                else if (ch == '\n')
-                {
-                    this.location.LineNum += 1;
-                    this.location.ColNum = 1;
-                }
-                else if (ch == '\t')
-                    this.location.ColNum += this.tabulations;
-                else
-                    this.location.ColNum += 1;
-            }
-
-            /// <summary>
-            /// Read a new character from the stream
-            /// </summary>
-            public char readChar()
-            {
-                char ch;
-                if (this.savedChar != '\0')
-                {
-                    ch = this.savedChar;
-                    this.savedChar = '\0';
-                }
-                else
-                {
-                    int byteRead = this.stream.ReadByte();
-                    if (byteRead == -1)
-                        ch = '\0';
-                    else
-                        ch = Convert.ToChar(byteRead);
-                }
-
-                this.savedLocation = this.location.shallowCopy();
-                this._updatePosition(ch);
-                return ch;
-            }
-
-            /// <summary>
-            /// Push a character back to the stream
-            /// </summary>
-            public char unreadChar(char ch)
-            {
-                this.savedChar = ch;
-                this.location = this.savedLocation;
-            }
-
-            /// <summary>
-            /// Push a character back to the stream
-            /// </summary>
-            public void SkipWhitespacesAndComments()
-            {
-                char ch = this.readChar();
-                while (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == '#')
-                {
-                    if (ch == '#')
-                    {
-                        while (ch != '\r' || ch != '\n' || ch != ' ')
-                        {
-                            continue;
-                        }
-
-                    }
-
-                    ch = this.readChar();
-                    if (ch == ' ')
-                    {
-                        return;
-                    }
-                }
-
-                unreadChar(ch);
-            }
-            
-
+            else if (ch == '\t')
+                Location.ColNum += Tabulations;
+            else
+                Location.ColNum += 1;
         }
 
+        /// <summary>
+        /// Read a new character from the stream
+        /// </summary>
+        public char ReadChar()
+        {
+            char ch;
+            if (SavedChar != '\0')
+            { 
+                ch = SavedChar; 
+                SavedChar = '\0';
+            }
+            else
+            {
+                int byteRead = Stream.ReadByte();
+                if (byteRead == -1)
+                    ch = '\0';
+                else
+                    ch = Convert.ToChar(byteRead);
+            }
+
+            SavedLocation = Location.ShallowCopy();
+            UpdatePosition(ch);
+            return ch;
+        }
+
+        /// <summary>
+        /// Push a character back to the stream.
+        /// </summary>
+        public void UnreadChar(char ch)
+        {
+            Debug.Assert(SavedChar == ' ');
+            SavedChar = ch;
+            Location = SavedLocation;
+        }
+
+        /// <summary>
+        /// Keep reading characters until a non-whitespace/non-comment character is found.
+        /// </summary>
+        public void SkipWhitespacesAndComments()
+        {
+            char ch = ReadChar();
+            while (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == '#')
+            {
+                if (ch == '#')
+                {
+                    //It's a comment! Keep reading until the end of the line (include the case "", the end-of-file)
+                    while (ch != '\r' || ch != '\n' || ch != ' ')
+                    {
+                        continue;
+                    }
+                }
+                ch = ReadChar();
+                if (ch == ' ')
+                {
+                    return;
+                }
+            }
+            //Put the non-whitespace character back
+            UnreadChar(ch);
+        }
+
+        public StringToken ParseStringToken(SourceLocation tokenLocation)
+        {
+            var token = "";
+            while (true)
+            {
+                var ch = ReadChar();
+
+                if (ch == '"') break;
+                if (ch == ' ')
+                {
+                    throw new GrammarErrorException("Unterminated string", tokenLocation);
+                }
+            
+                token += ch;
+            }
+            
+            return new StringToken(tokenLocation, token);
+        }
+
+        public FloatToken ParseFloatToken(string firstChar, SourceLocation tokenLocation)
+        {
+            var token = firstChar;
+            var value = null;
+            while (true)
+            {
+                var ch = ReadChar();
+                if (Char.IsDigit(ch) || ch == '.' || ch in ["e", "E"])
+                {
+                    UnreadChar(ch);
+                    break;
+                }
+                token += ch;
+            }
+
+            try
+            {
+                value = float(token);
+            }
+            catch
+            {
+                throw new GrammarErrorException($"'{token}' is an invalid floating-point number", tokenLocation);
+            }
+
+            return LiteralNumberToken(tokenLocation, value);
+        }
+        
+            
+
     }
+
+    
 }
 
 
