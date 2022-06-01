@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Diagnostics;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
+
 
 namespace PGENLib
 {
@@ -421,7 +423,55 @@ namespace PGENLib
             }
 
         }
-        
+
+        public Token ReadToken()
+        {
+            if (this.SavedToken!= null)
+            {
+                Token result = this.SavedToken;
+                this.SavedToken = null;
+                return result;
+            }
+            this.SkipWhitespacesAndComments();
+            
+            // Now ch does *not* contain a whitespace character.
+            char ch = this.ReadChar();
+            if (ch == ' ')
+            {
+                // No more characters in the file, so return a StopToken
+                return new StopToken(this.Location);
+            }
+            //At this point we must check what kind of token begins with the "ch" character (which has been
+            //put back in the stream with self.unread_char). First, we save the position in the stream.
+            SourceLocation tokenLocation = Location.ShallowCopy();
+            char[] SYMB = { '(',')','<','>','[',']', '*' };
+            char[] OP = {'+', '-', '.'};
+            if (SYMB.Contains(ch))
+            {
+                return new SymbolToken(tokenLocation, ch.ToString());
+            }
+            else if (ch == '"')
+            {
+                // A literal string (used for file names)
+                return this.ParseStringToken(tokenLocation = tokenLocation);
+            }
+            else if (Char.IsDigit(ch)|| OP.Contains(ch))
+            {
+                // A floating-point number
+                return this.ParseFloatToken(ch.ToString(), tokenLocation);
+            }
+            else if (Char.IsLetter(ch) || ch == '_')
+            {
+                // Since it begins with an alphabetic character, it must either be a keyword or a identifier
+                return this.ParseKeywordOrIdentifierToken(ch, tokenLocation);
+            }
+            else
+            {
+                // We got some weird character, like '@` or `&`
+                throw new GrammarErrorException("Invalid character {ch}", this.Location);
+            }
+
+        } 
     }
 
     
