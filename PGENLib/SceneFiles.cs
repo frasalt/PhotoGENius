@@ -288,6 +288,11 @@ namespace PGENLib
             SavedToken = savedToken;
         }
 
+        public InputStream(MemoryStream memorystream)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Shift the cursor one position ahead.
         /// </summary>
@@ -581,7 +586,6 @@ def expect_identifier(input_file: InputStream) -> str:
 
     return token.identifier
         */
-}
 
 /*
 Note: modificare world in modo che contenga una lista ad esempio di materiali (ora sono embedded dentro le shapes), 
