@@ -272,6 +272,11 @@ namespace PGENLib
             SavedToken = savedToken;
         }
 
+        public InputStream(MemoryStream memorystream)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Shift the cursor one position ahead.
         /// </summary>
@@ -473,8 +478,6 @@ namespace PGENLib
 
         } 
     }
-
-    
 }
 
 
