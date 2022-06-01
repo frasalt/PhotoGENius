@@ -8,7 +8,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
+but WITHOUT     ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Diagnostics;
 using System.Net.Mail;
+using System.Data;
+
 
 namespace PGENLib
 {
@@ -64,8 +66,6 @@ namespace PGENLib
         }
 
     }
-
-
 
     /// <summary>
     /// A lexical token, used when parsing a scene file
@@ -234,8 +234,22 @@ namespace PGENLib
             return Symbol;
         }
     }
-    
 
+    /// <summary>
+    /// A scene read from a scene file
+    /// </summary>
+    public class Scene // perchè partial?
+    {
+        public Dictionary<string, Material> Materials = new Dictionary<string, Material>();
+        public World world;
+        public OrthogonalCamera camera; // che tipo di camera?
+        //public PerspectiveCamera camera; // ?
+        public Dictionary<string, float> FloatVariables = new Dictionary<string, float>();
+        public DataSet OverriddenVariables = new DataSet();
+        //public DataTable overridden_variables = new DataTable();
+        //overridden_variables.DataType = string;
+    }
+    
     /// <summary>
     /// A high-level wrapper around a stream, used to parse scene files.
     /// This class implements a wrapper around a stream, with the following additional capabilities:
@@ -274,11 +288,11 @@ namespace PGENLib
         /// Shift the cursor one position ahead.
         /// </summary>
         private void UpdatePosition(char ch)
-        { 
+        {
             if (ch == '\0')
                 return;
             else if (ch == '\n')
-            { 
+            {
                 Location.LineNum += 1;
                 Location.ColNum = 1;
             }
@@ -295,8 +309,8 @@ namespace PGENLib
         {
             char ch;
             if (SavedChar != '\0')
-            { 
-                ch = SavedChar; 
+            {
+                ch = SavedChar;
                 SavedChar = '\0';
             }
             else
@@ -339,12 +353,14 @@ namespace PGENLib
                         continue;
                     }
                 }
+
                 ch = ReadChar();
                 if (ch == ' ')
                 {
                     return;
                 }
             }
+
             //Put the non-whitespace character back
             UnreadChar(ch);
         }
@@ -361,10 +377,10 @@ namespace PGENLib
                 {
                     throw new GrammarErrorException("Unterminated string", tokenLocation);
                 }
-            
+
                 token += ch;
             }
-            
+
             return new StringToken(tokenLocation, token);
         }
 
@@ -381,9 +397,10 @@ namespace PGENLib
                     UnreadChar(ch);
                     break;
                 }
+
                 token += ch;
             }
-            
+
             try
             {
                 value = float.Parse(token);
@@ -395,7 +412,7 @@ namespace PGENLib
 
             return new LiteralNumberToken(tokenLocation, value);
         }
-        
+
         private Token ParseKeywordOrIdentifierToken(char firstChar, SourceLocation tokenLocation)
         {
             string token = firstChar.ToString();
@@ -408,6 +425,7 @@ namespace PGENLib
                     this.UnreadChar(ch);
                     break;
                 }
+
                 token += ch;
             }
 
@@ -421,10 +439,107 @@ namespace PGENLib
             }
 
         }
-        
-    }
 
-    
+
+        /// <summary>
+        /// Read a token from `input_file` and check that it matches `symbol`.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="symbol"></param>
+        public void expect_symbol(InputStream inputFile, string symbol)
+        {
+            Token token = inputFile.ReadToken();
+            SymbolToken symbtoken = new SymbolToken(token.Location, "symbtok"); // riga per poter fare il confronto sotto
+            if (!token.GetType().IsInstanceOfType(symbtoken) || token.ToString() != symbol)
+            {
+                throw new GrammarErrorException($"Got '{token}' instead of '{symbol}'", token.Location);
+            }
+        }
+
+        /// <summary>
+        /// Read a token from `input_file` and check that it is one of the keywords in `keywords`.
+        /// Return the keyword as a :class:`.KeywordEnum` object.
+        /// </summary>
+        /// <param name="???"></param>
+        /// <returns></returns>
+        public KeywordList expect_keywords(InputStream input_file, KeywordList keywords)
+        {
+            KeywordToken token = input_file.ReadToken();
+            KeywordToken keytoken = new KeywordToken(token.Location, keywords); // riga per poter fare il confronto sotto
+            if( !token.GetType().IsInstanceOfType(keytoken))
+            {
+                throw new GrammarErrorException($"expected a keyword instead of '{token}'", token.Location);
+            }
+            if(! Enum.IsDefined(typeof(KeywordList), token.Keyword)) // sarà giusto?
+            {
+                string str = "";
+                foreach (string i in Enum.GetValues(typeof(KeywordList)))  
+                {  
+                    str+=i;  
+                }
+                throw new GrammarErrorException(
+                    $"expected one of the keywords" + str + "instead of '{token}'", token.Location);
+            }
+
+            return token.Keyword;
+        }
+        
+
+/*
+def expect_number(input_file: InputStream, scene: Scene) -> float:
+    """Read a token from `input_file` and check that it is either a literal number or a variable in `scene`.
+    Return the number as a ``float``."""
+    token = input_file.read_token()
+    if isinstance(token, LiteralNumberToken):
+        return token.value
+    elif isinstance(token, IdentifierToken):
+        variable_name = token.identifier
+        if variable_name not in scene.float_variables:
+            raise GrammarError(token.location, f"unknown variable '{token}'")
+        return scene.float_variables[variable_name]
+
+    raise GrammarError(token.location, f"got '{token}' instead of a number")
+
+
+def expect_string(input_file: InputStream) -> str:
+    """Read a token from `input_file` and check that it is a literal string.
+    Return the value of the string (a ``str``)."""
+    token = input_file.read_token()
+    if not isinstance(token, StringToken):
+        raise GrammarError(token.location, f"got '{token}' instead of a string")
+
+    return token.string
+
+
+def expect_identifier(input_file: InputStream) -> str:
+    """Read a token from `input_file` and check that it is an identifier.
+    Return the name of the identifier."""
+    token = input_file.read_token()
+    if not isinstance(token, IdentifierToken):
+        raise GrammarError(token.location, f"got '{token}' instead of an identifier")
+
+    return token.identifier
+        */
+}
+
+/*
+Note: modificare world in modo che contenga una lista ad esempio di materiali (ora sono embedded dentro le shapes), 
+in modo che siano modificabili direttmente dal parser. In realtà in putracer non fa così, ma usa una classe
+scene in cui c'è un world ecc, (5).
+
+Overridden_var servono per una funzionalità in più.
+
+(8) meglio metodi
+
+(11) attenzione la 6 è un po più impestata, tanto che ad esempio non è neanche una funzione di InputStream
+
+(14) come nel lexer per unread char
+
+(17) meglio aggiungere che rinominare
+
+(20) sono valide entrambe
+*/
+    }
 }
 
 
