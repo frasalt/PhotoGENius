@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Diagnostics;
 using System.Net.Mail;
 using System.Data;
+using System.Text.RegularExpressions;
 
 
 namespace PGENLib
@@ -53,7 +54,7 @@ namespace PGENLib
         /// <returns></returns>
         public SourceLocation ShallowCopy()
         {
-            return (SourceLocation) this.MemberwiseClone();
+            return (SourceLocation)this.MemberwiseClone();
         }
 
         /// <summary>
@@ -131,27 +132,27 @@ namespace PGENLib
         public static Dictionary<string, KeywordList> dictionary = new Dictionary<string, KeywordList>()
         {
 
-            {"new", KeywordList.New},
-            {"material", KeywordList.Material},
-            {"plane", KeywordList.Plane},
-            {"sphere", KeywordList.Sphere},
+            { "new", KeywordList.New },
+            { "material", KeywordList.Material },
+            { "plane", KeywordList.Plane },
+            { "sphere", KeywordList.Sphere },
             //{  "cylinder" , Keyword.Cylinder},
-            {"diffuse", KeywordList.Diffuse},
-            {"specular", KeywordList.Specular},
-            {"uniform", KeywordList.Uniform},
-            {"checkered", KeywordList.Checkered},
-            {"image", KeywordList.Image},
-            {"identity", KeywordList.Identity},
-            {"translation", KeywordList.Translation},
-            {"rotation_x", KeywordList.RotationX},
-            {"rotation_y", KeywordList.RotationY},
-            {"rotation_z", KeywordList.RotationZ},
-            {"scaling", KeywordList.Scaling},
-            {"camera", KeywordList.Camera},
-            {"orthogonal", KeywordList.Orthogonal},
-            {"perspective", KeywordList.Perspective},
-            {"float", KeywordList.Float},
-            {"pointlight", KeywordList.Pointlight}
+            { "diffuse", KeywordList.Diffuse },
+            { "specular", KeywordList.Specular },
+            { "uniform", KeywordList.Uniform },
+            { "checkered", KeywordList.Checkered },
+            { "image", KeywordList.Image },
+            { "identity", KeywordList.Identity },
+            { "translation", KeywordList.Translation },
+            { "rotation_x", KeywordList.RotationX },
+            { "rotation_y", KeywordList.RotationY },
+            { "rotation_z", KeywordList.RotationZ },
+            { "scaling", KeywordList.Scaling },
+            { "camera", KeywordList.Camera },
+            { "orthogonal", KeywordList.Orthogonal },
+            { "perspective", KeywordList.Perspective },
+            { "float", KeywordList.Float },
+            { "pointlight", KeywordList.Pointlight }
         };
 
         public override string ToString()
@@ -242,14 +243,17 @@ namespace PGENLib
     {
         public Dictionary<string, Material> Materials = new Dictionary<string, Material>();
         public World world;
+
         public OrthogonalCamera camera; // che tipo di camera?
+
         //public PerspectiveCamera camera; // ?
         public Dictionary<string, float> FloatVariables = new Dictionary<string, float>();
+
         public DataSet OverriddenVariables = new DataSet();
         //public DataTable overridden_variables = new DataTable();
         //overridden_variables.DataType = string;
     }
-    
+
     /// <summary>
     /// A high-level wrapper around a stream, used to parse scene files.
     /// This class implements a wrapper around a stream, with the following additional capabilities:
@@ -439,7 +443,58 @@ namespace PGENLib
             }
 
         }
+        
+        
+        public Token ReadToken()
+        {
+            if (this.SavedToken != null)
+            {
+                Token result = this.SavedToken;
+                this.SavedToken = null;
+                return result;
+            }
 
+            this.SkipWhitespacesAndComments();
+
+            // Now ch does *not* contain a whitespace character.
+            char ch = this.ReadChar();
+            if (ch == ' ')
+            {
+                // No more characters in the file, so return a StopToken
+                return new StopToken(this.Location);
+            }
+
+            //At this point we must check what kind of token begins with the "ch" character (which has been
+            //put back in the stream with self.unread_char). First, we save the position in the stream.
+            SourceLocation tokenLocation = Location.ShallowCopy();
+            char[] SYMB = { '(', ')', '<', '>', '[', ']', '*' };
+            char[] OP = { '+', '-', '.' };
+            if (SYMB.Contains(ch))
+            {
+                return new SymbolToken(tokenLocation, ch.ToString());
+            }
+            else if (ch == '"')
+            {
+                // A literal string (used for file names)
+                return this.ParseStringToken(tokenLocation = tokenLocation);
+            }
+            else if (Char.IsDigit(ch) || OP.Contains(ch))
+            {
+                // A floating-point number
+                return this.ParseFloatToken(ch.ToString(), tokenLocation);
+            }
+            else if (Char.IsLetter(ch) || ch == '_')
+            {
+                // Since it begins with an alphabetic character, it must either be a keyword or a identifier
+                return this.ParseKeywordOrIdentifierToken(ch, tokenLocation);
+            }
+            else
+            {
+                // We got some weird character, like '@` or `&`
+                throw new GrammarErrorException("Invalid character {ch}", this.Location);
+            }
+
+        }
 
         /// <summary>
         /// Read a token from `input_file` and check that it matches `symbol`.
@@ -449,13 +504,14 @@ namespace PGENLib
         public void expect_symbol(InputStream inputFile, string symbol)
         {
             Token token = inputFile.ReadToken();
-            SymbolToken symbtoken = new SymbolToken(token.Location, "symbtok"); // riga per poter fare il confronto sotto
+            SymbolToken
+                symbtoken = new SymbolToken(token.Location, "symbtok"); // riga per poter fare il confronto sotto
             if (!token.GetType().IsInstanceOfType(symbtoken) || token.ToString() != symbol)
             {
                 throw new GrammarErrorException($"Got '{token}' instead of '{symbol}'", token.Location);
             }
         }
-
+        
         /// <summary>
         /// Read a token from `input_file` and check that it is one of the keywords in `keywords`.
         /// Return the keyword as a :class:`.KeywordEnum` object.
@@ -464,26 +520,31 @@ namespace PGENLib
         /// <returns></returns>
         public KeywordList expect_keywords(InputStream input_file, KeywordList keywords)
         {
-            KeywordToken token = input_file.ReadToken();
-            KeywordToken keytoken = new KeywordToken(token.Location, keywords); // riga per poter fare il confronto sotto
-            if( !token.GetType().IsInstanceOfType(keytoken))
+            Token token = input_file.ReadToken();
+            KeywordToken
+                keytoken = new KeywordToken(token.Location, keywords); // riga per poter fare il confronto sotto
+            if (!token.GetType().IsInstanceOfType(keytoken))
             {
                 throw new GrammarErrorException($"expected a keyword instead of '{token}'", token.Location);
             }
-            if(! Enum.IsDefined(typeof(KeywordList), token.Keyword)) // sarà giusto?
+
+            if (!Enum.IsDefined(typeof(KeywordList), token.Keyword)) // sarà giusto?
             {
                 string str = "";
-                foreach (string i in Enum.GetValues(typeof(KeywordList)))  
-                {  
-                    str+=i;  
+                foreach (string i in Enum.GetValues(typeof(KeywordList)))
+                {
+                    str += i;
                 }
+
                 throw new GrammarErrorException(
                     $"expected one of the keywords" + str + "instead of '{token}'", token.Location);
             }
 
             return token.Keyword;
         }
-        
+    }
+}
+
 
 /*
 def expect_number(input_file: InputStream, scene: Scene) -> float:
@@ -539,8 +600,8 @@ Overridden_var servono per una funzionalità in più.
 
 (20) sono valide entrambe
 */
-    }
-}
+    
+
 
 
 
