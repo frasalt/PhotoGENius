@@ -19,11 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
-using System;
-using System.IO;
-using System.Linq;
-using System.Globalization;
-using System.Collections.Generic;
 
 
 namespace PGENLib
@@ -266,17 +261,21 @@ namespace PGENLib
         /// <summary>
         /// Basic contructor for the class.
         /// </summary>
-        public InputStream(Stream stream, string fileName = " ", int tabulations = 4)
+        public InputStream(Stream stream, SourceLocation location, char savedChar, SourceLocation savedLocation,
+            int tabulations, Token? savedToken)
         {
-            this.Stream = stream;
-            this.Location = new SourceLocation(fileName: fileName, lineNum: 1, colNum: 1);
-            this.SavedChar = '\0';
-            this.SavedLocation = this.Location;
-            this.Tabulations = tabulations;
-            this.SavedToken = null;
+            Stream = stream;
+            Location = location;
+            SavedChar = savedChar;
+            SavedLocation = savedLocation;
+            Tabulations = tabulations;
+            SavedToken = savedToken;
         }
- 
 
+        public InputStream(MemoryStream memorystream)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Shift the cursor one position ahead.
@@ -326,7 +325,7 @@ namespace PGENLib
         /// </summary>
         public void UnreadChar(char ch)
         {
-            //Debug.Assert(SavedChar == ' ');
+            Debug.Assert(SavedChar == ' ');
             SavedChar = ch;
             Location = SavedLocation;
         }
@@ -442,34 +441,34 @@ namespace PGENLib
             
             // Now ch does *not* contain a whitespace character.
             char ch = this.ReadChar();
-            if (ch == '\0')
+            if (ch == ' ')
             {
                 // No more characters in the file, so return a StopToken
                 return new StopToken(this.Location);
             }
             //At this point we must check what kind of token begins with the "ch" character (which has been
             //put back in the stream with self.unread_char). First, we save the position in the stream.
-            //SourceLocation tokenLocation = Location.ShallowCopy();
+            SourceLocation tokenLocation = Location.ShallowCopy();
             char[] SYMB = { '(',')','<','>','[',']', '*' };
             char[] OP = {'+', '-', '.'};
             if (SYMB.Contains(ch))
             {
-                return new SymbolToken(this.Location, ch.ToString());
+                return new SymbolToken(tokenLocation, ch.ToString());
             }
             else if (ch == '"')
             {
                 // A literal string (used for file names)
-                return this.ParseStringToken(this.Location);
+                return this.ParseStringToken(tokenLocation = tokenLocation);
             }
             else if (Char.IsDigit(ch)|| OP.Contains(ch))
             {
                 // A floating-point number
-                return this.ParseFloatToken(ch.ToString(), this.Location);
+                return this.ParseFloatToken(ch.ToString(), tokenLocation);
             }
             else if (Char.IsLetter(ch) || ch == '_')
             {
                 // Since it begins with an alphabetic character, it must either be a keyword or a identifier
-                return this.ParseKeywordOrIdentifierToken(ch, this.Location);
+                return this.ParseKeywordOrIdentifierToken(ch, tokenLocation);
             }
             else
             {
