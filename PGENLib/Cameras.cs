@@ -204,19 +204,40 @@ namespace PGENLib
     {
         public HdrImage Image;
         public ICamera Camera;
-        /*
         public PCG Pcg;
         public int SamplePerSide;
-        */
-
-        public ImageTracer(HdrImage image, ICamera camera /*, PCG pcg, int samplePerSide = 0*/)
+        
+        /// <summary>
+        /// Constructor with parameters. If SamplePerSide is usefull to implement the antialiasing: if it's not zero,
+        /// stratified sampling will be applied to each pixel in the image, using the random number generator `pcg`. 
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="camera"></param>
+        /// <param name="pcg"></param>
+        /// <param name="samplePerSide"></param>
+        public ImageTracer(HdrImage image, ICamera camera, PCG pcg, int samplePerSide = 0)
         {
             Image = image;
             Camera = camera;
-            /*
             Pcg = pcg;
             SamplePerSide = samplePerSide;
-            */
+            
+        }
+        
+        /// <summary>
+        /// Constructor with parameters. If SamplePerSide is usefull to implement the antialiasing: if it's not zero,
+        /// stratified sampling will be applied to each pixel in the image, using the random number generator `pcg`. 
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="camera"></param>
+        /// <param name="samplePerSide"></param>
+        public ImageTracer(HdrImage image, ICamera camera, int samplePerSide = 0)
+        {
+            Image = image;
+            Camera = camera;
+            Pcg = new PCG();
+            SamplePerSide = samplePerSide;
+            
         }
 
         /// <summary>
@@ -231,8 +252,8 @@ namespace PGENLib
         /// <returns></returns>
         public Ray FireRay(int col, int row, float uPixel = 0.5f, float vPixel = 0.5f)
         {
-            float u = (col + uPixel) / (Image.Width);
-            float v = 1.0f - (row + vPixel) / (Image.Height);
+            float u = (col + uPixel) / Image.Width;
+            float v = 1.0f - (row + vPixel) / Image.Height;
             return Camera.FireRay(u, v);
         }
 
@@ -249,32 +270,38 @@ namespace PGENLib
         /// </summary>
         /// <param name="func"></param>
         /// <param name="???"></param>
-        /*
-        public void FireAllRays (Func<Ray,Color> func, Func callback=None, callback_time_s: float = 2.0, **callback_kwargs)
-        {
-            var lastCallTime = process_time();
-            if (callback != null)
-            {
-                callback(col=0, row=0, **callback_kwargs)
-            }
         
+        public void FireAllRays (Func<Ray,Color> func)
+        {
             for(int row = 0; row< Image.Height; row ++)
             {
                 for(int col = 0; col< Image.Width; col ++)
                 {
+                    //if(row%20 == 0) Console.WriteLine($"        Fill row {row}/{Image.Height}");
+                    var cumColor = new Color(); //Black
+                    if (SamplePerSide > 0)
+                    {
+                        // Run stratified sampling over the pixel's surface.
+                        for (int interPixelRow = 0; interPixelRow < SamplePerSide; interPixelRow++)
+                        {
+                            for (int interPixelCol = 0; interPixelCol < SamplePerSide; interPixelCol++)
+                            {
+                                var uPixel = (interPixelCol + Pcg.RandomFloat()) / SamplePerSide;
+                                var vPixel = (interPixelRow + Pcg.RandomFloat()) / SamplePerSide;
+                                var ray = FireRay(col, row, uPixel, vPixel);
+                                cumColor += func(ray);
+                                
+                                Image.SetPixel(col, row, cumColor * (float)(1 / Math.Pow(SamplePerSide, 2.0f)));
+                            }
+                        }
+                    }
                     
-                    Ray ray = FireRay(col, row);
-                    Color color = func(ray);    
-                    Image.SetPixel(col, row, color);
                     
-                    current_time = process_time()
-                    if callback and (current_time - last_call_time > callback_time_s):
-                    callback(row, col, **callback_kwargs)
-                    last_call_time = current_time
                 }
             }
         }
-        */    
+        
+        /*    
         public void FireAllRays (Func<Ray,Color> func)
         {
             for(int row = 0; row< Image.Height; row ++)
@@ -291,5 +318,6 @@ namespace PGENLib
                 }
             }
         }
+        */
     }
 }

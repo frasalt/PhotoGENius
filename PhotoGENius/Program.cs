@@ -102,6 +102,11 @@
                 name: "--gamma-fac",
                 description: "Regulates gamma compression of rendered image.",
                 getDefaultValue: () => 1.8f);
+            
+            var samplePerPixel = new Option<int>(
+                name: "--sample-per-pixel",
+                description: "Number of sample per pixel (must be a perfect square).",
+                getDefaultValue: () => 1);
 
             var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
             var demo = new Command("demo", "Create an image.")
@@ -118,15 +123,22 @@
                 initState,
                 initSeq,
                 luminosityFactor,
-                gammaFactor
+                gammaFactor,
+                samplePerPixel
             };
             rootCommand.AddCommand(demo);
             
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
                 string pngOutputValue, string cameraType, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
-                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue) =>
-                {
-
+                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
+                { 
+                    var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
+                    
+                    if (Math.Abs(Math.Pow(samplePerSide, 2.0f) - samplePerPixelValue) > 10E-5)
+                    {
+                        Console.WriteLine("Error: samplePerPixel must be a perfect square");
+                        return;
+                    }
                 // 1.World initialization
 
                 var world = new World();
@@ -255,7 +267,7 @@
                 var image = new HdrImage(widthValue, heightValue);
                 Console.WriteLine($"    Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
 
-                var tracer = new ImageTracer(image, camera);
+                var tracer = new ImageTracer(image, camera, samplePerSide);
                 
                 if (algorithmValue == "onoff")
                 {
@@ -334,7 +346,7 @@
                     
                 },
                 width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
-                initState, initSeq, luminosityFactor, gammaFactor );
+                initState, initSeq, luminosityFactor, gammaFactor, samplePerPixel);
             
             //==============================================================================================================
             //Pfm2png con SystemCommandLine
