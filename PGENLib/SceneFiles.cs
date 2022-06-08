@@ -275,10 +275,7 @@ namespace PGENLib
             this.SavedToken = null;
         }
 
-        /*public InputStream(MemoryStream memorystream)
-        {
-            throw new NotImplementedException();
-        }*/
+    
 
         /// <summary>
         /// Shift the cursor one position ahead.
@@ -452,7 +449,7 @@ namespace PGENLib
             }
             //At this point we must check what kind of token begins with the "ch" character (which has been
             //put back in the stream with self.unread_char). First, we save the position in the stream.
-            SourceLocation tokenLocation = Location.ShallowCopy();
+            //SourceLocation tokenLocation = Location.ShallowCopy();
             char[] SYMB = { '(',')','<','>','[',']', '*' };
             char[] OP = {'+', '-', '.'};
             if (SYMB.Contains(ch))
