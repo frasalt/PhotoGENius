@@ -267,12 +267,12 @@ namespace PGENLib
         /// </summary>
         public InputStream(Stream stream, string fileName = " ", int tabulations = 4)
         {
-            this.Stream = stream;
-            this.Location = new SourceLocation(fileName: fileName, lineNum: 1, colNum: 1);
-            this.SavedChar = '\0';
-            this.SavedLocation = this.Location;
-            this.Tabulations = tabulations;
-            this.SavedToken = null;
+            Stream = stream;
+            Location = new SourceLocation(fileName: fileName, lineNum: 1, colNum: 1);
+            SavedChar = '\0';
+            SavedLocation = Location;
+            Tabulations = tabulations;
+            SavedToken = null;
         }
 
     
@@ -432,20 +432,20 @@ namespace PGENLib
 
         public Token ReadToken()
         {
-            if (this.SavedToken!= null)
+            if (SavedToken!= null)
             {
-                Token result = this.SavedToken;
-                this.SavedToken = null;
+                Token result = SavedToken;
+                SavedToken = null;
                 return result;
             }
-            this.SkipWhitespacesAndComments();
+            SkipWhitespacesAndComments();
             
             // Now ch does *not* contain a whitespace character.
-            char ch = this.ReadChar();
+            char ch = ReadChar();
             if (ch == '\0')
             {
                 // No more characters in the file, so return a StopToken
-                return new StopToken(this.Location);
+                return new StopToken(Location);
             }
             //At this point we must check what kind of token begins with the "ch" character (which has been
             //put back in the stream with self.unread_char). First, we save the position in the stream.
@@ -454,27 +454,27 @@ namespace PGENLib
             char[] OP = {'+', '-', '.'};
             if (SYMB.Contains(ch))
             {
-                return new SymbolToken(this.Location, ch.ToString());
+                return new SymbolToken(Location, ch.ToString());
             }
             else if (ch == '"')
             {
                 // A literal string (used for file names)
-                return this.ParseStringToken(this.Location);
+                return ParseStringToken(Location);
             }
             else if (Char.IsDigit(ch)|| OP.Contains(ch))
             {
                 // A floating-point number
-                return this.ParseFloatToken(ch.ToString(), this.Location);
+                return ParseFloatToken(ch.ToString(), Location);
             }
             else if (Char.IsLetter(ch) || ch == '_')
             {
                 // Since it begins with an alphabetic character, it must either be a keyword or a identifier
-                return this.ParseKeywordOrIdentifierToken(ch, this.Location);
+                return ParseKeywordOrIdentifierToken(ch, Location);
             }
             else
             {
                 // We got some weird character, like '@` or `&`
-                throw new GrammarErrorException("Invalid character {ch}", this.Location);
+                throw new GrammarErrorException("Invalid character {ch}", Location);
             }
 
         } 

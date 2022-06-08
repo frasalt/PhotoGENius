@@ -17,11 +17,12 @@ namespace PGENLib.Tests
         [Fact]
         public void TestInputFile()
         {
-            //creo lo stream partendo dai byte
-            byte[] Array = Encoding.ASCII.GetBytes("abc   \nd\nef");
-            MemoryStream memorystream = new MemoryStream(Array);
+            //Create the stream starting from bytes
+            byte[] array = Encoding.ASCII.GetBytes("abc   \nd\nef");
+            MemoryStream memorystream = new MemoryStream(array);
             InputStream stream = new InputStream(memorystream);
 
+            //Check if all the functions work
             Assert.True(stream.Location.LineNum == 1);
             Assert.True(stream.Location.ColNum == 1);
             
@@ -67,6 +68,7 @@ namespace PGENLib.Tests
 
         }
         
+        //Define some Assert funcions.
         private void AssertIsKeyword(Token token, KeywordList keyword)
         {
             Assert.True(token is KeywordToken);
@@ -86,7 +88,7 @@ namespace PGENLib.Tests
         private void AssertIsNumber(Token token, float number)
         {
             Assert.True(token is LiteralNumberToken);
-            Assert.True(((LiteralNumberToken)token).Value == number);
+            Assert.True(Math.Abs(((LiteralNumberToken)token).Value - number) < 10E-5);
         }
         
         private void AssertIsString(Token token, string frase)
@@ -101,19 +103,19 @@ namespace PGENLib.Tests
             //la @ serve per una stringa letterale complessa
             
             string test = @" 
-                # This is a comment
+                # This is a comment 
                 # This is another comment
                 new material sky_material(
                  diffuse(image(""my file.pfm"")),
                  <5.0, 500.0, 300.0 >
                 ) # Comment at the end of the line";
-            byte[] Array = Encoding.ASCII.GetBytes(test);
-            MemoryStream memorystream = new MemoryStream(Array);
+            byte[] array = Encoding.ASCII.GetBytes(test);
+            MemoryStream memorystream = new MemoryStream(array);
             InputStream stream = new InputStream(memorystream);
-            
-            
-            //AssertIsKeyword(stream.ReadToken(), KeywordList.New);
             AssertIsKeyword(stream.ReadToken(), KeywordList.Material);
+
+            //AssertIsKeyword(stream.ReadToken(), KeywordList.New);
+            //AssertIsKeyword(stream.ReadToken(), KeywordList.Material);
             //AssertIsIdentifier(InputStream.ReadToken(), "sky_material");
 
         }
