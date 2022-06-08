@@ -261,15 +261,8 @@ namespace PGENLib
         /// Shoot several light rays crossing each of the pixels in the image. For each pixel of the `HdrImage`
         /// object, fire one ray and pass it to the function `func`, which must accept a `Ray` as its only
         /// parameter and must return a `Color` object, representing the color to assign to that pixel in the image.
-        /// If `callback` is not none, it must be a function accepting at least two parameters named `col` and `row`.
-        /// This function is called periodically during the rendering, and the two mandatory arguments are the row and
-        /// column number of the last pixel that has been traced. (Both the row and column are increased by one starting
-        /// from zero: first the row and then the column.) The time between two consecutive calls to the callback can be
-        /// tuned using the parameter `callback_time_s`. Any keyword argument passed to `fire_all_rays` is passed to
-        /// the callback.
         /// </summary>
         /// <param name="func"></param>
-        /// <param name="???"></param>
         
         public void FireAllRays (Func<Ray,Color> func)
         {
