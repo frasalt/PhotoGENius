@@ -275,9 +275,9 @@ namespace PGENLib
         {
             for(int row = 0; row< Image.Height; row ++)
             {
+                if(row%20 == 0) Console.WriteLine($"        Fill row {row}/{Image.Height}");
                 for(int col = 0; col< Image.Width; col ++)
                 {
-                    //if(row%20 == 0) Console.WriteLine($"        Fill row {row}/{Image.Height}");
                     var cumColor = new Color(); //Black
                     if (SamplePerSide > 0)
                     {
