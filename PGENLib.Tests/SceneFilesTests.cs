@@ -110,8 +110,8 @@ namespace PGENLib.Tests
                  <5.0, 500.0, 300.0 >
                 ) # Comment at the end of the line";
             byte[] array = Encoding.ASCII.GetBytes(test);
-            MemoryStream memorystream = new MemoryStream(array);
-            InputStream stream = new InputStream(memorystream);
+            MemoryStream memoryStream = new MemoryStream(array);
+            InputStream stream = new InputStream(memoryStream);
             AssertIsKeyword(stream.ReadToken(), KeywordList.Material);
 
             //AssertIsKeyword(stream.ReadToken(), KeywordList.New);
