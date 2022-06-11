@@ -108,15 +108,12 @@ namespace PGENLib.Tests
                 _tracer = new ImageTracer(_image, _camera);
             }
 
-            /*
+            
             [Fact]
             public void test_orientation()
             {
                 // Fire a ray against top-left corner of the screen
-<<<<<<< HEAD
-=======
 
->>>>>>> 33b6579c24f5eba16bae7305c620547b24c9ebe1
                 Ray topLeftRay = _tracer.FireRay(0, 0, 0.0f, 0.0f);
                 Point point = new Point(0.0f, 2.0f, 1.0f);
                 Point rayPoint = topLeftRay.At(1.0f);
@@ -128,7 +125,7 @@ namespace PGENLib.Tests
                 rayPoint = bottomRightRay.At(1.0f);
                 Assert.True(Point.are_close(point,rayPoint)); 
             }
-            */
+            
 
             [Fact]
             public void test_uv_submapping() 

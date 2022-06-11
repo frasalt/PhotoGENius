@@ -177,15 +177,17 @@
                     new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
                 
-                // sphere in the middle
-                //world.AddShape(
-                //    new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial)
-                //);
+                //sphere in the middle
+                world.AddShape(
+                    new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial)
+                );
                 
-                // sphere aside
+                //sphere aside
                 world.AddShape(
                     new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
+                
+                /*
                 //---------------------------
                 //tree
                 //cilinder in the middle
@@ -198,13 +200,18 @@
                     new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
                     );
                 //----------------------------
-                // sphere in the middle
-                //world.AddShape(
-                //    new Sphere(Transformation.Traslation(new Vec(0f, -2.5f, 1f)),sphereMaterial)
-                //);
+                */
+                
                 
                 /*
-
+                //---------------------------
+                //cube with spheres
+                //---------------------------
+                // sphere in the middle
+                world.AddShape(
+                    new Sphere(Transformation.Traslation(new Vec(0f, -2.5f, 1f)),sphereMaterial)
+                );
+                
                 //   sphere in vertices
                 var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
                 Transformation transformation;
@@ -241,7 +248,7 @@
 
                 transformation = Transformation.Traslation(new Vec(0.0f, 0.5f, 0.0f));
                 world.AddShape(new Sphere(transformation * scaling, redMaterial));
-
+                //---------------------------
                 */
                 
                 // 2.Camera initialization
@@ -275,11 +282,8 @@
                 {
                     Console.WriteLine("    Using on/off renderer");
                     var renderer = new OnOffRenderer(world);
-                    // >>> PROFILING
-                    // https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/performance-counters
-                    // https://www.speedscope.app/ << online app for output visualization
                     tracer.FireAllRays(renderer.Call);
-                    // >>>
+                    
                 }
                 else if(algorithmValue == "flat")
                 {
