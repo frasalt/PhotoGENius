@@ -242,14 +242,16 @@ namespace PGENLib
     public class Scene // perchè partial?
     {
         public Dictionary<string, Material> Materials = new Dictionary<string, Material>();
+        
         public World world;
 
-        public OrthogonalCamera camera; // che tipo di camera?
-
+        public OrthogonalCamera camera; // ma che tipo di camera? come uso l'equivalente di Union?
         //public PerspectiveCamera camera; // ?
+        
         public Dictionary<string, float> FloatVariables = new Dictionary<string, float>();
 
-        public DataSet OverriddenVariables = new DataSet();
+        //public DataSet<string> OverriddenVariables = new DataSet<string>(); // come faccio a indicare che devono essere stringhe?
+        public DataSet OverriddenVariables = new DataSet(); // come faccio a indicare che devono essere stringhe?
         //public DataTable overridden_variables = new DataTable();
         //overridden_variables.DataType = string;
     }
@@ -448,8 +450,8 @@ namespace PGENLib
             }
 
         }
-        
-        
+
+
         public Token ReadToken()
         {
             if (this.SavedToken != null)
@@ -501,16 +503,17 @@ namespace PGENLib
 
         }
 
-        /// <summary>
-        /// Read a token from `input_file` and check that it matches `symbol`.
+    }
+
+    /// <summary>
+        /// Read a token from `inputFile` and check that it matches `symbol`.
         /// </summary>
         /// <param name="inputFile"></param>
         /// <param name="symbol"></param>
         public void expect_symbol(InputStream inputFile, string symbol)
         {
             Token token = inputFile.ReadToken();
-            SymbolToken
-                symbtoken = new SymbolToken(token.Location, "symbtok"); // riga per poter fare il confronto sotto
+            SymbolToken symbtoken = new SymbolToken(token.Location, "symbtok"); // riga per poter fare il confronto sotto
             if (!token.GetType().IsInstanceOfType(symbtoken) || token.ToString() != symbol)
             {
                 throw new GrammarErrorException($"Got '{token}' instead of '{symbol}'", token.Location);
@@ -519,21 +522,25 @@ namespace PGENLib
         
         /// <summary>
         /// Read a token from `input_file` and check that it is one of the keywords in `keywords`.
-        /// Return the keyword as a :class:`.KeywordEnum` object.
+        /// Return the keyword as a class :class:'.KeywordList` object.
         /// </summary>
-        /// <param name="???"></param>
+        /// <param name="input_file"></param>
+        /// <param name="keywords"></param>
         /// <returns></returns>
-        public KeywordList expect_keywords(InputStream input_file, KeywordList keywords)
+        public KeywordList expect_keywords(InputStream input_file, List<KeywordList> keywords)
         {
             Token token = input_file.ReadToken();
-            KeywordToken
-                keytoken = new KeywordToken(token.Location, keywords); // riga per poter fare il confronto sotto
-            if (!token.GetType().IsInstanceOfType(keytoken))
+            //KeywordToken keytoken = new KeywordToken(token.Location, keywords); // riga per poter fare il confronto sotto
+            // if token is NOT of type keyword, throw error (else go on ...)
+            Type type = token.GetType();
+            if (type != typeof(KeywordToken))
             {
-                throw new GrammarErrorException($"expected a keyword instead of '{token}'", token.Location);
+                throw new GrammarErrorException($"Expected a keyword instead of '{token}'", token.Location);
             }
 
-            if (!Enum.IsDefined(typeof(KeywordList), token.Keyword)) // sarà giusto?
+            //(... go on) if the keyword associated to token [>>> how do i get this damn kw?!?! <<<] is NOT in the list, throw error ...
+            //if (!Enum.IsDefined(typeof(keywords), token.Keyword))
+            if (!keywords.Contains(token.Keyword)) 
             {
                 string str = "";
                 foreach (string i in Enum.GetValues(typeof(KeywordList)))
@@ -545,6 +552,7 @@ namespace PGENLib
                     $"expected one of the keywords" + str + "instead of '{token}'", token.Location);
             }
 
+            //... else return the keyword!
             return token.Keyword;
         }
     }
