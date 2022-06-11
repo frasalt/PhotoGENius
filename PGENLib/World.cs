@@ -27,7 +27,7 @@ namespace PGENLib
                 HitRecord? intersection;
                 intersection = Shapes[i].RayIntersection(intRay);
                 if (intersection == null) continue;
-                if (closest == null || (float)closest?.t > (float)intersection?.t)
+                if (closest == null || closest.Value.t > intersection.Value.t)
                 {
                     closest = intersection;
                 }

@@ -21,6 +21,7 @@
     using System.Text;
     using PGENLib;
     using Color = PGENLib.Color;
+    using System.Diagnostics;
 
 
     namespace PhotoGENius; 
@@ -33,7 +34,7 @@
         static async Task<int> Main(string[] args)
         {
             //==============================================================================================================
-            //Demo con SystemCommandLine
+            //Demo 
             //==============================================================================================================
 
             var width = new Option<int>(
@@ -129,9 +130,10 @@
             rootCommand.AddCommand(demo);
             
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
-                string pngOutputValue, string cameraType, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
+                string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
                 ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
                 { 
+                    
                     var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
                     
                     if (Math.Abs(Math.Pow(samplePerSide, 2.0f) - samplePerPixelValue) > 10E-5)
@@ -250,7 +252,7 @@
                 float aspectRatio = (float) widthValue / heightValue;
 
                 ICamera camera;
-                if (cameraType == "perspective")
+                if (cameraTypeValue == "perspective")
                 {
                     camera = new PerspectiveCamera(1.0f, aspectRatio, rotation * transformation);
                 }

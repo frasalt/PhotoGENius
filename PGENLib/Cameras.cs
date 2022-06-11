@@ -80,7 +80,7 @@ namespace PGENLib
 
         public Ray Transform(Transformation tr)
         {
-            var newRay = new Ray(tr*this.Origin, tr*this.Dir)
+            var newRay = new Ray(tr*Origin, tr*Dir)
             {
                 Tmax = this.Tmax,
                 Tmin = this.Tmin,
