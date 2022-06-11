@@ -23,7 +23,8 @@ using System.IO;
 using System.Linq;
 using System.Globalization;
 using System.Collections.Generic;
-
+using System.Data;
+using static System.Data.DataSet;
 
 namespace PGENLib
 {
@@ -272,6 +273,27 @@ namespace PGENLib
     }
     
     /// <summary>
+    /// A scene read from a scene file
+    /// </summary>
+    public class Scene // perchè partial?
+    {
+        public Dictionary<string, Material> Materials = new Dictionary<string, Material>();
+        
+        public World world;
+
+        public OrthogonalCamera camera; // ma che tipo di camera? come uso l'equivalente di Union?
+        //public PerspectiveCamera camera; // ?
+        
+        public Dictionary<string, float> FloatVariables = new Dictionary<string, float>();
+
+        //public DataSet<string> OverriddenVariables = new DataSet<string>(); // come faccio a indicare che devono essere stringhe?
+        public DataSet OverriddenVariables = new DataSet(); // come faccio a indicare che devono essere stringhe?
+        //public DataTable overridden_variables = new DataTable();
+        //overridden_variables.DataType = string;
+    }
+
+
+    /// <summary>
     /// A high-level wrapper around a stream, used to parse scene files.
     /// This class implements a wrapper around a stream, with the following additional capabilities:
     /// <list type="number" >
@@ -491,7 +513,7 @@ namespace PGENLib
             }
 
         }
-
+        
         public Token ReadToken()
         {
             if (SavedToken!= null)
@@ -539,8 +561,60 @@ namespace PGENLib
                 throw new GrammarErrorException("Invalid character {ch}", Location);
             }
 
-        } 
+        }
+
+    
+
+    /// <summary>
+        /// Read a token from `inputFile` and check that it matches `symbol`.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="symbol"></param>
+        public void expect_symbol(InputStream inputFile, string symbol)
+        {
+            Token token = inputFile.ReadToken();
+            SymbolToken symbtoken = new SymbolToken(token.Location, "symbtok"); // riga per poter fare il confronto sotto
+            if (!token.GetType().IsInstanceOfType(symbtoken) || token.ToString() != symbol)
+            {
+                throw new GrammarErrorException($"Got '{token}' instead of '{symbol}'", token.Location);
+            }
+        }
         
+        /// <summary>
+        /// Read a token from `input_file` and check that it is one of the keywords in `keywords`.
+        /// Return the keyword as a class :class:'.KeywordList` object.
+        /// </summary>
+        /// <param name="input_file"></param>
+        /// <param name="keywords"></param>
+        /// <returns></returns>
+        public KeywordList expect_keywords(InputStream input_file, List<KeywordList> keywords)
+        {
+            Token token = input_file.ReadToken();
+            //KeywordToken keytoken = new KeywordToken(token.Location, keywords); // riga per poter fare il confronto sotto
+            // if token is NOT of type keyword, throw error (else go on ...)
+            Type type = token.GetType();
+            if (type != typeof(KeywordToken))
+            {
+                throw new GrammarErrorException($"Expected a keyword instead of '{token}'", token.Location);
+            }
+
+            //(... go on) if the keyword associated to token [>>> how do i get this damn kw?!?! <<<] is NOT in the list, throw error ...
+            //if (!Enum.IsDefined(typeof(keywords), token.Keyword))
+            if (!keywords.Contains(token.Keyword)) 
+            {
+                string str = "";
+                foreach (string i in Enum.GetValues(typeof(KeywordList)))
+                {
+                    str += i;
+                }
+
+                throw new GrammarErrorException(
+                    $"expected one of the keywords" + str + "instead of '{token}'", token.Location);
+            }
+
+            //... else return the keyword!
+            return token.Keyword;
+        } 
     }
 
 }
