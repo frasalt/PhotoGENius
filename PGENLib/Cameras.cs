@@ -215,7 +215,7 @@ namespace PGENLib
         /// <param name="camera"></param>
         /// <param name="pcg"></param>
         /// <param name="samplePerSide"></param>
-        public ImageTracer(HdrImage image, ICamera camera, PCG pcg, int samplePerSide = 0)
+        public ImageTracer(HdrImage image, ICamera camera, PCG pcg, int samplePerSide = 1)
         {
             Image = image;
             Camera = camera;
@@ -231,7 +231,7 @@ namespace PGENLib
         /// <param name="image"></param>
         /// <param name="camera"></param>
         /// <param name="samplePerSide"></param>
-        public ImageTracer(HdrImage image, ICamera camera, int samplePerSide = 0)
+        public ImageTracer(HdrImage image, ICamera camera, int samplePerSide = 1)
         {
             Image = image;
             Camera = camera;
@@ -271,6 +271,7 @@ namespace PGENLib
                 for(int col = 0; col< Image.Width; col ++)
                 {
                     var cumColor = new Color(); //Black
+                    
                     if (SamplePerSide > 0)
                     {
                         // Run stratified sampling over the pixel's surface.
@@ -287,6 +288,7 @@ namespace PGENLib
                             }
                         }
                     }
+                    
                     
                     
                 }
