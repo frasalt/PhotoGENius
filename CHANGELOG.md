@@ -1,5 +1,7 @@
 # HEAD
 
+//Controllare vecchi pull request e aggiornare il changelog
+
 # 11-06-2022
 - Implemented antialiasing to improve images quality.
 
