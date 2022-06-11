@@ -160,8 +160,36 @@ namespace PGENLib.Tests
                 return new Color(1.0f, 2.0f, 3.0f);
             }
         }
-
-
-
+        
     }
+
+    public class TestAntialiasing
+    {
+        int numOfRays = 0;
+        private Ray ray = new Ray();
+        [Fact]
+        public void AntialiasTest()
+        {
+            var smallImg = new HdrImage(1, 1);
+            var camera = new OrthogonalCamera();
+            var tracer = new ImageTracer(smallImg, camera, 10);
+            
+            tracer.FireAllRays(TraceRay);
+
+            //Check that the number of rays that were fired is what we expect (10²)
+            Assert.True(numOfRays==100);
+        }
+        Color TraceRay(Ray r)
+        {
+            var point = ray.At(1);
+            //Check that all the rays intersect the screen within the region [−1, 1] × [−1, 1]
+            Assert.True(Math.Abs(point.x-0.0f) < 10E-5);
+            Assert.True(point.y is >= -1.0f and <= 1.0f);
+            Assert.True(point.z is >= -1.0f and <= 1.0f);
+            numOfRays += 1;
+            return new Color();
+        }
+        
+    }
+    
 }
