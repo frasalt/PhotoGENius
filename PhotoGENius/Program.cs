@@ -153,7 +153,7 @@
                 var skyMaterial = new Material(
                     //new UniformPigment(new Color(1.0f, 0.9f, 0.5f)),
                     new UniformPigment(new Color(2*1f, 2*0.9f, 2*0.5f)),
-                    new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
+                    new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 1f)))
                     );
                 var groundMaterial = new Material(
                     new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), new Color(0.1f, 0.2f, 0.5f)))
@@ -177,16 +177,15 @@
                     new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
                 
-
                 //sphere in the middle
                 world.AddShape(
-                    new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial)
+                    new Sphere(Transformation.Scaling(new Vec(1.3f,1.3f,0.7f))*Transformation.Traslation(new Vec(0f, 0f, 0.7f)),sphereMaterial)
                 );
                 
                 //sphere aside
-                world.AddShape(
+                /*world.AddShape(
                     new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
-                );
+                );*/
                 
                 /*
                 //---------------------------
@@ -201,6 +200,7 @@
                     new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
                     );
                 //----------------------------
+                */
 
                 
                 /*
@@ -254,7 +254,7 @@
                 // 2.Camera initialization
                 Console.WriteLine("Initializing camera...");
 
-                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.5f));
+                Transformation transformation = Transformation.Traslation(new Vec(-3.0f, 1.0f, 1.5f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
 
@@ -263,9 +263,13 @@
                 {
                     camera = new PerspectiveCamera(1.0f, aspectRatio, rotation * transformation);
                 }
-                else
+                else if(cameraTypeValue == "orthogonal")
                 {
                     camera = new OrthogonalCamera(aspectRatio, rotation * transformation);
+                }
+                else
+                {
+                    throw new Exception("Invalid camera option: use orthogonal, or perspective");
                 }
 
                 // 3.(ruotare l'osservatore)
