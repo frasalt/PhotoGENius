@@ -177,6 +177,7 @@
                     new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
                 
+
                 //sphere in the middle
                 world.AddShape(
                     new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial)
@@ -200,8 +201,7 @@
                     new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
                     );
                 //----------------------------
-                */
-                
+
                 
                 /*
                 //---------------------------
@@ -282,6 +282,7 @@
                 {
                     Console.WriteLine("    Using on/off renderer");
                     var renderer = new OnOffRenderer(world);
+
                     tracer.FireAllRays(renderer.Call);
                     
                 }
