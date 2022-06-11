@@ -1,5 +1,8 @@
 # HEAD
 
+# 11-06-2022
+- Implemented antialiasing to improve images quality.
+
 # Version 0.2.0
 - **Breaking change**: implement *demo* and *pfm2png* commands and implement easy CL interfece to use them.
 
