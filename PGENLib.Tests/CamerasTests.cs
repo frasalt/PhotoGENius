@@ -139,7 +139,7 @@ namespace PGENLib.Tests
             public void test_image_coverage()
             {
                 _tracer.FireAllRays(lambda);
-
+                
                 Color mycolor = new Color(1.0f, 2.0f, 3.0f);
                 Color mypixel;
                 for (int row = 0; row < _image.Height; row++)
