@@ -8,19 +8,23 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
-but WITHOUT     ANY WARRANTY; without even the implied warranty of
+but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 using System.Diagnostics;
 using System.Net.Mail;
-using System.Data;
 using System.Text.RegularExpressions;
-
+using System;
+using System.IO;
+using System.Linq;
+using System.Globalization;
+using System.Collections.Generic;
+using System.Data;
+using static System.Data.DataSet;
 
 namespace PGENLib
 {
@@ -54,7 +58,7 @@ namespace PGENLib
         /// <returns></returns>
         public SourceLocation ShallowCopy()
         {
-            return (SourceLocation)this.MemberwiseClone();
+            return (SourceLocation) this.MemberwiseClone();
         }
 
         /// <summary>
@@ -67,6 +71,8 @@ namespace PGENLib
         }
 
     }
+
+
 
     /// <summary>
     /// A lexical token, used when parsing a scene file
@@ -132,27 +138,27 @@ namespace PGENLib
         public static Dictionary<string, KeywordList> dictionary = new Dictionary<string, KeywordList>()
         {
 
-            { "new", KeywordList.New },
-            { "material", KeywordList.Material },
-            { "plane", KeywordList.Plane },
-            { "sphere", KeywordList.Sphere },
+            {"new", KeywordList.New},
+            {"material", KeywordList.Material},
+            {"plane", KeywordList.Plane},
+            {"sphere", KeywordList.Sphere},
             //{  "cylinder" , Keyword.Cylinder},
-            { "diffuse", KeywordList.Diffuse },
-            { "specular", KeywordList.Specular },
-            { "uniform", KeywordList.Uniform },
-            { "checkered", KeywordList.Checkered },
-            { "image", KeywordList.Image },
-            { "identity", KeywordList.Identity },
-            { "translation", KeywordList.Translation },
-            { "rotation_x", KeywordList.RotationX },
-            { "rotation_y", KeywordList.RotationY },
-            { "rotation_z", KeywordList.RotationZ },
-            { "scaling", KeywordList.Scaling },
-            { "camera", KeywordList.Camera },
-            { "orthogonal", KeywordList.Orthogonal },
-            { "perspective", KeywordList.Perspective },
-            { "float", KeywordList.Float },
-            { "pointlight", KeywordList.Pointlight }
+            {"diffuse", KeywordList.Diffuse},
+            {"specular", KeywordList.Specular},
+            {"uniform", KeywordList.Uniform},
+            {"checkered", KeywordList.Checkered},
+            {"image", KeywordList.Image},
+            {"identity", KeywordList.Identity},
+            {"translation", KeywordList.Translation},
+            {"rotation_x", KeywordList.RotationX},
+            {"rotation_y", KeywordList.RotationY},
+            {"rotation_z", KeywordList.RotationZ},
+            {"scaling", KeywordList.Scaling},
+            {"camera", KeywordList.Camera},
+            {"orthogonal", KeywordList.Orthogonal},
+            {"perspective", KeywordList.Perspective},
+            {"float", KeywordList.Float},
+            {"pointlight", KeywordList.Pointlight}
         };
 
         public override string ToString()
@@ -279,31 +285,27 @@ namespace PGENLib
         /// <summary>
         /// Basic contructor for the class.
         /// </summary>
-        public InputStream(Stream stream, SourceLocation location, char savedChar, SourceLocation savedLocation,
-            int tabulations, Token? savedToken)
+        public InputStream(Stream stream, string fileName = " ", int tabulations = 4)
         {
             Stream = stream;
-            Location = location;
-            SavedChar = savedChar;
-            SavedLocation = savedLocation;
+            Location = new SourceLocation(fileName: fileName, lineNum: 1, colNum: 1);
+            SavedChar = '\0';
+            SavedLocation = Location;
             Tabulations = tabulations;
-            SavedToken = savedToken;
+            SavedToken = null;
         }
 
-        public InputStream(MemoryStream memorystream)
-        {
-            throw new NotImplementedException();
-        }
+    
 
         /// <summary>
         /// Shift the cursor one position ahead.
         /// </summary>
         private void UpdatePosition(char ch)
-        {
+        { 
             if (ch == '\0')
                 return;
             else if (ch == '\n')
-            {
+            { 
                 Location.LineNum += 1;
                 Location.ColNum = 1;
             }
@@ -320,8 +322,8 @@ namespace PGENLib
         {
             char ch;
             if (SavedChar != '\0')
-            {
-                ch = SavedChar;
+            { 
+                ch = SavedChar; 
                 SavedChar = '\0';
             }
             else
@@ -343,7 +345,7 @@ namespace PGENLib
         /// </summary>
         public void UnreadChar(char ch)
         {
-            Debug.Assert(SavedChar == ' ');
+            //Debug.Assert(SavedChar == ' ');
             SavedChar = ch;
             Location = SavedLocation;
         }
@@ -353,7 +355,7 @@ namespace PGENLib
         /// </summary>
         public void SkipWhitespacesAndComments()
         {
-            char ch = ReadChar();
+            char ch = this.ReadChar();
             while (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == '#')
             {
                 if (ch == '#')
@@ -364,16 +366,15 @@ namespace PGENLib
                         continue;
                     }
                 }
-
-                ch = ReadChar();
-                if (ch == ' ')
+                ch = this.ReadChar();
+                if (ch == '\0')
                 {
                     return;
                 }
             }
-
             //Put the non-whitespace character back
             UnreadChar(ch);
+            return;
         }
 
         public StringToken ParseStringToken(SourceLocation tokenLocation)
@@ -388,10 +389,10 @@ namespace PGENLib
                 {
                     throw new GrammarErrorException("Unterminated string", tokenLocation);
                 }
-
+            
                 token += ch;
             }
-
+            
             return new StringToken(tokenLocation, token);
         }
 
@@ -408,10 +409,9 @@ namespace PGENLib
                     UnreadChar(ch);
                     break;
                 }
-
                 token += ch;
             }
-
+            
             try
             {
                 value = float.Parse(token);
@@ -423,7 +423,7 @@ namespace PGENLib
 
             return new LiteralNumberToken(tokenLocation, value);
         }
-
+        
         private Token ParseKeywordOrIdentifierToken(char firstChar, SourceLocation tokenLocation)
         {
             string token = firstChar.ToString();
@@ -436,7 +436,6 @@ namespace PGENLib
                     this.UnreadChar(ch);
                     break;
                 }
-
                 token += ch;
             }
 
@@ -450,60 +449,57 @@ namespace PGENLib
             }
 
         }
-
-
+        
         public Token ReadToken()
         {
-            if (this.SavedToken != null)
+            if (SavedToken!= null)
             {
-                Token result = this.SavedToken;
-                this.SavedToken = null;
+                Token result = SavedToken;
+                SavedToken = null;
                 return result;
             }
-
-            this.SkipWhitespacesAndComments();
-
+            SkipWhitespacesAndComments();
+            
             // Now ch does *not* contain a whitespace character.
-            char ch = this.ReadChar();
-            if (ch == ' ')
+            char ch = ReadChar();
+            if (ch == '\0')
             {
                 // No more characters in the file, so return a StopToken
-                return new StopToken(this.Location);
+                return new StopToken(Location);
             }
-
             //At this point we must check what kind of token begins with the "ch" character (which has been
             //put back in the stream with self.unread_char). First, we save the position in the stream.
-            SourceLocation tokenLocation = Location.ShallowCopy();
-            char[] SYMB = { '(', ')', '<', '>', '[', ']', '*' };
-            char[] OP = { '+', '-', '.' };
+            //SourceLocation tokenLocation = Location.ShallowCopy();
+            char[] SYMB = { '(',')','<','>','[',']', '*' };
+            char[] OP = {'+', '-', '.'};
             if (SYMB.Contains(ch))
             {
-                return new SymbolToken(tokenLocation, ch.ToString());
+                return new SymbolToken(Location, ch.ToString());
             }
             else if (ch == '"')
             {
                 // A literal string (used for file names)
-                return this.ParseStringToken(tokenLocation = tokenLocation);
+                return ParseStringToken(Location);
             }
-            else if (Char.IsDigit(ch) || OP.Contains(ch))
+            else if (Char.IsDigit(ch)|| OP.Contains(ch))
             {
                 // A floating-point number
-                return this.ParseFloatToken(ch.ToString(), tokenLocation);
+                return ParseFloatToken(ch.ToString(), Location);
             }
             else if (Char.IsLetter(ch) || ch == '_')
             {
                 // Since it begins with an alphabetic character, it must either be a keyword or a identifier
-                return this.ParseKeywordOrIdentifierToken(ch, tokenLocation);
+                return ParseKeywordOrIdentifierToken(ch, Location);
             }
             else
             {
                 // We got some weird character, like '@` or `&`
-                throw new GrammarErrorException("Invalid character {ch}", this.Location);
+                throw new GrammarErrorException("Invalid character {ch}", Location);
             }
 
         }
 
-    }
+    
 
     /// <summary>
         /// Read a token from `inputFile` and check that it matches `symbol`.
@@ -554,66 +550,10 @@ namespace PGENLib
 
             //... else return the keyword!
             return token.Keyword;
-        }
+        } 
     }
+
 }
-
-
-/*
-def expect_number(input_file: InputStream, scene: Scene) -> float:
-    """Read a token from `input_file` and check that it is either a literal number or a variable in `scene`.
-    Return the number as a ``float``."""
-    token = input_file.read_token()
-    if isinstance(token, LiteralNumberToken):
-        return token.value
-    elif isinstance(token, IdentifierToken):
-        variable_name = token.identifier
-        if variable_name not in scene.float_variables:
-            raise GrammarError(token.location, f"unknown variable '{token}'")
-        return scene.float_variables[variable_name]
-
-    raise GrammarError(token.location, f"got '{token}' instead of a number")
-
-
-def expect_string(input_file: InputStream) -> str:
-    """Read a token from `input_file` and check that it is a literal string.
-    Return the value of the string (a ``str``)."""
-    token = input_file.read_token()
-    if not isinstance(token, StringToken):
-        raise GrammarError(token.location, f"got '{token}' instead of a string")
-
-    return token.string
-
-
-def expect_identifier(input_file: InputStream) -> str:
-    """Read a token from `input_file` and check that it is an identifier.
-    Return the name of the identifier."""
-    token = input_file.read_token()
-    if not isinstance(token, IdentifierToken):
-        raise GrammarError(token.location, f"got '{token}' instead of an identifier")
-
-    return token.identifier
-        */
-
-/*
-Note: modificare world in modo che contenga una lista ad esempio di materiali (ora sono embedded dentro le shapes), 
-in modo che siano modificabili direttmente dal parser. In realtà in putracer non fa così, ma usa una classe
-scene in cui c'è un world ecc, (5).
-
-Overridden_var servono per una funzionalità in più.
-
-(8) meglio metodi
-
-(11) attenzione la 6 è un po più impestata, tanto che ad esempio non è neanche una funzione di InputStream
-
-(14) come nel lexer per unread char
-
-(17) meglio aggiungere che rinominare
-
-(20) sono valide entrambe
-*/
-    
-
 
 
 
