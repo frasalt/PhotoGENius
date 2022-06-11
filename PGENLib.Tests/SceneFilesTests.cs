@@ -22,7 +22,7 @@ namespace PGENLib.Tests
             MemoryStream memorystream = new MemoryStream(array);
             InputStream stream = new InputStream(memorystream);
 
-            //Check if all the functions work
+            //Check if all functions work
             Assert.True(stream.Location.LineNum == 1);
             Assert.True(stream.Location.ColNum == 1);
             
@@ -107,7 +107,7 @@ namespace PGENLib.Tests
                 # This is another comment
                 new material sky_material(
                  diffuse(image(""my file.pfm"")),
-                 <5.0, 500.0, 300.0 >
+                 < 5.0, 500.0, 300.0 >
                 ) # Comment at the end of the line";
             byte[] array = Encoding.ASCII.GetBytes(test);
             MemoryStream memoryStream = new MemoryStream(array);
