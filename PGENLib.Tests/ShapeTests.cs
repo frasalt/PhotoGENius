@@ -128,6 +128,13 @@ namespace PGENLib.Tests
             Assert.True(sphere.RayIntersection(new Ray(new Point(0f, 0f, 2f), -Vz)) == null);
             Assert.True(sphere.RayIntersection(new Ray(new Point(-10f, 0f, 0f), -Vz)) == null);
         }
+
+        [Fact]
+        public void CilinderTests()
+        {
+            
+        }
+        
         
     }
 

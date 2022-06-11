@@ -21,6 +21,7 @@
     using System.Text;
     using PGENLib;
     using Color = PGENLib.Color;
+    using System.Diagnostics;
 
 
     namespace PhotoGENius; 
@@ -33,7 +34,7 @@
         static async Task<int> Main(string[] args)
         {
             //==============================================================================================================
-            //Demo con SystemCommandLine
+            //Demo 
             //==============================================================================================================
 
             var width = new Option<int>(
@@ -102,6 +103,11 @@
                 name: "--gamma-fac",
                 description: "Regulates gamma compression of rendered image.",
                 getDefaultValue: () => 1.8f);
+            
+            var samplePerPixel = new Option<int>(
+                name: "--sample-per-pixel",
+                description: "Number of sample per pixel (must be a perfect square).",
+                getDefaultValue: () => 1);
 
             var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
             var demo = new Command("demo", "Create an image.")
@@ -118,15 +124,23 @@
                 initState,
                 initSeq,
                 luminosityFactor,
-                gammaFactor
+                gammaFactor,
+                samplePerPixel
             };
             rootCommand.AddCommand(demo);
             
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
-                string pngOutputValue, string cameraType, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
-                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue) =>
-                {
-
+                string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
+                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
+                { 
+                    
+                    var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
+                    
+                    if (Math.Abs(Math.Pow(samplePerSide, 2.0f) - samplePerPixelValue) > 10E-5)
+                    {
+                        Console.WriteLine("Error: samplePerPixel must be a perfect square");
+                        return;
+                    }
                 // 1.World initialization
 
                 var world = new World();
@@ -162,15 +176,28 @@
                 world.AddShape(
                     new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
+                
                 // sphere in the middle
-                world.AddShape(
-                    new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial)
-                );
+                //world.AddShape(
+                //    new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial)
+                //);
+                
                 // sphere aside
                 world.AddShape(
                     new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
-                
+                //---------------------------
+                //tree
+                //cilinder in the middle
+                world.AddShape(
+                    new Cilinder( Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial,
+                        0.0f, 2.0f, 0.3f)
+                );
+                //Sphere
+                world.AddShape(
+                    new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
+                    );
+                //----------------------------
                 // sphere in the middle
                 //world.AddShape(
                 //    new Sphere(Transformation.Traslation(new Vec(0f, -2.5f, 1f)),sphereMaterial)
@@ -220,12 +247,12 @@
                 // 2.Camera initialization
                 Console.WriteLine("Initializing camera...");
 
-                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.2f));
+                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.5f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
 
                 ICamera camera;
-                if (cameraType == "perspective")
+                if (cameraTypeValue == "perspective")
                 {
                     camera = new PerspectiveCamera(1.0f, aspectRatio, rotation * transformation);
                 }
@@ -242,7 +269,7 @@
                 var image = new HdrImage(widthValue, heightValue);
                 Console.WriteLine($"    Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
 
-                var tracer = new ImageTracer(image, camera);
+                var tracer = new ImageTracer(image, camera, samplePerSide);
                 
                 if (algorithmValue == "onoff")
                 {
@@ -250,6 +277,7 @@
                     var renderer = new OnOffRenderer(world);
                     // >>> PROFILING
                     // https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/performance-counters
+                    // https://www.speedscope.app/ << online app for output visualization
                     tracer.FireAllRays(renderer.Call);
                     // >>>
                 }
@@ -320,7 +348,7 @@
                     
                 },
                 width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
-                initState, initSeq, luminosityFactor, gammaFactor );
+                initState, initSeq, luminosityFactor, gammaFactor, samplePerPixel);
             
             //==============================================================================================================
             //Pfm2png con SystemCommandLine
