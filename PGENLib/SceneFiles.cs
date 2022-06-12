@@ -17,7 +17,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
-using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System;
@@ -28,6 +27,7 @@ using System.Collections.Generic;
 using static System.Data.DataSet;
 */
 using System.Data;
+using System.Diagnostics;
 
 
 namespace PGENLib
@@ -42,6 +42,12 @@ namespace PGENLib
         public int LineNum;
         public int ColNum;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="lineNum"></param>
+        /// <param name="colNum"></param>
         public SourceLocation(string fileName, int lineNum = 0, int colNum = 0)
         {
             FileName = fileName;
@@ -49,6 +55,11 @@ namespace PGENLib
             ColNum = colNum;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="lineNum"></param>
+        /// <param name="colNum"></param>
         public SourceLocation(int lineNum = 0, int colNum = 0)
         {
             FileName = new string("");
@@ -75,7 +86,7 @@ namespace PGENLib
         }
 
     }
-
+    
     /// <summary>
     /// A lexical token, used when parsing a scene file
     /// </summary>
@@ -83,12 +94,17 @@ namespace PGENLib
     {
         public SourceLocation Location;
 
+        /// <summary>
+        /// Constructor, with a `SourceLocation` object as input parameter
+        /// </summary>
+        /// <param name="location"></param>
         public Token(SourceLocation location)
         {
             Location = location;
         }
     }
 
+    
     public class StopToken : Token
     {
         public StopToken(SourceLocation location) : base(location)
@@ -116,19 +132,35 @@ namespace PGENLib
         Camera = 16,
         Orthogonal = 17,
         Perspective = 18,
-
-        //Cylinder
         Float = 19,
-        Pointlight = 20
+        Pointlight = 20,
+        //Cilinder = 21
     }
 
     /// <summary>
-    /// A token containing a keyword
+    /// A token containing a keyword.
+    /// Parameters:
+    /// <list type="table">
+    /// <item>
+    ///     <term>Location</term>
+    ///     <description> a `SourceLocation` object holding informations about token location in
+    ///     the file (filename, number of column, number of rows)</description>
+    /// </item>
+    /// <item>
+    ///     <term>Keyword</term>
+    ///     <description> a `KeywordList` object holding the possible Keyword options</description>
+    /// </item>
+    /// </list>
     /// </summary>
     public class KeywordToken : Token
     {
         public KeywordList Keyword;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="keyword"></param>
         public KeywordToken(SourceLocation location, KeywordList keyword) : base(location)
         {
             Keyword = keyword;
@@ -137,7 +169,7 @@ namespace PGENLib
         /// <summary>
         ///  Dictionary linking the keyword to its string identifier.
         /// </summary>
-        public static Dictionary<string, KeywordList> dictionary = new Dictionary<string, KeywordList>()
+        public static Dictionary<string, KeywordList> Dictionary = new Dictionary<string, KeywordList>()
         {
 
             { "new", KeywordList.New },
@@ -161,6 +193,7 @@ namespace PGENLib
             { "perspective", KeywordList.Perspective },
             { "float", KeywordList.Float },
             { "pointlight", KeywordList.Pointlight }
+
         };
 
         public override string ToString()
@@ -243,7 +276,7 @@ namespace PGENLib
             return Symbol;
         }
     }
-
+    
     /// <summary>
     /// A scene read from a scene file
     /// </summary>
@@ -251,9 +284,9 @@ namespace PGENLib
     {
         public Dictionary<string, Material> Materials = new Dictionary<string, Material>();
 
-        public World world;
+        public World World;
 
-        public OrthogonalCamera camera; // ma che tipo di camera? come uso l'equivalente di Union?
+        public OrthogonalCamera Camera; // ma che tipo di camera? come uso l'equivalente di Union?
         //public PerspectiveCamera camera; // ?
 
         public Dictionary<string, float> FloatVariables = new Dictionary<string, float>();
@@ -264,12 +297,46 @@ namespace PGENLib
         //overridden_variables.DataType = string;
     }
 
+
     /// <summary>
     /// A high-level wrapper around a stream, used to parse scene files.
     /// This class implements a wrapper around a stream, with the following additional capabilities:
-    /// - It tracks the line number and column number;
-    /// - It permits to "un-read" characters and tokens.
+    /// <list type="number" >
+    /// <item>
+    ///     <description> It tracks the line number and column number;</description>
+    /// </item>
+    /// <item>
+    ///     <description> It permits to "un-read" characters and tokens.</description>
+    /// </item>
+    /// </list>
     /// </summary>
+    /// Parameters:
+    /// <list type="table">
+    /// <item>
+    ///     <term>Stream</term>
+    ///     <description> a `Stream` object, used to read a file;</description>
+    /// </item>
+    /// <item>
+    ///     <term>Location</term>
+    ///     <description> a `SourceLocation` object;</description>
+    /// </item>
+    /// <item>
+    ///     <term>SavedChar</term>
+    ///     <description> a `char?` object, holding the un-read character or being null, if no char has been un-read;</description>
+    /// </item>
+    /// <item>
+    ///     <term>SavedLocation</term>
+    ///     <description> a `SourceLocation` object with the location of the un-read character or token;</description>
+    /// </item>
+    /// <item>
+    ///     <term>Tabulation</term>
+    ///     <description> a `Ray` object that hit the surface;</description>
+    /// </item>
+    /// <item>
+    ///     <term>SavedToken</term>
+    ///     <description> a `Token` object, holding the un-read token or being null, if no token has been un-read. </description>
+    /// </item>
+    /// </list>
     public class InputStream
     {
         public Stream Stream;
@@ -285,9 +352,9 @@ namespace PGENLib
         public Token? SavedToken;
 
         /// <summary>
-        /// Basic contructor for the class.
+        /// Basic constructor for the class.
         /// </summary>
-        public InputStream(Stream stream, string fileName = " ", int tabulations = 4)
+        public InputStream(Stream stream, string fileName = "", int tabulations = 4)
         {
             Stream = stream;
             Location = new SourceLocation(fileName: fileName, lineNum: 1, colNum: 1);
@@ -297,16 +364,15 @@ namespace PGENLib
             SavedToken = null;
         }
 
-
-
         /// <summary>
         /// Shift the cursor one position ahead.
         /// </summary>
+        /// <param name="ch"></param>
         private void UpdatePosition(char ch)
         {
             if (ch == '\0')
                 return;
-            else if (ch == '\n')
+            if (ch == '\n')
             {
                 Location.LineNum += 1;
                 Location.ColNum = 1;
@@ -324,12 +390,14 @@ namespace PGENLib
         {
             char ch;
             if (SavedChar != '\0')
-            {
-                ch = SavedChar;
+            { 
+                //Recover the un-read character and return it
+                ch = SavedChar; 
                 SavedChar = '\0';
             }
             else
             {
+                //Read a new character from the stream
                 int byteRead = Stream.ReadByte();
                 if (byteRead == -1)
                     ch = '\0';
@@ -347,7 +415,7 @@ namespace PGENLib
         /// </summary>
         public void UnreadChar(char ch)
         {
-            //Debug.Assert(SavedChar == ' ');
+            Debug.Assert(SavedChar == '\0');
             SavedChar = ch;
             Location = SavedLocation;
         }
@@ -449,7 +517,7 @@ namespace PGENLib
 
             try
             {
-                return new KeywordToken(tokenLocation, KeywordToken.dictionary[token]);
+                return new KeywordToken(tokenLocation, KeywordToken.Dictionary[token]);
             }
             catch (System.Exception)
             {
