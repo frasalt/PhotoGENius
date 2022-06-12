@@ -106,7 +106,6 @@ namespace PGENLib
             Location = location;
         }
     }
-
     
     public class StopToken : Token
     {
