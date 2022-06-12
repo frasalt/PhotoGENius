@@ -15,16 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-using System.Diagnostics;
-using System.Net.Mail;
-using System.Text.RegularExpressions;
-using System;
-using System.IO;
-using System.Linq;
-using System.Globalization;
-using System.Collections.Generic;
+
 using System.Data;
-using static System.Data.DataSet;
+using System.Diagnostics;
 
 namespace PGENLib
 {
@@ -69,7 +62,7 @@ namespace PGENLib
         /// <returns></returns>
         public SourceLocation ShallowCopy()
         {
-            return (SourceLocation) this.MemberwiseClone();
+            return (SourceLocation) MemberwiseClone();
         }
 
         /// <summary>
@@ -165,7 +158,7 @@ namespace PGENLib
         /// <summary>
         ///  Dictionary linking the keyword to its string identifier.
         /// </summary>
-        public static Dictionary<string, KeywordList> Dictionary = new Dictionary<string, KeywordList>()
+        public static Dictionary<string, KeywordList> Dictionary = new Dictionary<string, KeywordList>
         {
 
             {"new", KeywordList.New},
@@ -364,10 +357,11 @@ namespace PGENLib
         /// </summary>
         /// <param name="ch"></param>
         private void UpdatePosition(char ch)
-        { 
-            if (ch == '\0') return;
-            else if (ch == '\n')
-            { 
+        {
+            if (ch == '\0')
+                return;
+            if (ch == '\n')
+            {
                 Location.LineNum += 1;
                 Location.ColNum = 1;
             }
@@ -419,7 +413,7 @@ namespace PGENLib
         /// </summary>
         public void SkipWhitespacesAndComments()
         {
-            char ch = this.ReadChar();
+            char ch = ReadChar();
             while (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == '#')
             {
                 if (ch == '#')
@@ -427,10 +421,9 @@ namespace PGENLib
                     //It's a comment! Keep reading until the end of the line (include the case "", the end-of-file)
                     while (ch != '\r' || ch != '\n' || ch != ' ')
                     {
-                        continue;
                     }
                 }
-                ch = this.ReadChar();
+                ch = ReadChar();
                 if (ch == '\0')
                 {
                     return;
@@ -438,7 +431,6 @@ namespace PGENLib
             }
             //Put the non-whitespace character back
             UnreadChar(ch);
-            return;
         }
 
         public StringToken ParseStringToken(SourceLocation tokenLocation)
@@ -493,11 +485,11 @@ namespace PGENLib
             string token = firstChar.ToString();
             while (true)
             {
-                char ch = this.ReadChar();
+                char ch = ReadChar();
 
                 if (!(Char.IsLetterOrDigit(ch) || ch == '_'))
                 {
-                    this.UnreadChar(ch);
+                    UnreadChar(ch);
                     break;
                 }
                 token += ch;
@@ -507,7 +499,7 @@ namespace PGENLib
             {
                 return new KeywordToken(tokenLocation, KeywordToken.Dictionary[token]);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return new IdentifierToken(tokenLocation, token);
             }
@@ -540,26 +532,27 @@ namespace PGENLib
             {
                 return new SymbolToken(Location, ch.ToString());
             }
-            else if (ch == '"')
+
+            if (ch == '"')
             {
                 // A literal string (used for file names)
                 return ParseStringToken(Location);
             }
-            else if (Char.IsDigit(ch)|| OP.Contains(ch))
+
+            if (Char.IsDigit(ch)|| OP.Contains(ch))
             {
                 // A floating-point number
                 return ParseFloatToken(ch.ToString(), Location);
             }
-            else if (Char.IsLetter(ch) || ch == '_')
+
+            if (Char.IsLetter(ch) || ch == '_')
             {
                 // Since it begins with an alphabetic character, it must either be a keyword or a identifier
                 return ParseKeywordOrIdentifierToken(ch, Location);
             }
-            else
-            {
-                // We got some weird character, like '@` or `&`
-                throw new GrammarErrorException("Invalid character {ch}", Location);
-            }
+
+            // We got some weird character, like '@` or `&`
+            throw new GrammarErrorException("Invalid character {ch}", Location);
 
         }
 
@@ -609,7 +602,7 @@ namespace PGENLib
                 }
 
                 throw new GrammarErrorException(
-                    $"expected one of the keywords" + str + "instead of '{token}'", token.Location);
+                    "expected one of the keywords" + str + "instead of '{token}'", token.Location);
             }
 
             //... else return the keyword!
