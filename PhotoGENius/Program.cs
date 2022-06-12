@@ -17,6 +17,7 @@
      */
 
     using System.CommandLine;
+    using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using PGENLib;
     using Color = PGENLib.Color;
@@ -247,8 +248,118 @@
                     tracer.FireAllRays(renderer.Call);
                 }
                 
-                
 
+                // 5.salvare PFM 
+                var stream = new MemoryStream();
+                using FileStream fstream = File.OpenWrite(pfmOutputValue);
+
+                image.WritePFMFile(stream, Endianness.BigEndian); // salvo le immagini in memoria...
+                try // ... e le scrivo su file
+                {
+                    var outf = pfmOutputValue;
+                    {
+                        image.WritePFMFile(fstream, Endianness.BigEndian);
+                    }
+
+                    Console.WriteLine($" >> File {pfmOutputValue} has been written to disk.");
+                }
+                catch
+                {
+                    Console.WriteLine(
+                        $"Error: couldn't write file {pfmOutputValue}");
+                }
+                    
+                // 6.convertire a PNG
+                image.NormalizeImage(1.0f);
+                image.ClampImage();
+
+                // salvo in file PNG, a seconda delle opzioni
+                try
+                {
+                    var outf = pngOutputValue;
+                    {
+                        image.WriteLdrImage(outf, "PNG", 0.2f);
+                    }
+
+                    Console.WriteLine($" >> File {pngOutputValue} has been written to disk.");
+                }
+                catch
+                {
+                    Console.WriteLine(
+                        $"Error: couldn't write file {pngOutputValue}");
+                }
+                    
+            },
+            width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
+            initState, initSeq );
+            
+            //==============================================================================================================
+            // Render 
+            //==============================================================================================================
+
+            var scenefile = new Option<string>(
+                name: "--file-name",
+                description: "Input file for scene description",
+                getDefaultValue: () => "input_file.txt");
+
+            var render = new Command("render", "Create an image.")
+            {
+                scenefile,
+                width,
+                height,
+                angleDeg,
+                pfmOutput,
+                pngOutput,
+                cameraType,
+                algorithm,
+                raysNum,
+                maxDepth,
+                initState,
+                initSeq
+            };
+            rootCommand.AddCommand(render);
+            
+            render.SetHandler((string scenefileValue, int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
+                    string pngOutputValue, string cameraType, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
+                    ulong initSeqValue) =>
+                {
+                    Stream scene_stream = new FileStream(scenefileValue, FileMode.Open);
+                    Dictionary<string, float> dict = new Dictionary<string, float>();
+                    
+                    Scene scene = ExpectParse.parse_scene(new InputStream(scene_stream), dict);
+
+                    
+                    // 4.Run raytracer
+
+                    var image = new HdrImage(widthValue, heightValue);
+                    Console.WriteLine($"Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
+
+                    var tracer = new ImageTracer(image, scene.Camera);
+                
+                    if (algorithmValue == "onoff")
+                    {
+                        Console.WriteLine("Using on/off renderer");
+                        var renderer = new OnOffRenderer(scene.World);
+                        tracer.FireAllRays(renderer.Call);
+                    }
+                    else if(algorithmValue == "flat")
+                    {
+                        Console.WriteLine("Using flat renderer");
+                        var renderer = new FlatRenderer(scene.World);
+                        tracer.FireAllRays(renderer.Call);
+                    }
+                    else if (algorithmValue == "pathtracing")
+                    {
+                        Console.WriteLine("Using pathtracing");
+                        var renderer = new PathTracer(
+                            scene.World,
+                            new PCG(initStateValue, initSeqValue), 
+                            raysNumValue, 
+                            maxDepthValue
+                        );
+                        tracer.FireAllRays(renderer.Call);
+                    }
+                
 
                     // 5.salvare PFM 
                     var stream = new MemoryStream();
@@ -291,8 +402,8 @@
                     }
                     
                 },
-                width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
-                initState, initSeq );
+            scenefile, width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
+            initState, initSeq );
             
             //==============================================================================================================
             //Pfm2png con SystemCommandLine
