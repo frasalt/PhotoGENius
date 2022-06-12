@@ -737,7 +737,7 @@ namespace PGENLib
         /// <summary>
         /// Returns a Transformation object, encoding a rigid translation.
         /// </summary>
-        public static Transformation Traslation(Vec v)
+        public static Transformation Translation(Vec v)
         {
             Transformation trasl = new Transformation();
             trasl.m.M14 = v.x;

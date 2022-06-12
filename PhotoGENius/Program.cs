@@ -138,7 +138,7 @@
                 
                 // sky
                 world.AddShape(
-                    new Sphere(Transformation.Scaling(new Vec(200f, 200f, 200f)) * Transformation.Traslation(new Vec(0f, 0f, 0.4f)),skyMaterial)
+                    new Sphere(Transformation.Scaling(new Vec(200f, 200f, 200f)) * Transformation.Translation(new Vec(0f, 0f, 0.4f)),skyMaterial)
                 );
                 // ground
                 world.AddShape(
@@ -146,11 +146,11 @@
                 );
                 // sphere in the middle
                 world.AddShape(
-                    new Sphere(Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial)
+                    new Sphere(Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial)
                 );
                 // sphere aside
                 world.AddShape(
-                    new Sphere(Transformation.Traslation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
+                    new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
                 
                 // sphere in the middle
@@ -200,7 +200,7 @@
                 */
                 
                 // 2.Camera initialization
-                Transformation transformation = Transformation.Traslation(new Vec(-1.0f, 0.0f, 1.2f));
+                Transformation transformation = Transformation.Translation(new Vec(-1.0f, 0.0f, 1.2f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
 
