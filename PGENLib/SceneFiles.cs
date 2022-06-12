@@ -976,8 +976,8 @@ namespace PGENLib
         public Scene parse_scene(InputStream inputFile, Dictionary<string, float> variables)
         {
             Scene scene = new Scene();
-            scene.FloatVariables = copy(variables);
-            scene.OverriddenVariables = set(variables.keys());
+            scene.FloatVariables = variables;
+            scene.OverriddenVariables = variables.Keys;
 
             while (true)
             {
@@ -996,9 +996,10 @@ namespace PGENLib
                 float variableValue = expect_number(inputFile, scene);
                 expect_symbol(inputFile, ")");
 
-                if (variable_name in scene.float_variables) and not(variable_name in scene.overridden_variables):
-                raise GrammarError(location=
-                variableLoc, message = f"variable «{variable_name}» cannot be redefined");
+                if ((scene.FloatVariables.ContainsKey(variableName)) and not(variableName in scene.OverriddenVariables))
+                {
+                    throw  new GrammarErrorException($"variable «{variableName}» cannot be redefined", variableLoc);
+                }
 
                 if variable_name not in scene.overridden_variables:
                 // Only define the variable if it was not defined by the user *outside* the scene file
