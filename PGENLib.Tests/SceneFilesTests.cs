@@ -69,10 +69,14 @@ namespace PGENLib.Tests
         }
         
         //Define some Assert funcions.
-        private void AssertIsKeyword(Token token, KeywordList keyword)
+        public void AssertIsKeyword(Token token, KeywordList keyword)
         {
+            Console.WriteLine("1");
             Assert.True(token is KeywordToken);
+            Console.WriteLine("2");
             Assert.True(((KeywordToken)token).Keyword == keyword);
+            Console.WriteLine("3");
+
         }
         private void AssertIsIdentifier(Token token, string identifier)
         {
@@ -105,7 +109,7 @@ namespace PGENLib.Tests
             string test = @" 
                 # This is a comment 
                 # This is another comment
-                new material sky_material(
+                material sky_material(
                  diffuse(image(""my file.pfm"")),
                  < 5.0, 500.0, 300.0 >
                 ) # Comment at the end of the line";
@@ -117,7 +121,7 @@ namespace PGENLib.Tests
             //AssertIsKeyword(stream.ReadToken(), KeywordList.New);
             //AssertIsKeyword(stream.ReadToken(), KeywordList.Material);
             //AssertIsIdentifier(InputStream.ReadToken(), "sky_material");
-
+            memoryStream.Close();
         }
         
     }

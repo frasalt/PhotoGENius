@@ -16,6 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
+using System.Data;
+using System.Diagnostics;
+
 /*
 using System.Net.Mail;
 using System.Text.RegularExpressions;
@@ -33,11 +37,27 @@ using System.Net;
 using System.Numerics;
 
 
+
 namespace PGENLib
 {
 
     /// <summary>
-    /// A specific position in a source file.
+    /// The class points out a specific location in a source file.
+    /// The fields are:
+    /// <list type="table">
+    /// <item>
+    ///     <term>FileName</term>
+    ///     <description> name of the file or empty string;</description>
+    /// </item>
+    /// <item>
+    ///     <term>LineNum</term>
+    ///     <description> number of line;</description>
+    /// </item>
+    /// <item>
+    ///     <term>ColNum</term>
+    ///     <description> number of column;</description>
+    /// </item>
+    /// </list>
     /// </summary>
     public class SourceLocation
     {
@@ -76,7 +96,7 @@ namespace PGENLib
         /// <returns></returns>
         public SourceLocation ShallowCopy()
         {
-            return (SourceLocation)this.MemberwiseClone();
+            return (SourceLocation) MemberwiseClone();
         }
 
         /// <summary>
@@ -171,7 +191,7 @@ namespace PGENLib
         /// <summary>
         ///  Dictionary linking the keyword to its string identifier.
         /// </summary>
-        public static Dictionary<string, KeywordList> Dictionary = new Dictionary<string, KeywordList>()
+        public static Dictionary<string, KeywordList> Dictionary = new Dictionary<string, KeywordList>
         {
 
             { "new", KeywordList.New },
@@ -299,7 +319,6 @@ namespace PGENLib
 
 
     /// <summary>
-    /// A high-level wrapper around a stream, used to parse scene files.
     /// This class implements a wrapper around a stream, with the following additional capabilities:
     /// <list type="number" >
     /// <item>
@@ -397,12 +416,14 @@ namespace PGENLib
             }
             else
             {
+                
                 //Read a new character from the stream
                 int byteRead = Stream.ReadByte();
                 if (byteRead == -1)
                     ch = '\0';
                 else
                     ch = Convert.ToChar(byteRead);
+
             }
 
             SavedLocation = Location.ShallowCopy();
@@ -426,14 +447,16 @@ namespace PGENLib
         public void SkipWhitespacesAndComments()
         {
             char ch = ReadChar();
-            while (ch is ' ' or '\t' or '\n' or '\r' or '#')
+
+            while (ch is ' ' or '\t' or '\n' or '\r' or '#' or '\0')
+
             {
                 if (ch == '#')
                 {
                     //It's a comment! Keep reading until the end of the line (include the case "", the end-of-file)
                     //while (ch != '\r' || ch != '\n' || ch != ' ') // <<<< ma così non è la fine del file!
                     // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
-                    while (ch != '\r' || ch != '\n' || ch != '\0')
+                    while (ch is not ('\r' or '\n' or '\0'))
                     {
                     }
 
@@ -503,11 +526,11 @@ namespace PGENLib
             string token = firstChar.ToString();
             while (true)
             {
-                char ch = this.ReadChar();
+                char ch = ReadChar();
 
                 if (!(Char.IsLetterOrDigit(ch) || ch == '_'))
                 {
-                    this.UnreadChar(ch);
+                    UnreadChar(ch);
                     break;
                 }
 
@@ -518,13 +541,18 @@ namespace PGENLib
             {
                 return new KeywordToken(tokenLocation, KeywordToken.Dictionary[token]);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return new IdentifierToken(tokenLocation, token);
             }
 
         }
 
+        /// <summary>
+        /// Reads a token from tge stream 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="GrammarErrorException"> a lexical error is found</exception>
         public Token ReadToken()
         {
             // If already saved, return it, and clean the savedToken member ...
@@ -538,46 +566,48 @@ namespace PGENLib
             // ... else go on and look for another token
             SkipWhitespacesAndComments();
 
-            // Now ch does NOT contain a whitespace character.
-            char ch = ReadChar();
+            // Now ch does *not* contain a whitespace character.
+            var ch = ReadChar();
+
             if (ch == '\0')
             {
                 // No more characters in the file, so return a StopToken
                 return new StopToken(Location);
             }
 
-            //At this point we must check what kind of token begins with the "ch" character (which has been
-            //put back in the stream with self.unread_char). First, we save the position in the stream.
-            //SourceLocation tokenLocation = Location.ShallowCopy();
-            char[] SYMB = { '(', ')', '<', '>', '[', ']', '*' };
-            char[] op = { '+', '-', '.' };
-            if (SYMB.Contains(ch))
+            //We first save the position in the stream.
+            SourceLocation tokenLocation = Location.ShallowCopy();
+
+            //Now, which token begins with the "ch" character?
+            char[] symb = {'(', ')', '<', '>', '[', ']', '*'};
+            char[] op = {'+', '-', '.'};
+            if (symb.Contains(ch))
             {
-                return new SymbolToken(Location, ch.ToString());
+                return new SymbolToken(tokenLocation, ch.ToString());
             }
+
             if (ch == '"')
             {
                 // A literal string (used for file names)
-                return ParseStringToken(Location);
+                return ParseStringToken(tokenLocation);
             }
+
             if (Char.IsDigit(ch) || op.Contains(ch))
             {
                 // A floating-point number
-                return ParseFloatToken(ch.ToString(), Location);
-            }
-            if (Char.IsLetter(ch) || ch == '_')
-            {
-                // Since it begins with an alphabetic character, it must either be a keyword or an identifier
-                return ParseKeywordOrIdentifierToken(ch, Location);
-            }
-            else
-            {
-                // We got some weird character, like '@` or `&`
-                throw new GrammarErrorException($"Invalid character {ch}", Location);
+                return ParseFloatToken(ch.ToString(), tokenLocation);
             }
 
+            if (Char.IsLetter(ch) || ch == '_')
+            {
+                // Since it begins with an alphabetic character, it must either be a keyword or a identifier
+                return ParseKeywordOrIdentifierToken(ch, tokenLocation);
+            }
+
+            // We got some weird character, like '@` or `&`
+            throw new GrammarErrorException($"Invalid character {ch}", Location);
         }
-        
+
         /// <summary>
         /// Make as if `token` were never read from `inputFile`
         /// </summary>
@@ -591,6 +621,7 @@ namespace PGENLib
 
     }
 
+    
     public class ExpectParse
     {
         // << perchè siamo obbligati a wrappare in una classe le expect-functions per farle funzionare?
@@ -640,6 +671,7 @@ namespace PGENLib
                 }
 
                 throw new GrammarErrorException(
+
                     $"Expected one of the keywords '{str}' instead of '{token}'", token.Location);
             }
 
@@ -748,6 +780,7 @@ namespace PGENLib
 
             return new Color(red, green, blue);
         }
+
 
         public Pigment parse_pigment(InputStream inputFile, Scene scene)
         {
