@@ -28,6 +28,9 @@ using static System.Data.DataSet;
 */
 using System.Data;
 using System.Diagnostics;
+using System.IO.Compression;
+using System.Net;
+using System.Numerics;
 
 
 namespace PGENLib
@@ -286,8 +289,7 @@ namespace PGENLib
 
         public World World;
 
-        public OrthogonalCamera Camera; // ma che tipo di camera? come uso l'equivalente di Union?
-        //public PerspectiveCamera camera; // ?
+        public ICamera Camera; 
 
         public Dictionary<string, float> FloatVariables = new Dictionary<string, float>();
 
@@ -390,9 +392,9 @@ namespace PGENLib
         {
             char ch;
             if (SavedChar != '\0')
-            { 
+            {
                 //Recover the un-read character and return it
-                ch = SavedChar; 
+                ch = SavedChar;
                 SavedChar = '\0';
             }
             else
@@ -425,7 +427,7 @@ namespace PGENLib
         /// </summary>
         public void SkipWhitespacesAndComments()
         {
-            char ch = this.ReadChar();
+            char ch = ReadChar();
             while (ch is ' ' or '\t' or '\n' or '\r' or '#')
             {
                 if (ch == '#')
@@ -435,11 +437,11 @@ namespace PGENLib
                     // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
                     while (ch != '\r' || ch != '\n' || ch != '\0')
                     {
-                        continue;
                     }
+
                 }
 
-                ch = this.ReadChar();
+                ch = ReadChar();
                 if (ch == '\0')
                 {
                     return;
@@ -448,7 +450,6 @@ namespace PGENLib
 
             //Put the non-whitespace character back
             UnreadChar(ch);
-            return;
         }
 
         public StringToken ParseStringToken(SourceLocation tokenLocation)
@@ -528,6 +529,7 @@ namespace PGENLib
 
         public Token ReadToken()
         {
+            // If already saved, return it, and clean the savedToken member ...
             if (SavedToken != null)
             {
                 Token result = SavedToken;
@@ -535,9 +537,10 @@ namespace PGENLib
                 return result;
             }
 
+            // ... else go on and look for another token
             SkipWhitespacesAndComments();
 
-            // Now ch does *not* contain a whitespace character.
+            // Now ch does NOT contain a whitespace character.
             char ch = ReadChar();
             if (ch == '\0')
             {
@@ -554,27 +557,38 @@ namespace PGENLib
             {
                 return new SymbolToken(Location, ch.ToString());
             }
-            else if (ch == '"')
+            if (ch == '"')
             {
                 // A literal string (used for file names)
                 return ParseStringToken(Location);
             }
-            else if (Char.IsDigit(ch) || op.Contains(ch))
+            if (Char.IsDigit(ch) || op.Contains(ch))
             {
                 // A floating-point number
                 return ParseFloatToken(ch.ToString(), Location);
             }
-            else if (Char.IsLetter(ch) || ch == '_')
+            if (Char.IsLetter(ch) || ch == '_')
             {
-                // Since it begins with an alphabetic character, it must either be a keyword or a identifier
+                // Since it begins with an alphabetic character, it must either be a keyword or an identifier
                 return ParseKeywordOrIdentifierToken(ch, Location);
             }
             else
             {
                 // We got some weird character, like '@` or `&`
-                throw new GrammarErrorException("Invalid character {ch}", Location);
+                throw new GrammarErrorException($"Invalid character {ch}", Location);
             }
 
+        }
+        
+        /// <summary>
+        /// Make as if `token` were never read from `inputFile`
+        /// </summary>
+        /// <param name="token"></param>
+        public void UnreadToken(Token token)
+        {
+            // <<<< NON CI PIAE CHE QUESTO ERRORE NON SIA SOTTO CONTROLLO
+            Debug.Assert(SavedToken != null);
+            SavedToken = token;
         }
 
     }
@@ -590,10 +604,10 @@ namespace PGENLib
         /// </summary>
         /// <param name="inputFile"></param>
         /// <param name="symbol"></param>
-        void expect_symbol(InputStream inputFile, string symbol)
+        public void expect_symbol(InputStream inputFile, string symbol)
         {
             Token token = inputFile.ReadToken();
-            
+
             // if token is NOT a symble or the symble-token does NOT match the symble expected, throw error
             if (token is not SymbolToken || ((SymbolToken)token).Symbol != symbol)
             {
@@ -602,14 +616,13 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Read a token from `input_file` and check that it is one of the keywords in `keywords`.
+        /// Read a token from `inputFile` and check that it is one of the keywords in `keywords`.
         /// Return the keyword as a class :class:'.KeywordList` object.
         /// </summary>
         /// <param name="inputFile"></param>
         /// <param name="keywords"></param>
         /// <returns></returns>
-        //public
-        KeywordList expect_keywords(InputStream inputFile, List<KeywordList> keywords)
+        public KeywordList expect_keywords(InputStream inputFile, List<KeywordList> keywords)
         {
             Token token = inputFile.ReadToken();
 
@@ -637,7 +650,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Read a token from `input_file` and check that it is either a literal number or a variable in `scene`.
+        /// Read a token from `inputFile` and check that it is either a literal number or a variable in `scene`.
         /// Return the number as a ``float``.
         /// </summary>
         /// <param name="inputFile"></param>
@@ -669,7 +682,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Read a token from `input_file` and check that it is a literal string.
+        /// Read a token from `inputFile` and check that it is a literal string.
         /// Return the value of the string(a ``str``).
         /// </summary>
         /// <param name="inputFile"></param>
@@ -677,7 +690,7 @@ namespace PGENLib
         public string expect_string(InputStream inputFile)
         {
             Token token = inputFile.ReadToken();
-            
+
             if (token is not StringToken)
             {
                 throw new GrammarErrorException($"Got '{token}' instead of a string", token.Location);
@@ -685,9 +698,9 @@ namespace PGENLib
 
             return ((StringToken)token).String;
         }
-        
+
         /// <summary>
-        /// Read a token from `input_file` and check that it is an identifier.
+        /// Read a token from `inputFile` and check that it is an identifier.
         /// Return the name of the identifier.
         /// </summary>
         /// <param name="inputFile"></param>
@@ -705,7 +718,7 @@ namespace PGENLib
         }
 
         //=============== PARSE ============================
-        
+
         /// <summary>
         /// Parse symbles and numbers to return a vector of floats
         /// </summary>
@@ -725,233 +738,289 @@ namespace PGENLib
             return new Vec(x, y, z);
         }
 
-
-        public Color parse_color(InputStream input_file, Scene scene)
+        public Color parse_color(InputStream inputFile, Scene scene)
         {
-            expect_symbol(input_file, "<");
-            float red = expect_number(input_file, scene);
-            expect_symbol(input_file, ",");
-            float green = expect_number(input_file, scene);
-            expect_symbol(input_file, ",");
-            float blue = expect_number(input_file, scene);
-            expect_symbol(input_file, ">");
+            expect_symbol(inputFile, "<");
+            float red = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float green = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float blue = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ">");
 
             return new Color(red, green, blue);
         }
 
-        public Pigment parse_pigment(InputStream input_file, Scene scene)
+        public Pigment parse_pigment(InputStream inputFile, Scene scene)
         {
 
-            Pigment result; //= new Pigment();
-            
-            List<KeywordList> mylist = new List<KeywordList> {KeywordList.Uniform, KeywordList.Checkered, KeywordList.Image};
-            KeywordList keyword = expect_keywords(input_file, mylist);
+            Pigment result;
 
-            expect_symbol(input_file, "(");
+            List<KeywordList> mylist = new List<KeywordList>
+                { KeywordList.Uniform, KeywordList.Checkered, KeywordList.Image };
+            KeywordList keyword = expect_keywords(inputFile, mylist);
+
+            expect_symbol(inputFile, "(");
             if (keyword == KeywordList.Uniform)
             {
-                Color color = parse_color(input_file, scene);
+                Color color = parse_color(inputFile, scene);
                 result = new UniformPigment(color);
             }
             else if (keyword == KeywordList.Checkered)
             {
-                Color color1 = parse_color(input_file, scene);
-                expect_symbol(input_file, ",");
-                Color color2 = parse_color(input_file, scene);
-                expect_symbol(input_file, ",");
-                int numOfSteps = (int)expect_number(input_file, scene);
+                Color color1 = parse_color(inputFile, scene);
+                expect_symbol(inputFile, ",");
+                Color color2 = parse_color(inputFile, scene);
+                expect_symbol(inputFile, ",");
+                int numOfSteps = (int)expect_number(inputFile, scene);
                 result = new CheckeredPigment(color1, color2, numOfSteps);
             }
             else if (keyword == KeywordList.Image)
             {
-                string file_name = expect_string(input_file);
-                with open(file_name, "rb") as image_file
+                string fileName = expect_string(inputFile);
+                // don't worry about width & height: they're gonna be overwritten
+                HdrImage image = new HdrImage(1, 1);
+                using (Stream imageFile = File.OpenRead(fileName))
                 {
-                    image = read_pfm_image(image_file);
+                    image = image.ReadPFMFile(imageFile);
                 }
-                result = ImagePigment(image = image);
+
+                result = new ImagePigment(image);
             }
             else
             {
-                assert False, "This line should be unreachable";
+                //assert False, 
+                // non capisco bene cosa intendesse tomasi in queste righe di codice
+                throw new Exception("This line should be unreachable");
             }
 
-            expect_symbol(input_file, ")");
-            
+            expect_symbol(inputFile, ")");
+
             return result;
         }
 
+        public BRDF parse_brdf(InputStream inputFile, Scene scene)
+        {
 
-/*
-def parse_brdf(input_file: InputStream, scene: Scene) -> BRDF:
-    brdf_keyword = expect_keywords(input_file, [KeywordEnum.DIFFUSE, KeywordEnum.SPECULAR])
-    expect_symbol(input_file, "(")
-    pigment = parse_pigment(input_file, scene)
-    expect_symbol(input_file, ")")
+            List<KeywordList> mylist = new List<KeywordList> { KeywordList.Diffuse, KeywordList.Specular };
+            KeywordList brdfKeyword = expect_keywords(inputFile, mylist);
 
-    if brdf_keyword == KeywordEnum.DIFFUSE:
-        return DiffuseBRDF(pigment=pigment)
-    elif brdf_keyword == KeywordEnum.SPECULAR:
-        return SpecularBRDF(pigment=pigment)
+            expect_symbol(inputFile, "(");
+            Pigment pigment = parse_pigment(inputFile, scene);
+            expect_symbol(inputFile, ")");
 
-    assert False, "This line should be unreachable"
+            if (brdfKeyword == KeywordList.Diffuse)
+                return new DiffuseBRDF(pigment);
+            if (brdfKeyword == KeywordList.Specular)
+                return new SpecularBRDF(pigment);
+            else
+            {
+                //assert False, 
+                // come prima non capisco bene cosa intendesse tomasi in queste righe di codice
+                throw new Exception("This line should be unreachable");
+            }
+        }
 
+        public Tuple<string, Material> parse_material(InputStream inputFile, Scene scene)
+        {
+            string name = expect_identifier(inputFile);
 
-def parse_material(input_file: InputStream, scene: Scene) -> Tuple[str, Material]:
-    name = expect_identifier(input_file)
+            expect_symbol(inputFile, "(");
+            BRDF brdf = parse_brdf(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            Pigment emittedRadiance = parse_pigment(inputFile, scene);
+            expect_symbol(inputFile, ")");
 
-    expect_symbol(input_file, "(")
-    brdf = parse_brdf(input_file, scene)
-    expect_symbol(input_file, ",")
-    emitted_radiance = parse_pigment(input_file, scene)
-    expect_symbol(input_file, ")")
+            return new Tuple<string, Material>(name, new Material(emittedRadiance, brdf));
+        }
 
-    return name, Material(brdf=brdf, emitted_radiance=emitted_radiance)
+        public Transformation parse_transformation(InputStream inputFile, Scene scene)
+        {
+            Transformation result = new Transformation();
 
+            while (true)
+            {
+                List<KeywordList> mylist = new List<KeywordList>
+                {
+                    KeywordList.Identity,
+                    KeywordList.Translation,
+                    KeywordList.RotationX,
+                    KeywordList.RotationY,
+                    KeywordList.RotationZ,
+                    KeywordList.Scaling
+                };
+                KeywordList transformationKw = expect_keywords(inputFile, mylist);
 
-def parse_transformation(input_file, scene: Scene):
-    result = Transformation()
+                if (transformationKw == KeywordList.Identity)
+                {
+                    continue;// Do nothing (a primitive form of optimization!)
+                }
+                else if (transformationKw == KeywordList.Translation)
+                {
+                    expect_symbol(inputFile, "(");
+                    result *= Transformation.Translation(parse_vector(inputFile, scene));
+                    expect_symbol(inputFile, ")");
+                }
+                else if (transformationKw == KeywordList.RotationX)
+                {
+                    expect_symbol(inputFile, "(");
+                    result *= Transformation.RotationX(expect_number(inputFile, scene));
+                    expect_symbol(inputFile, ")");
+                }
+                else if (transformationKw == KeywordList.RotationY)
+                {
+                    expect_symbol(inputFile, "(");
+                    result *= Transformation.RotationY(expect_number(inputFile, scene));
+                    expect_symbol(inputFile, ")");
+                }
+                else if (transformationKw == KeywordList.RotationZ)
+                {
+                    expect_symbol(inputFile, "(");
+                    result *= Transformation.RotationZ(expect_number(inputFile, scene));
+                    expect_symbol(inputFile, ")");
+                }
+                else if (transformationKw == KeywordList.Scaling)
+                {
+                    expect_symbol(inputFile, "(");
+                    result *= Transformation.Scaling(parse_vector(inputFile, scene));
+                    expect_symbol(inputFile, ")");
+                }
 
-    while True:
-        transformation_kw = expect_keywords(input_file, [
-            KeywordEnum.IDENTITY,
-            KeywordEnum.TRANSLATION,
-            KeywordEnum.ROTATION_X,
-            KeywordEnum.ROTATION_Y,
-            KeywordEnum.ROTATION_Z,
-            KeywordEnum.SCALING,
-        ])
+                // We must peek the next token to check if there is another transformation that is being
+                // chained or if the sequence ends.
+                // That's why this is a LL(1) parser!
+                Token nextKw = inputFile.ReadToken();
+                if ((nextKw is not SymbolToken) || ((SymbolToken)nextKw).Symbol != "*")
+                {
+                    // Pretend you never read this token and put it back!
+                    inputFile.UnreadToken(nextKw);
+                    break;
+                }
+            }
 
-        if transformation_kw == KeywordEnum.IDENTITY:
-            pass  # Do nothing (this is a primitive form of optimization!)
-        elif transformation_kw == KeywordEnum.TRANSLATION:
-            expect_symbol(input_file, "(")
-            result *= translation(parse_vector(input_file, scene))
-            expect_symbol(input_file, ")")
-        elif transformation_kw == KeywordEnum.ROTATION_X:
-            expect_symbol(input_file, "(")
-            result *= rotation_x(expect_number(input_file, scene))
-            expect_symbol(input_file, ")")
-        elif transformation_kw == KeywordEnum.ROTATION_Y:
-            expect_symbol(input_file, "(")
-            result *= rotation_y(expect_number(input_file, scene))
-            expect_symbol(input_file, ")")
-        elif transformation_kw == KeywordEnum.ROTATION_Z:
-            expect_symbol(input_file, "(")
-            result *= rotation_z(expect_number(input_file, scene))
-            expect_symbol(input_file, ")")
-        elif transformation_kw == KeywordEnum.SCALING:
-            expect_symbol(input_file, "(")
-            result *= scaling(parse_vector(input_file, scene))
-            expect_symbol(input_file, ")")
+            return result;
+        }
 
-        # We must peek the next token to check if there is another transformation that is being
-        # chained or if the sequence ends. Thus, this is a LL(1) parser.
-        next_kw = input_file.read_token()
-        if (not isinstance(next_kw, SymbolToken)) or (next_kw.symbol != "*"):
-            # Pretend you never read this token and put it back!
-            input_file.unread_token(next_kw)
-            break
+        public Sphere parse_sphere(InputStream inputFile, Scene scene)
+        {
+            expect_symbol(inputFile, "(");
 
-    return result
+            string materialName = expect_identifier(inputFile);
+            if(! scene.Materials.ContainsKey(materialName))
+            {
+                // We raise the exception here because inputFile is pointing to the end of the wrong identifier
+                throw new GrammarErrorException($"Unknown material {materialName}", inputFile.Location);
+            }
 
+            expect_symbol(inputFile, ",");
+            Transformation transformation = parse_transformation(inputFile, scene);
+            expect_symbol(inputFile, ")");
 
-def parse_sphere(input_file: InputStream, scene: Scene) -> Sphere:
-    expect_symbol(input_file, "(")
+            return new Sphere(transformation, scene.Materials[materialName]);
+        }
 
-    material_name = expect_identifier(input_file)
-    if material_name not in scene.materials.keys():
-        # We raise the exception here because input_file is pointing to the end of the wrong identifier
-        raise GrammarError(input_file.location, f"unknown material {material_name}")
+        public XyPlane parse_plane(InputStream inputFile, Scene scene)
+        {
+            expect_symbol(inputFile, "(");
 
-    expect_symbol(input_file, ",")
-    transformation = parse_transformation(input_file, scene)
-    expect_symbol(input_file, ")")
+            string materialName = expect_identifier(inputFile);
+            if(! scene.Materials.ContainsKey(materialName))
+            {
+                // We raise the exception here because inputFile is pointing to the end of the wrong identifier
+                throw new GrammarErrorException($"Unknown material {materialName}", inputFile.Location);
+            }
 
-    return Sphere(transformation=transformation, material=scene.materials[material_name])
+            expect_symbol(inputFile, ",");
+            Transformation transformation = parse_transformation(inputFile, scene);
+            expect_symbol(inputFile, ")");
 
+            return new XyPlane(transformation, scene.Materials[materialName]);
+        }
+        
+        public ICamera parse_camera(InputStream inputFile, Scene scene)
+        {
+            ICamera result;
+            
+            expect_symbol(inputFile, "(");
+            KeywordList typeKw = expect_keywords(inputFile, 
+                new List<KeywordList>{KeywordList.Perspective, KeywordList.Orthogonal});
+            expect_symbol(inputFile, ",");
+            Transformation transformation = parse_transformation(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float aspectRatio = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float distance = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ")");
 
-def parse_plane(input_file: InputStream, scene: Scene) -> Plane:
-    expect_symbol(input_file, "(")
+            if (typeKw == KeywordList.Perspective)
+            {
+                result = new PerspectiveCamera(distance, aspectRatio, transformation);
+            }
+            else // (typeKw == KeywordList.Orthogonal)
+                 // SIAMO TRANQUILLI: NON È POSSIBILE ARRIVARE FIN QUI CON TYPEKW DIVERSO DA PERSPECTIVE O ORTHOGONAL
+            {
+                result = new OrthogonalCamera(aspectRatio, transformation);
+            }
 
-    material_name = expect_identifier(input_file)
-    if material_name not in scene.materials.keys():
-        # We raise the exception here because input_file is pointing to the end of the wrong identifier
-        raise GrammarError(input_file.location, f"unknown material {material_name}")
+            return result;
+        }
 
-    expect_symbol(input_file, ",")
-    transformation = parse_transformation(input_file, scene)
-    expect_symbol(input_file, ")")
+        // public Cylinder parse_cylinder { }
 
-    return Plane(transformation=transformation, material=scene.materials[material_name])
+        /// <summary>
+        /// Read a scene description from a stream and return a :class:`.Scene` object
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="variables"></param>
+        /// <returns></returns>
+        public Scene parse_scene(InputStream inputFile, Dictionary<string, float> variables)
+        {
+            Scene scene = new Scene();
+            scene.FloatVariables = copy(variables);
+            scene.OverriddenVariables = set(variables.keys());
 
+            while (true)
+            {
+                Token what = inputFile.ReadToken();
+                if (what is StopToken)
+                    break;
+                if (what is not KeywordToken)
+                    throw new GrammarErrorException($"Expected a keyword instead of '{what}'", what.Location);
+                if (((KeywordToken)what).Keyword == KeywordList.Float)
+                    { string variableName = expect_identifier(inputFile); }
 
-def parse_camera(input_file: InputStream, scene) -> Camera:
-    expect_symbol(input_file, "(")
-    type_kw = expect_keywords(input_file, [KeywordEnum.PERSPECTIVE, KeywordEnum.ORTHOGONAL])
-    expect_symbol(input_file, ",")
-    transformation = parse_transformation(input_file, scene)
-    expect_symbol(input_file, ",")
-    aspect_ratio = expect_number(input_file, scene)
-    expect_symbol(input_file, ",")
-    distance = expect_number(input_file, scene)
-    expect_symbol(input_file, ")")
+                // Save this for the error message
+                SourceLocation variableLoc = inputFile.Location;
 
-    if type_kw == KeywordEnum.PERSPECTIVE:
-        result = PerspectiveCamera(screen_distance=distance, aspect_ratio=aspect_ratio, transformation=transformation)
-    elif type_kw == KeywordEnum.ORTHOGONAL:
-        result = OrthogonalCamera(aspect_ratio=aspect_ratio, transformation=transformation)
+                expect_symbol(inputFile, "(");
+                float variableValue = expect_number(inputFile, scene);
+                expect_symbol(inputFile, ")");
 
-    return result
+                if (variable_name in scene.float_variables) and not(variable_name in scene.overridden_variables):
+                raise GrammarError(location=
+                variableLoc, message = f"variable «{variable_name}» cannot be redefined");
 
+                if variable_name not in scene.overridden_variables:
+                // Only define the variable if it was not defined by the user *outside* the scene file
+                // (e.g., from the command line)
+                scene.float_variables[variable_name] = variableValue;
 
-def parse_scene(input_file: InputStream, variables: Dict[str, float] = {}) -> Scene:
-    """Read a scene description from a stream and return a :class:`.Scene` object"""
-    scene = Scene()
-    scene.float_variables = copy(variables)
-    scene.overridden_variables = set(variables.keys())
-
-    while True:
-        what = input_file.read_token()
-        if isinstance(what, StopToken):
-            break
-
-        if not isinstance(what, KeywordToken):
-            raise GrammarError(what.location, f"expected a keyword instead of '{what}'")
-
-        if what.keyword == KeywordEnum.FLOAT:
-            variable_name = expect_identifier(input_file)
-
-            # Save this for the error message
-            variable_loc = input_file.location
-
-            expect_symbol(input_file, "(")
-            variable_value = expect_number(input_file, scene)
-            expect_symbol(input_file, ")")
-
-            if (variable_name in scene.float_variables) and not (variable_name in scene.overridden_variables):
-                raise GrammarError(location=variable_loc, message=f"variable «{variable_name}» cannot be redefined")
-
-            if variable_name not in scene.overridden_variables:
-                # Only define the variable if it was not defined by the user *outside* the scene file
-                # (e.g., from the command line)
-                scene.float_variables[variable_name] = variable_value
-
-        elif what.keyword == KeywordEnum.SPHERE:
-            scene.world.add_shape(parse_sphere(input_file, scene))
-        elif what.keyword == KeywordEnum.PLANE:
-            scene.world.add_shape(parse_plane(input_file, scene))
-        elif what.keyword == KeywordEnum.CAMERA:
-            if scene.camera:
+                elif what.keyword == KeywordList.SPHERE:
+                scene.world.add_shape(parse_sphere(inputFile, scene))
+                elif what.keyword == KeywordList.PLANE:
+                scene.world.add_shape(parse_plane(inputFile, scene))
+                elif what.keyword == KeywordList.CAMERA:
+                if scene.camera:
                 raise GrammarError(what.location, "You cannot define more than one camera")
 
-            scene.camera = parse_camera(input_file, scene)
-        elif what.keyword == KeywordEnum.MATERIAL:
-            name, material = parse_material(input_file, scene)
-            scene.materials[name] = material
+                scene.camera = parse_camera(inputFile, scene)
+                elif what.keyword == KeywordList.MATERIAL:
+                name, material = parse_material(inputFile, scene)
+                scene.materials[name] = material;
+            }
 
-    return scene
-         */
+            return scene;
+        }
     }
 }
 

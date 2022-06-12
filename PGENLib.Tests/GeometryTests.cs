@@ -196,10 +196,10 @@ namespace PGENLib.Tests
         [Fact]
         public void test_traslation()
         {
-            Transformation tr1 = Transformation.Traslation(new Vec(1.0f, 2.0f, 3.0f));
-            Transformation tr2 = Transformation.Traslation(new Vec(4.0f, 6.0f, 8.0f));
+            Transformation tr1 = Transformation.Translation(new Vec(1.0f, 2.0f, 3.0f));
+            Transformation tr2 = Transformation.Translation(new Vec(4.0f, 6.0f, 8.0f));
             Transformation prod = tr1 * tr2;
-            Transformation expected = Transformation.Traslation(new Vec(5.0f, 8.0f, 11.0f));
+            Transformation expected = Transformation.Translation(new Vec(5.0f, 8.0f, 11.0f));
             Assert.True(tr1.IsConsistent());
             Assert.True(tr2.IsConsistent());
             Assert.True(tr2.IsConsistent());

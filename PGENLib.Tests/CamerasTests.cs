@@ -61,7 +61,7 @@ namespace PGENLib.Tests
         public void test_ortCameraTransform()
         {
             var vy = new Vec(0.0f, 1.0f, 0.0f);
-            var tr = Transformation.Traslation(-vy * 2.0f)*Transformation.RotationZ(90);
+            var tr = Transformation.Translation(-vy * 2.0f)*Transformation.RotationZ(90);
             var cam = new OrthogonalCamera(2.0f, tr);
             var ray = cam.FireRay(0.5f, 0.5f);
             Assert.True(Point.are_close(ray.At(1.0f), new Point(0.0f, -2.0f, 0.0f)));
