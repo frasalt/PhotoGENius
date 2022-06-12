@@ -313,9 +313,8 @@ namespace PGENLib
         public Dictionary<string, float> FloatVariables = new Dictionary<string, float>();
 
         //public DataSet<string> OverriddenVariables = new DataSet<string>(); // come faccio a indicare che devono essere stringhe?
-        public DataSet OverriddenVariables = new DataSet(); // come faccio a indicare che devono essere stringhe?
-        //public DataTable overridden_variables = new DataTable();
-        //overridden_variables.DataType = string;
+        public Dictionary<string, float>.KeyCollection OverriddenVariables = 
+            new Dictionary<string, float>.KeyCollection(new Dictionary<string, float>()); // come faccio a indicare che devono essere stringhe?
     }
 
 
@@ -1019,37 +1018,45 @@ namespace PGENLib
                 if (what is not KeywordToken)
                     throw new GrammarErrorException($"Expected a keyword instead of '{what}'", what.Location);
                 if (((KeywordToken)what).Keyword == KeywordList.Float)
-                    { string variableName = expect_identifier(inputFile); }
-
-                // Save this for the error message
-                SourceLocation variableLoc = inputFile.Location;
-
-                expect_symbol(inputFile, "(");
-                float variableValue = expect_number(inputFile, scene);
-                expect_symbol(inputFile, ")");
-
-                if ((scene.FloatVariables.ContainsKey(variableName)) and not(variableName in scene.OverriddenVariables))
                 {
-                    throw  new GrammarErrorException($"variable «{variableName}» cannot be redefined", variableLoc);
+                    string variableName = expect_identifier(inputFile);
+
+                    // Save this for the error message
+                    SourceLocation variableLoc = inputFile.Location;
+
+                    expect_symbol(inputFile, "(");
+                    float variableValue = expect_number(inputFile, scene);
+                    expect_symbol(inputFile, ")");
+
+                    if (scene.FloatVariables.ContainsKey(variableName) &&
+                        !(scene.OverriddenVariables.Contains(variableName)))
+                    {
+                        throw new GrammarErrorException($"variable «{variableName}» cannot be redefined", variableLoc);
+                    }
+
+                    if (!scene.OverriddenVariables.Contains(variableName))
+                    {
+                        // Only define the variable if it was not defined by the user OUTSIDE the scene file
+                        // (e.g., from the command line)
+                        scene.FloatVariables[variableName] = variableValue;
+                    }
+                }
+                else if (((KeywordToken)what).Keyword == KeywordList.Sphere)
+                    scene.World.AddShape(parse_sphere(inputFile, scene));
+                else if (((KeywordToken)what).Keyword == KeywordList.Plane)
+                    scene.World.AddShape(parse_plane(inputFile, scene));
+                else if (((KeywordToken)what).Keyword == KeywordList.Camera)
+                {
+                    if (scene.Camera != null)
+                        throw new GrammarErrorException("You cannot define more than one camera", what.Location);
+                    scene.Camera = parse_camera(inputFile, scene);
                 }
 
-                if variable_name not in scene.overridden_variables:
-                // Only define the variable if it was not defined by the user *outside* the scene file
-                // (e.g., from the command line)
-                scene.float_variables[variable_name] = variableValue;
-
-                elif what.keyword == KeywordList.SPHERE:
-                scene.world.add_shape(parse_sphere(inputFile, scene))
-                elif what.keyword == KeywordList.PLANE:
-                scene.world.add_shape(parse_plane(inputFile, scene))
-                elif what.keyword == KeywordList.CAMERA:
-                if scene.camera:
-                raise GrammarError(what.location, "You cannot define more than one camera")
-
-                scene.camera = parse_camera(inputFile, scene)
-                elif what.keyword == KeywordList.MATERIAL:
-                name, material = parse_material(inputFile, scene)
-                scene.materials[name] = material;
+                else if (((KeywordToken)what).Keyword == KeywordList.Material)
+                {
+                    (string name, Material material) = parse_material(inputFile, scene);
+                    scene.Materials[name] = material;
+                }
             }
 
             return scene;
