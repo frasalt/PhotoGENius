@@ -62,7 +62,7 @@ namespace PGENLib.Tests{
         [Fact]
         public void TestOnOffRenderer()
         {
-            var t = Transformation.Traslation(new Vec(2.0f, 0.0f, 0.0f))
+            var t = Transformation.Translation(new Vec(2.0f, 0.0f, 0.0f))
                     * Transformation.Scaling(new Vec(0.2f, 0.2f, 0.2f));
             var uPig = new UniformPigment(Color.White());
             var brdf = new DiffuseBRDF(uPig);
@@ -95,7 +95,7 @@ namespace PGENLib.Tests{
         public void TestFlatRenderer()
         {
             var sphereColor = new Color(1.0f, 2.0f, 3.0f);
-            var t = Transformation.Traslation(new Vec(2.0f, 0.0f, 0.0f)) *
+            var t = Transformation.Translation(new Vec(2.0f, 0.0f, 0.0f)) *
                     Transformation.Scaling(new Vec(0.2f, 0.2f, 0.2f));
             var uPig = new UniformPigment(sphereColor);
             var brdf = new DiffuseBRDF(uPig);

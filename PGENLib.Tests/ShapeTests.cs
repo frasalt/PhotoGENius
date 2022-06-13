@@ -96,7 +96,7 @@ namespace PGENLib.Tests
         [Fact]
         public void TestTransformation()
         {
-            Sphere sphere = new Sphere(Transformation.Traslation(new Vec(10.0f, 0.0f, 0.0f)));
+            Sphere sphere = new Sphere(Transformation.Translation(new Vec(10.0f, 0.0f, 0.0f)));
 
             Ray ray1 = new Ray(new Point(10f, 0f, 2f), -Vz);
             HitRecord? int1 = sphere.RayIntersection(ray1);
