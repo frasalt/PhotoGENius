@@ -106,19 +106,18 @@ namespace PGENLib.Tests
         {
             //la @ serve per una stringa letterale complessa
             
-            string test = @" 
+            string test = @"
                 # This is a comment 
                 # This is another comment
-                material sky_material(
+                new material sky_material(
                  diffuse(image(""my file.pfm"")),
                  < 5.0, 500.0, 300.0 >
                 ) # Comment at the end of the line";
             byte[] array = Encoding.ASCII.GetBytes(test);
             MemoryStream memoryStream = new MemoryStream(array);
             InputStream stream = new InputStream(memoryStream);
-            AssertIsKeyword(stream.ReadToken(), KeywordList.Material);
-
-            //AssertIsKeyword(stream.ReadToken(), KeywordList.New);
+            
+            AssertIsKeyword(stream.ReadToken(), KeywordList.New);
             //AssertIsKeyword(stream.ReadToken(), KeywordList.Material);
             //AssertIsIdentifier(InputStream.ReadToken(), "sky_material");
             memoryStream.Close();
