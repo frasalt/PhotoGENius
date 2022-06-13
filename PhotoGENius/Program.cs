@@ -70,7 +70,8 @@
             
             var algorithm = new Option<string>(
                 name: "--algorithm",
-                description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one or 'pathtracing'  ",
+                description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one " +
+                             "or 'pathtracing' or 'pointlight'  ",
                 getDefaultValue: () => "pathtracing");
             
             var raysNum = new Option<int>(
@@ -251,7 +252,9 @@
                     world.AddShape(new Sphere(transformation * scaling, redMaterial));
                     //---------------------------
                     */
-                
+
+                    world.AddLight(new PointLight(new Point(-30f, 30f, 30f), new Color(1.0f, 1.0f, 1.0f)));
+                    
                     // 2.Camera initialization
                     Console.WriteLine("Initializing camera...");
 
@@ -273,6 +276,7 @@
                         throw new Exception("Invalid camera option: use orthogonal, or perspective");
                     }
 
+                    
                     // 3.(ruotare l'osservatore)
 
                     // 4.Run raytracer
@@ -308,8 +312,20 @@
                         );
                         tracer.FireAllRays(renderer.Call);
                     }
-                
+                    else if (algorithmValue == "pointlight")
+                    {
+                        Console.WriteLine("    Using pointlight tracer");
+                        var renderer = new PointLightRenderer(world, BLACK);
+                        tracer.FireAllRays(renderer.Call);
 
+                    }
+                    else
+                    {
+                        Console.WriteLine($"    Tracer {algorithm} is not valid. " +
+                                          $"Available tracer are 'flat', 'onoff', 'pathtracing', 'pointlight'.");
+                        return;
+                    }
+                    
                     // 5.salvare PFM 
                     var stream = new MemoryStream();
                     using FileStream fstream = File.OpenWrite(pfmOutputValue);

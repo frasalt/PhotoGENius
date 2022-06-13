@@ -154,6 +154,7 @@ namespace PGENLib
             AmbientColor = ambientColor;
         }
         
+       
         public override Color Call(Ray ray)
         {
             var hitRecord = World.RayIntersection(ray);
