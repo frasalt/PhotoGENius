@@ -3,56 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace PGENLib
 {
-    //==================================================================================================================
-    //Vec
-    //==================================================================================================================
-    /// <summary>
-    /// A 2D vector, with two floating point fields u and v.
-    /// </summary>
-
-    public struct Vec2d
-    {
-        internal float u;
-        internal float v;
-
-        /// <summary>
-        /// Empty constructor.
-        /// </summary>
-        public Vec2d()
-        {
-            u = 0;
-            v = 0;
-
-        }
-
-        /// <summary>
-        /// Constructor with float parameters.
-        /// </summary>
-        public Vec2d(float u, float v)
-        {
-            this.u = u;
-            this.v = v;
-
-        }
-
-        //METODI========================================================================================================
-        /// <summary>
-        /// Check weather two Vec2d objects are equals. 
-        /// </summary>
-        public static bool are_close(Vec2d p, Vec2d q)
-        {
-            var epsilon = 1E-5;
-            if (Math.Abs(p.u - q.u) < epsilon && Math.Abs(p.v - q.v) < epsilon)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
-    }
+    
     
     //==================================================================================================================
     //HitRecords
