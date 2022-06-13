@@ -458,8 +458,8 @@ namespace PGENLib
                     // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
                     while (ch is not ('\r' or '\n' or '\0'))
                     {
+                        ch = ReadChar(); // <<<<< CORRETTO? lui scriveva solo "continue"
                     }
-
                 }
 
                 ch = ReadChar();
@@ -633,7 +633,7 @@ namespace PGENLib
         /// </summary>
         /// <param name="inputFile"></param>
         /// <param name="symbol"></param>
-        public void expect_symbol(InputStream inputFile, string symbol)
+        public static void expect_symbol(InputStream inputFile, string symbol)
         {
             Token token = inputFile.ReadToken();
 
@@ -651,7 +651,7 @@ namespace PGENLib
         /// <param name="inputFile"></param>
         /// <param name="keywords"></param>
         /// <returns></returns>
-        public KeywordList expect_keywords(InputStream inputFile, List<KeywordList> keywords)
+        public static KeywordList expect_keywords(InputStream inputFile, List<KeywordList> keywords)
         {
             Token token = inputFile.ReadToken();
 
@@ -686,7 +686,7 @@ namespace PGENLib
         /// <param name="inputFile"></param>
         /// <param name="scene"></param>
         /// <returns></returns>
-        public float expect_number(InputStream inputFile, Scene scene)
+        public static float expect_number(InputStream inputFile, Scene scene)
         {
             Token token = inputFile.ReadToken();
 
@@ -717,7 +717,7 @@ namespace PGENLib
         /// </summary>
         /// <param name="inputFile"></param>
         /// <returns></returns>
-        public string expect_string(InputStream inputFile)
+        public static string expect_string(InputStream inputFile)
         {
             Token token = inputFile.ReadToken();
 
@@ -735,7 +735,7 @@ namespace PGENLib
         /// </summary>
         /// <param name="inputFile"></param>
         /// <returns></returns>
-        public string expect_identifier(InputStream inputFile)
+        public static string expect_identifier(InputStream inputFile)
         {
             Token token = inputFile.ReadToken();
 
@@ -755,7 +755,7 @@ namespace PGENLib
         /// <param name="inputFile"></param>
         /// <param name="scene"></param>
         /// <returns></returns>
-        public Vec parse_vector(InputStream inputFile, Scene scene)
+        public static Vec parse_vector(InputStream inputFile, Scene scene)
         {
             expect_symbol(inputFile, "[");
             float x = expect_number(inputFile, scene);
@@ -768,7 +768,7 @@ namespace PGENLib
             return new Vec(x, y, z);
         }
 
-        public Color parse_color(InputStream inputFile, Scene scene)
+        public static Color parse_color(InputStream inputFile, Scene scene)
         {
             expect_symbol(inputFile, "<");
             float red = expect_number(inputFile, scene);
@@ -782,7 +782,7 @@ namespace PGENLib
         }
 
 
-        public Pigment parse_pigment(InputStream inputFile, Scene scene)
+        public static Pigment parse_pigment(InputStream inputFile, Scene scene)
         {
 
             Pigment result;
@@ -830,7 +830,7 @@ namespace PGENLib
             return result;
         }
 
-        public BRDF parse_brdf(InputStream inputFile, Scene scene)
+        public static BRDF parse_brdf(InputStream inputFile, Scene scene)
         {
 
             List<KeywordList> mylist = new List<KeywordList> { KeywordList.Diffuse, KeywordList.Specular };
@@ -852,7 +852,7 @@ namespace PGENLib
             }
         }
 
-        public Tuple<string, Material> parse_material(InputStream inputFile, Scene scene)
+        public static Tuple<string, Material> parse_material(InputStream inputFile, Scene scene)
         {
             string name = expect_identifier(inputFile);
 
@@ -865,7 +865,7 @@ namespace PGENLib
             return new Tuple<string, Material>(name, new Material(emittedRadiance, brdf));
         }
 
-        public Transformation parse_transformation(InputStream inputFile, Scene scene)
+        public static Transformation parse_transformation(InputStream inputFile, Scene scene)
         {
             Transformation result = new Transformation();
 
@@ -932,7 +932,7 @@ namespace PGENLib
             return result;
         }
 
-        public Sphere parse_sphere(InputStream inputFile, Scene scene)
+        public static Sphere parse_sphere(InputStream inputFile, Scene scene)
         {
             expect_symbol(inputFile, "(");
 
@@ -950,7 +950,7 @@ namespace PGENLib
             return new Sphere(transformation, scene.Materials[materialName]);
         }
 
-        public XyPlane parse_plane(InputStream inputFile, Scene scene)
+        public static XyPlane parse_plane(InputStream inputFile, Scene scene)
         {
             expect_symbol(inputFile, "(");
 
@@ -968,7 +968,7 @@ namespace PGENLib
             return new XyPlane(transformation, scene.Materials[materialName]);
         }
         
-        public ICamera parse_camera(InputStream inputFile, Scene scene)
+        public static ICamera parse_camera(InputStream inputFile, Scene scene)
         {
             ICamera result;
             
@@ -1004,7 +1004,7 @@ namespace PGENLib
         /// <param name="inputFile"></param>
         /// <param name="variables"></param>
         /// <returns></returns>
-        public Scene parse_scene(InputStream inputFile, Dictionary<string, float> variables)
+        public static Scene parse_scene(InputStream inputFile, Dictionary<string, float> variables)
         {
             Scene scene = new Scene();
             scene.FloatVariables = variables;

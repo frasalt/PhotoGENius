@@ -118,10 +118,10 @@ namespace PGENLib.Tests
             InputStream stream = new InputStream(memoryStream);
             
             AssertIsKeyword(stream.ReadToken(), KeywordList.New);
-            //AssertIsKeyword(stream.ReadToken(), KeywordList.Material);
-            //AssertIsIdentifier(InputStream.ReadToken(), "sky_material");
+            AssertIsKeyword(stream.ReadToken(), KeywordList.Material);
+            AssertIsIdentifier(stream.ReadToken(), "sky_material");
+            
             memoryStream.Close();
         }
-        
     }
 }
