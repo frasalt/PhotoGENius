@@ -234,10 +234,9 @@ namespace PGENLib
         /// Normalize two vectors or normals and evaluate the dot product.
         /// The result is the cosine of the angle between the two vectors/normals.
         /// </summary>
-        /// <param name="v1">vector/normal</param>
-        /// <param name="v2">vector/normal</param>
+        /// <param name="v1">Vector</param>
+        /// <param name="v2">Vector</param>
         /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
-        //DEVO IMPLEMENTEARE UNION PER FORZA PERCHè COSì VALE SIA PER I VETTORI CHE PER LE NORMALI
         public static float NormalizeDot(Vec v1, Vec v2)
         {
             var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
@@ -246,16 +245,50 @@ namespace PGENLib
             return r;
         }
         
-        /*
-        public static float NormalizeDot<T>(ref T v1, ref T v2)
+        /// <summary>
+        /// Normalize two vectors or normals and evaluate the dot product.
+        /// The result is the cosine of the angle between the two vectors/normals.
+        /// </summary>
+        /// <param name="v1">Normal</param>
+        /// <param name="v2">Normal</param>
+        /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
+        public static float NormalizeDot(Normal v1, Normal v2)
         {
             var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
             var v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
             float r = DotProd(v1Vec, v2Vec);
             return r;
         }
-        */
         
+        /// <summary>
+        /// Normalize two vectors or normals and evaluate the dot product.
+        /// The result is the cosine of the angle between the two vectors/normals.
+        /// </summary>
+        /// <param name="v1">Normal</param>
+        /// <param name="v2">Vec</param>
+        /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
+        public static float NormalizeDot(Normal v1, Vec v2)
+        {
+            var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
+            var v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
+            float r = DotProd(v1Vec, v2Vec);
+            return r;
+        }
+        
+        /// <summary>
+        /// Normalize two vectors or normals and evaluate the dot product.
+        /// The result is the cosine of the angle between the two vectors/normals.
+        /// </summary>
+        /// <param name="v1">Vec</param>
+        /// <param name="v2">Normal</param>
+        /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
+        public static float NormalizeDot(Vec v1, Normal v2)
+        {
+            var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
+            var v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
+            float r = DotProd(v1Vec, v2Vec);
+            return r;
+        }
     }
     //==========================================================================================================
     //Tuple 
