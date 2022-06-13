@@ -80,7 +80,7 @@ namespace PGENLib
 
         public Ray Transform(Transformation tr)
         {
-            var newRay = new Ray(tr*this.Origin, tr*this.Dir)
+            var newRay = new Ray(tr*Origin, tr*Dir)
             {
                 Tmax = this.Tmax,
                 Tmin = this.Tmin,
@@ -204,11 +204,40 @@ namespace PGENLib
     {
         public HdrImage Image;
         public ICamera Camera;
+        public PCG Pcg;
+        public int SamplePerSide;
         
-        public ImageTracer(HdrImage image, ICamera camera)
+        /// <summary>
+        /// Constructor with parameters. If SamplePerSide is usefull to implement the antialiasing: if it's not zero,
+        /// stratified sampling will be applied to each pixel in the image, using the random number generator `pcg`. 
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="camera"></param>
+        /// <param name="pcg"></param>
+        /// <param name="samplePerSide"></param>
+        public ImageTracer(HdrImage image, ICamera camera, PCG pcg, int samplePerSide = 1)
         {
             Image = image;
             Camera = camera;
+            Pcg = pcg;
+            SamplePerSide = samplePerSide;
+            
+        }
+        
+        /// <summary>
+        /// Constructor with parameters. If SamplePerSide is usefull to implement the antialiasing: if it's not zero,
+        /// stratified sampling will be applied to each pixel in the image, using the random number generator `pcg`. 
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="camera"></param>
+        /// <param name="samplePerSide"></param>
+        public ImageTracer(HdrImage image, ICamera camera, int samplePerSide = 1)
+        {
+            Image = image;
+            Camera = camera;
+            Pcg = new PCG();
+            SamplePerSide = samplePerSide;
+            
         }
 
         /// <summary>
@@ -223,8 +252,8 @@ namespace PGENLib
         /// <returns></returns>
         public Ray FireRay(int col, int row, float uPixel = 0.5f, float vPixel = 0.5f)
         {
-            float u = (col + uPixel) / (Image.Width);
-            float v = 1.0f - (row + vPixel) / (Image.Height);
+            float u = (col + uPixel) / Image.Width;
+            float v = 1.0f - (row + vPixel) / Image.Height;
             return Camera.FireRay(u, v);
         }
 
@@ -232,54 +261,40 @@ namespace PGENLib
         /// Shoot several light rays crossing each of the pixels in the image. For each pixel of the `HdrImage`
         /// object, fire one ray and pass it to the function `func`, which must accept a `Ray` as its only
         /// parameter and must return a `Color` object, representing the color to assign to that pixel in the image.
-        /// If `callback` is not none, it must be a function accepting at least two parameters named `col` and `row`.
-        /// This function is called periodically during the rendering, and the two mandatory arguments are the row and
-        /// column number of the last pixel that has been traced. (Both the row and column are increased by one starting
-        /// from zero: first the row and then the column.) The time between two consecutive calls to the callback can be
-        /// tuned using the parameter `callback_time_s`. Any keyword argument passed to `fire_all_rays` is passed to
-        /// the callback.
         /// </summary>
         /// <param name="func"></param>
-        /// <param name="???"></param>
-        /*
-        public void FireAllRays (Func<Ray,Color> func, Func callback=None, callback_time_s: float = 2.0, **callback_kwargs)
-        {
-            var lastCallTime = process_time();
-            if (callback != null)
-            {
-                callback(col=0, row=0, **callback_kwargs)
-            }
-        
-            for(int row = 0; row< Image.Height; row ++)
-            {
-                for(int col = 0; col< Image.Width; col ++)
-                {
-                    
-                    Ray ray = FireRay(col, row);
-                    Color color = func(ray);    
-                    Image.SetPixel(col, row, color);
-                    
-                    current_time = process_time()
-                    if callback and (current_time - last_call_time > callback_time_s):
-                    callback(row, col, **callback_kwargs)
-                    last_call_time = current_time
-                }
-            }
-        }
-        */    
         public void FireAllRays (Func<Ray,Color> func)
         {
             for(int row = 0; row< Image.Height; row ++)
             {
+                if(row%20 == 0) Console.WriteLine($"        Fill row {row}/{Image.Height}");
                 for(int col = 0; col< Image.Width; col ++)
                 {
+                    var cumColor = new Color(); //Black
                     
-                    Ray ray = FireRay(col, row);
-                    Color color = func(ray);    // una funzione che viene invocata per ogni raggio e
-                    // restituisca un oggetto di tipo Color.
-                    Image.SetPixel(col, row, color);
+                    if (SamplePerSide > 0)
+                    {
+                        // Run stratified sampling over the pixel's surface.
+                        for (int interPixelRow = 0; interPixelRow < SamplePerSide; interPixelRow++)
+                        {
+                            for (int interPixelCol = 0; interPixelCol < SamplePerSide; interPixelCol++)
+                            {
+                                var uPixel = (interPixelCol + Pcg.RandomFloat()) / SamplePerSide;
+                                var vPixel = (interPixelRow + Pcg.RandomFloat()) / SamplePerSide;
+                                var ray = FireRay(col, row, uPixel, vPixel);
+                                cumColor += func(ray);
+                                
+                                Image.SetPixel(col, row, cumColor * (float)(1 / Math.Pow(SamplePerSide, 2.0f)));
+                            }
+                        }
+                    }
+                    
+                    
+                    
                 }
             }
         }
+        
+
     }
 }

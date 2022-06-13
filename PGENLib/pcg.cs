@@ -46,9 +46,10 @@ namespace PGENLib
         /// Return a new random number uniformly distributed over [0, 1].
         /// </summary>
         /// <returns></returns>
-        public uint RandomFloat()
+        public float RandomFloat()
         {
-            return Random()/ 0xffffffff;
+            //return Random()/ 0xffffffff;
+            return (float)Random()/4294967295.0f;
         }
     }
 }

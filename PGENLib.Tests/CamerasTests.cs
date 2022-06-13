@@ -108,15 +108,12 @@ namespace PGENLib.Tests
                 _tracer = new ImageTracer(_image, _camera);
             }
 
-            /*
+            
             [Fact]
             public void test_orientation()
             {
                 // Fire a ray against top-left corner of the screen
-<<<<<<< HEAD
-=======
 
->>>>>>> 33b6579c24f5eba16bae7305c620547b24c9ebe1
                 Ray topLeftRay = _tracer.FireRay(0, 0, 0.0f, 0.0f);
                 Point point = new Point(0.0f, 2.0f, 1.0f);
                 Point rayPoint = topLeftRay.At(1.0f);
@@ -128,7 +125,7 @@ namespace PGENLib.Tests
                 rayPoint = bottomRightRay.At(1.0f);
                 Assert.True(Point.are_close(point,rayPoint)); 
             }
-            */
+            
 
             [Fact]
             public void test_uv_submapping() 
@@ -142,7 +139,7 @@ namespace PGENLib.Tests
             public void test_image_coverage()
             {
                 _tracer.FireAllRays(lambda);
-
+                
                 Color mycolor = new Color(1.0f, 2.0f, 3.0f);
                 Color mypixel;
                 for (int row = 0; row < _image.Height; row++)
@@ -163,8 +160,36 @@ namespace PGENLib.Tests
                 return new Color(1.0f, 2.0f, 3.0f);
             }
         }
-
-
-
+        
     }
+
+    public class TestAntialiasing
+    {
+        int numOfRays = 0;
+        private Ray ray = new Ray();
+        [Fact]
+        public void AntialiasTest()
+        {
+            var smallImg = new HdrImage(1, 1);
+            var camera = new OrthogonalCamera();
+            var tracer = new ImageTracer(smallImg, camera, 10);
+            
+            tracer.FireAllRays(TraceRay);
+
+            //Check that the number of rays that were fired is what we expect (10²)
+            Assert.True(numOfRays==100);
+        }
+        Color TraceRay(Ray r)
+        {
+            var point = ray.At(1);
+            //Check that all the rays intersect the screen within the region [−1, 1] × [−1, 1]
+            Assert.True(Math.Abs(point.x-0.0f) < 10E-5);
+            Assert.True(point.y is >= -1.0f and <= 1.0f);
+            Assert.True(point.z is >= -1.0f and <= 1.0f);
+            numOfRays += 1;
+            return new Color();
+        }
+        
+    }
+    
 }
