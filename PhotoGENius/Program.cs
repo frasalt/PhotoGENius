@@ -386,9 +386,14 @@
                 {
                     Stream scene_stream = new FileStream(scenefileValue, FileMode.Open);
                     Dictionary<string, float> dict = new Dictionary<string, float>();
-                    
-                    Scene scene = ExpectParse.parse_scene(new InputStream(scene_stream), dict);
 
+
+                    Scene scene = new Scene();
+                    
+                    scene = ExpectParse.parse_scene(new InputStream(scene_stream), dict);
+
+                    Console.WriteLine("Number of shapes in world: "+ scene.World.Shapes.Count);
+                    Console.WriteLine(scene.World.Shapes);
                     
                     // 4.Run raytracer
 
