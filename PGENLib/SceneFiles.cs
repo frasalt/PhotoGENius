@@ -157,7 +157,7 @@ namespace PGENLib
         Perspective = 18,
         Float = 19,
         Pointlight = 20,
-        //Cilinder = 21
+        Cylinder = 21
     }
 
     /// <summary>
@@ -199,7 +199,7 @@ namespace PGENLib
             { "material", KeywordList.Material },
             { "plane", KeywordList.Plane },
             { "sphere", KeywordList.Sphere },
-            //{  "cylinder" , Keyword.Cylinder},
+            { "cylinder" , KeywordList.Cylinder},
             { "diffuse", KeywordList.Diffuse },
             { "specular", KeywordList.Specular },
             { "uniform", KeywordList.Uniform },
@@ -954,7 +954,7 @@ namespace PGENLib
             return new Sphere(transformation, scene.Materials[materialName]);
         }
 
-        public Cylinder parse_cylinder(InputStream inputFile, Scene scene)
+        public static Cylinder parse_cylinder(InputStream inputFile, Scene scene)
         {
             expect_symbol(inputFile, "(");
             string materialName = expect_identifier(inputFile);
@@ -970,12 +970,10 @@ namespace PGENLib
             expect_symbol(inputFile, ",");
             float zmax = expect_number(inputFile, scene);
             expect_symbol(inputFile, ",");
-            float phimax = expect_number(inputFile, scene);
-            expect_symbol(inputFile, ",");
             float r = expect_number(inputFile, scene);
             expect_symbol(inputFile, ")");
 
-            return new Cylinder(transformation, scene.Materials[materialName], zmin, zmax, phimax, r);
+            return new Cylinder(transformation, scene.Materials[materialName], zmin, zmax, r);
         }
 
         public static XyPlane parse_plane(InputStream inputFile, Scene scene)
@@ -1082,6 +1080,8 @@ namespace PGENLib
                         scene.World.AddShape(parse_sphere(inputFile, scene));
                     else if (((KeywordToken)what).Keyword == KeywordList.Plane)
                         scene.World.AddShape(parse_plane(inputFile, scene));
+                    else if (((KeywordToken)what).Keyword == KeywordList.Cylinder)
+                        scene.World.AddShape(parse_cylinder(inputFile, scene));
                     else if (((KeywordToken)what).Keyword == KeywordList.Camera)
                     {
                         if (scene.Camera != null)

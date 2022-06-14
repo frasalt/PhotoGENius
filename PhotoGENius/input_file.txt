@@ -14,8 +14,8 @@ sphere (sky_material, translation([0, 0, 0.4]) * scaling([200, 200, 200]))
 plane (ground_material, identity)
 sphere (sphere_material, translation([0, 0, 1]))
 sphere (mirror_material, translation([0, 2, 0]))
-cylinder (cyl_material, translation([0, -1.5, 1.5]))
+cylinder (cyl_material, translation([0, -1.5, 1]), 0, 1, 1)
 
 #---------------  CAMERA  ---------------
 
-camera(perspective, translation([-5, 0, 1]), 1.0, 3.0)
+camera(perspective, rotation_y(40)*translation([-5, 0, 3]), 1.0, 2.0)
