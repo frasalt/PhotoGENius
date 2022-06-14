@@ -101,13 +101,23 @@ namespace PGENLib
     public interface ICamera
     {
         Ray FireRay(float u, float v);
-
+        Transformation GetTransf();
+        void SetTransf(Transformation tr);
     }
   
     public struct OrthogonalCamera : ICamera
     {
-        private float AspectRatio;
-        private Transformation Transf;
+        public float AspectRatio;
+        public Transformation Transf;
+
+        public Transformation GetTransf()
+        {
+            return Transf;
+        }
+        public void SetTransf(Transformation tr)
+        {
+            Transf = tr;
+        }
 
         public OrthogonalCamera(float aspectRatio = 1.0f)
         {
@@ -133,9 +143,18 @@ namespace PGENLib
     
     public struct PerspectiveCamera : ICamera
     {
-        private float ScreenDistance;
-        private float AspectRatio;
-        private Transformation Transf;
+        public float ScreenDistance;
+        public float AspectRatio;
+        public Transformation Transf;
+        
+        public Transformation GetTransf()
+        {
+            return Transf;
+        }
+        public void SetTransf(Transformation tr)
+        {
+            Transf = tr;
+        }
         
         public PerspectiveCamera()
         {

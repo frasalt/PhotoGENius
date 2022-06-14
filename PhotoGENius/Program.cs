@@ -426,6 +426,11 @@ class Program
                 scene = ExpectParse.parse_scene(new InputStream(sceneStream), dict);
 
                 //Inserire controllo dei parametri di input letti da file
+
+                // <<<<<<<<<<<< le impostazioni della camera devono poter essere date da linea di comando come per la rotazione
+                // rotazione della camera
+                if (angleDegValue != 0)
+                    scene.Camera.SetTransf( Transformation.RotationZ(angleDegValue)*scene.Camera.GetTransf());
                     
                 // 4.Run raytracer
                 Console.WriteLine("\nRunning raytracer...");
