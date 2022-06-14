@@ -110,7 +110,6 @@ namespace PGENLib
                 if (Pcg.RandomFloat() > q)
                 {
                     //Keep the recursion going, but compensate for other potentially discarded rays
-
                     hitColor *= 1.0f / (1.0f - q);
                 }
                 else
@@ -145,7 +144,7 @@ namespace PGENLib
     {
         public Color AmbientColor;
 
-        public PointLightRenderer(World world, Color backGroundColor = default) : this(new Color(1.0f, 1.0f, 1.0f), world, backGroundColor)
+        public PointLightRenderer(World world, Color backGroundColor = default) : this(new Color(0f, 0f, 0f), world, backGroundColor)
         {
         }
 
