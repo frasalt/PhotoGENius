@@ -218,9 +218,9 @@ namespace PGENLib
     }
     
     //==============================================================================================================
-    //Cilinder
+    //Cylinder
     //==============================================================================================================
-    public class Cilinder : Shape
+    public class Cylinder : Shape
     {
         public float R;
         public float Zmin;
@@ -231,7 +231,7 @@ namespace PGENLib
         /// <summary>
         /// Constructor without any parameter.
         /// </summary>
-        public Cilinder(float zmin = 0.0f, float zmax = 2.0f, float r=1.0f)
+        public Cylinder(float zmin = 0.0f, float zmax = 2.0f, float r=1.0f)
         {
             Phimax = (float) (2*Math.PI);
             Zmin = zmin;
@@ -243,7 +243,7 @@ namespace PGENLib
         /// <summary>
         /// Constructor with parameters.
         /// </summary>
-        public Cilinder(Material material, float zmin = 0.0f, float zmax = 2.0f, float r=1.0f)
+        public Cylinder(Material material, float zmin = 0.0f, float zmax = 2.0f, float r=1.0f)
         {
             Phimax = (float) (2*Math.PI);
             Zmin = zmin;
@@ -260,7 +260,7 @@ namespace PGENLib
         /// <param name="zmin"></param>
         /// <param name="zmax"></param>
         /// <param name="r"></param>
-        public Cilinder(Transformation transf, Material material, float zmin = 0f, float zmax = 2f, float r = 1.0f)
+        public Cylinder(Transformation transf, Material material, float zmin = 0f, float zmax = 2f, float r = 1.0f)
         {
             Zmin = zmin;
             Zmax = zmax;
@@ -279,7 +279,7 @@ namespace PGENLib
         /// <param name="zmax"></param>
         /// <param name="phimax"></param>
         /// <param name="r"></param>
-        public Cilinder(Transformation transf, Material material, float zmin, float zmax, float phimax, float r = 1.0f)
+        public Cylinder(Transformation transf, Material material, float zmin, float zmax, float phimax, float r = 1.0f)
         {
             Zmin = zmin;
             Zmax = zmax;
@@ -352,7 +352,7 @@ namespace PGENLib
             }
 
             
-            var hit = new HitRecord(Transf*hitPoint, Transf*CilinderNormal(hitPoint, ray.Dir),
+            var hit = new HitRecord(Transf*hitPoint, Transf*CylinderNormal(hitPoint, ray.Dir),
                 new Vec2d(phi / Phimax, (hitPoint.z - Zmin) / (Zmax - Zmin)), tFirstHit, ray, Material);
             return hit;
         }
@@ -361,7 +361,7 @@ namespace PGENLib
         /// <summary>
         /// Convert the 3D intersection point into a 2D point, of coordinates (u,v). 
         /// </summary>
-        public Vec2d CilinderPointToUv(Point point)
+        public Vec2d CylinderPointToUv(Point point)
         {
             
             float u = (float) (Math.Atan(point.y/point.x) / Phimax); 
@@ -375,13 +375,13 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Computes the normal in the intersection point of a ray and the surface of a cilinder.
+        /// Computes the normal in the intersection point of a ray and the surface of a cylinder.
         /// The normal has always the opposite direction with respect to a given Ray. 
         /// </summary>
         /// <param name="point">Type Point</param>
         /// <param name="dir">Type Vec</param>
         /// <returns>Normal</returns>
-        public Normal CilinderNormal(Point point,  Vec dir)
+        public Normal CylinderNormal(Point point,  Vec dir)
         {
             Normal result = new Normal(point.x, point.y, 0.0f);
             Normal n;

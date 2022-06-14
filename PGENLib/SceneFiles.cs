@@ -950,6 +950,30 @@ namespace PGENLib
             return new Sphere(transformation, scene.Materials[materialName]);
         }
 
+        public Cylinder parse_cylinder(InputStream inputFile, Scene scene)
+        {
+            expect_symbol(inputFile, "(");
+            string materialName = expect_identifier(inputFile);
+            if (!scene.Materials.ContainsKey(materialName))
+            {
+                // We raise the exception here because inputFile is pointing to the end of the wrong identifier
+                throw new GrammarErrorException($"Unknown material {materialName}", inputFile.Location);
+            }
+            expect_symbol(inputFile, ",");
+            Transformation transformation = parse_transformation(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float zmin = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float zmax = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float phimax = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float r = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ")");
+
+            return new Cylinder(transformation, scene.Materials[materialName], zmin, zmax, phimax, r);
+        }
+
         public static XyPlane parse_plane(InputStream inputFile, Scene scene)
         {
             expect_symbol(inputFile, "(");
@@ -996,7 +1020,7 @@ namespace PGENLib
             return result;
         }
 
-        // public Cylinder parse_cylinder { }
+        
 
         /// <summary>
         /// Read a scene description from a stream and return a :class:`.Scene` object
