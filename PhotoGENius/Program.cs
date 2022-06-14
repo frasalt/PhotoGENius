@@ -69,7 +69,8 @@
             
             var algorithm = new Option<string>(
                 name: "--algorithm",
-                description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one or 'pathtracing'  ",
+                description: "Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one " +
+                             "or 'pathtracing' or 'pointlight'  ",
                 getDefaultValue: () => "pathtracing");
             
             var raysNum = new Option<int>(
@@ -136,7 +137,7 @@
                     string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
                     ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
                 { 
-                    
+                    //Inserire controllo dei parametri di input letti da file
                     var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
                     
                     if (Math.Abs(Math.Pow(samplePerSide, 2.0f) - samplePerPixelValue) > 10E-5)
@@ -188,7 +189,7 @@
                     world.AddShape(
                         new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                     );
-                    
+                                 
                     /*
                     //---------------------------
                     //tree
@@ -198,6 +199,7 @@
                         new Cilinder( Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial,
                             0.0f, 2.0f, 0.3f)
                     );
+                    
                     //Sphere
                     world.AddShape(
                         new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
@@ -253,7 +255,9 @@
                     world.AddShape(new Sphere(transformation * scaling, redMaterial));
                     //---------------------------
                     */
-                
+
+                    world.AddLight(new PointLight(new Point(-30f, 30f, 30f), new Color(1.0f, 1.0f, 1.0f)));
+                    
                     // 2.Camera initialization
                     Console.WriteLine("\nInitializing camera...");
 
@@ -275,6 +279,7 @@
                         throw new Exception("Invalid camera option: use orthogonal, or perspective");
                     }
 
+                    
                     // 3.(ruotare l'osservatore)
 
                     // 4.Run raytracer
@@ -308,6 +313,19 @@
                             maxDepthValue
                         );
                         tracer.FireAllRays(renderer.Call);
+                    }
+                    else if (algorithmValue == "pointlight")
+                    {
+                        Console.WriteLine("    Using pointlight tracer");
+                        var renderer = new PointLightRenderer(world: world, backGroundColor: BLACK);
+                        tracer.FireAllRays(renderer.Call);
+
+                    }
+                    else
+                    {
+                        Console.WriteLine($"    [{algorithm}] is not valid. " +
+                                          $"Available tracer are 'flat', 'onoff', 'pathtracing', 'pointlight'.");
+                        return;
                     }
                     
                     // 5.salvare PFM 
@@ -385,59 +403,82 @@
             rootCommand.AddCommand(render);
             
             render.SetHandler((string scenefileValue, int widthValue, int heightValue, float angleDegValue,
-                string pfmOutputValue,
-                string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue,
-                int maxDepthValue, ulong initStateValue,
-                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
+                string pfmOutputValue, string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue,
+                int maxDepthValue, ulong initStateValue, ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
             {
+                //Compute number of sample per side, which will be used for antialiasing
+                var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
+                    
+                if (Math.Abs(Math.Pow(samplePerSide, 2.0f) - samplePerPixelValue) > 10E-5)
+                {
+                    Console.WriteLine("Error: samplePerPixel must be a perfect square");
+                    return;
+                }
                 Console.WriteLine("");
                 Console.WriteLine("=====================================");
                 Console.WriteLine("Initializing scene...");
 
+                //Read the scene from input file
                 Stream sceneStream = new FileStream(scenefileValue, FileMode.Open);
                 Dictionary<string, float> dict = new Dictionary<string, float>();
+            
+                Scene scene = new Scene();    
+                scene = ExpectParse.parse_scene(new InputStream(scene_stream), dict);
 
-                Scene scene = new Scene();
-
-                scene = ExpectParse.parse_scene(new InputStream(sceneStream), dict);
-
+                //Inserire controllo dei parametri di input letti da file
+                    
                 // 4.Run raytracer
                 Console.WriteLine("\nRunning raytracer...");
 
                 var image = new HdrImage(widthValue, heightValue);
                 Console.WriteLine(
                     $"    Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
+              
 
-                var tracer = new ImageTracer(image, scene.Camera);
-
-                if (algorithmValue == "onoff")
-                {
-                    Console.WriteLine("Using on/off renderer");
-                    var renderer = new OnOffRenderer(scene.World);
-                    tracer.FireAllRays(renderer.Call);
-                }
-                else if (algorithmValue == "flat")
-                {
-                    Console.WriteLine("Using flat renderer");
-                    var renderer = new FlatRenderer(scene.World);
-                    tracer.FireAllRays(renderer.Call);
-                }
-                else if (algorithmValue == "pathtracing")
-                {
-                    Console.WriteLine("    Using pathtracing");
-                    var renderer = new PathTracer(
-                        scene.World,
-                        new PCG(initStateValue, initSeqValue),
-                        raysNumValue,
-                        maxDepthValue
-                    );
-                    tracer.FireAllRays(renderer.Call);
-                }
+                    var tracer = new ImageTracer(image, scene.Camera, samplePerSide);
                 
-                sceneStream.Close();
+                    if (algorithmValue == "onoff")
+                    {
+                        Console.WriteLine("Using on/off renderer");
+                        var renderer = new OnOffRenderer(scene.World);
+                        tracer.FireAllRays(renderer.Call);
+                    }
+                    else if(algorithmValue == "flat")
+                    {
+                        Console.WriteLine("Using flat renderer");
+                        var renderer = new FlatRenderer(scene.World);
+                        tracer.FireAllRays(renderer.Call);
+                    }
+                    else if (algorithmValue == "pathtracing")
+                    {
+                        Console.WriteLine("Using pathtracing");
+                        var renderer = new PathTracer(
+                            scene.World,
+                            new PCG(initStateValue, initSeqValue), 
+                            raysNumValue, 
+                            maxDepthValue
+                        );
+                        tracer.FireAllRays(renderer.Call);
+                    }
+                    else if (algorithmValue == "pointlight")
+                    {
+                        Console.WriteLine("    Using pointlight tracer");
+                        var renderer = new PointLightRenderer(world: scene.World, backGroundColor: BLACK);
+                        tracer.FireAllRays(renderer.Call);
 
-                // 5.salvare PFM 
-                Console.WriteLine("\nSaving PFM image...");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"    [{algorithm}] is not valid. " +
+                                          $"Available tracer are 'flat', 'onoff', 'pathtracing', 'pointlight'.");
+                        return;
+                    }
+              
+                  sceneStream.Close();
+
+                    // 5.salvare PFM 
+                    Console.WriteLine("\nSaving PFM image...");
+
 
                 using FileStream fstream = File.OpenWrite(pfmOutputValue);
 
@@ -503,6 +544,8 @@
             rootCommand.AddCommand(pfm2png);
             pfm2png.SetHandler((float luminosityFactorValue, float gammaFactorValue, string pfmInputValue, string pngOutputValue) =>
                 {
+
+                    //Inserire parse dei parametri di input letti da file
                     HdrImage img = new HdrImage(0,0);
             
                     // leggo l'immagine HDR in formato PFM

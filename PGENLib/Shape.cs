@@ -23,6 +23,17 @@ namespace PGENLib
         {
             throw new NotImplementedException("Method Shape.RayIntersection is abstract and cannot be called");
         }
+
+        /// <summary>
+        /// Determine whether a ray hits the shape or not
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public virtual bool QuickRayIntersection(Ray ray)
+        {
+            throw new NotImplementedException("Method Shape.QuickRayIntersection is abstract and cannot be called");
+        }
     }
     
     //==============================================================================================================
@@ -64,7 +75,7 @@ namespace PGENLib
         /// <returns>Returns a HitRecord, or Null if the ray doesn't hit the sphere.</returns>
         public override HitRecord? RayIntersection(Ray ray)
         {
-            Ray invRay = ray.Transform(this.Transf.Inverse());
+            Ray invRay = ray.Transform(Transf.Inverse());
             var originVec = invRay.Origin.PointToVec();
             //Calculate the coefficients for the intersection equation and solve the equation
             var a = Vec.SquaredNorm(invRay.Dir);
@@ -98,6 +109,36 @@ namespace PGENLib
             var hit = new HitRecord(Transf*hitPoint, Transf*SphereNormal(hitPoint, ray.Dir),
                 SpherePointToUv(hitPoint), tFirstHit, ray, Material);
             return hit;
+        }
+
+        /// <summary>
+        /// Determine whether a ray hits the shape or not
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public override bool QuickRayIntersection(Ray ray)
+        {
+            var invRay = ray.Transform(Transf.Inverse());
+            var originVec = invRay.Origin.PointToVec();
+            
+            //Calculate the coefficients for the intersection equation and solve the equation
+            var a = Vec.SquaredNorm(invRay.Dir);
+            var b = 2.0f * Vec.DotProd(originVec, invRay.Dir);
+            var c = Vec.SquaredNorm(originVec) - 1.0f;
+            var delta = b * b - 4.0 * a * c;
+            
+            //Is there any solution?
+            if (delta <= 0.0f)
+            {
+                return false;
+            }
+
+            var sqrtDelta = (float) Math.Sqrt(delta);
+            var tmin = (-b - sqrtDelta) / (2.0f * a);
+            var tmax = (-b + sqrtDelta) / (2.0f * a);
+            
+            return ((tmin > invRay.Tmin && tmin < invRay.Tmax) || (tmax > invRay.Tmin && tmax < invRay.Tmax));
         }
         
         /// <summary>
@@ -214,6 +255,25 @@ namespace PGENLib
                 surfacePoint, t, ray, Material);
             return hit;
         }
+        
+        /// <summary>
+        /// Determine whether a ray hits the shape or not
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public override bool QuickRayIntersection(Ray ray)
+        {
+            var invRay = ray.Transform(Transf.Inverse());
+            if (Math.Abs(invRay.Dir.z) < 1e-5)
+            {
+                return false;
+            }
+
+            var t = -invRay.Origin.z / invRay.Dir.z;
+            return t > invRay.Tmin && t < invRay.Tmax;
+        }
+
         
     }
     

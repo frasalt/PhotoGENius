@@ -2,6 +2,9 @@
 
 //Controllare vecchi pull request e aggiornare il changelog
 
+# 14-06-2022
+-Pointlight renderer implemented (https://github.com/frasalt/PhotoGENius/pull/23)
+
 # 11-06-2022
 - Implemented antialiasing to improve images quality.
 
