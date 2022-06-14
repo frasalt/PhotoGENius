@@ -3,7 +3,7 @@
 
 ![](logoPGEN.png) 
 
-<!-- add here a funny but explanatory image, maybe one of a genius! -->
+<!-- add here a funny but explanatory  image, maybe one of a genius! -->
 
 ## Features
 
