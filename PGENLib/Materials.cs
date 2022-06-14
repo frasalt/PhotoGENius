@@ -261,8 +261,8 @@ namespace PGENLib
     /// </summary>
     public class Material
     {
-        protected internal BRDF Brdf;
-        protected internal Pigment EmittedRadiance; 
+        public BRDF Brdf;
+        public Pigment EmittedRadiance; 
         public Material()
         {
             Brdf = new DiffuseBRDF();

@@ -63,5 +63,4 @@ namespace PGENLib
             SourceLocation = sourceLocation;
         }
     }
-
 }
