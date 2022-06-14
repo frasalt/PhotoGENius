@@ -34,10 +34,9 @@
 
         static async Task<int> Main(string[] args)
         {
-            //==============================================================================================================
-            //Demo 
-            //==============================================================================================================
+            var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
 
+            
             var width = new Option<int>(
                 name: "--width",
                 description: "Width of the image to render.",
@@ -109,9 +108,12 @@
                 name: "--sample-per-pixel",
                 description: "Number of sample per pixel (must be a perfect square).",
                 getDefaultValue: () => 1);
+            
+            //==============================================================================================================
+            //Demo 
+            //==============================================================================================================
 
-            var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
-            var demo = new Command("demo", "Create an image.")
+            var demo = new Command("demo", "Create a demo image.")
             {
                 width,
                 height,
@@ -128,8 +130,8 @@
                 gammaFactor,
                 samplePerPixel
             };
-            rootCommand.AddCommand(demo);
             
+            rootCommand.AddCommand(demo);
             demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
                     string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
                     ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
@@ -142,13 +144,13 @@
                         Console.WriteLine("Error: samplePerPixel must be a perfect square");
                         return;
                     }
+                    
                     // 1.World initialization
 
                     var world = new World();
                 
                     // materials
-                    Console.WriteLine("");
-                    Console.WriteLine("=====================================");
+                    Console.WriteLine("\n=====================================");
                     Console.WriteLine("Initializing materials...");
                 
                     var skyMaterial = new Material(
@@ -167,7 +169,7 @@
                     );
 
                     // shapes
-                    Console.WriteLine("Initializing shapes...");
+                    Console.WriteLine("\nInitializing shapes...");
 
                     // sky
                     world.AddShape(
@@ -253,7 +255,7 @@
                     */
                 
                     // 2.Camera initialization
-                    Console.WriteLine("Initializing camera...");
+                    Console.WriteLine("\nInitializing camera...");
 
                     Transformation transformation = Transformation.Translation(new Vec(-3.0f, 1.0f, 1.5f));
                     var rotation = Transformation.RotationZ(angleDegValue);
@@ -276,10 +278,11 @@
                     // 3.(ruotare l'osservatore)
 
                     // 4.Run raytracer
-                    Console.WriteLine("Running raytracer...");
+                    Console.WriteLine("\nRunning raytracer...");
 
                     var image = new HdrImage(widthValue, heightValue);
-                    Console.WriteLine($"    Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
+                    Console.WriteLine(
+                        $"    Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
 
                     var tracer = new ImageTracer(image, camera, samplePerSide);
                 
@@ -287,9 +290,7 @@
                     {
                         Console.WriteLine("    Using on/off renderer");
                         var renderer = new OnOffRenderer(world);
-
                         tracer.FireAllRays(renderer.Call);
-                    
                     }
                     else if(algorithmValue == "flat")
                     {
@@ -308,21 +309,19 @@
                         );
                         tracer.FireAllRays(renderer.Call);
                     }
-                
-
+                    
                     // 5.salvare PFM 
-                    var stream = new MemoryStream();
+                    Console.WriteLine("\nSaving PFM image...");
+                    
                     using FileStream fstream = File.OpenWrite(pfmOutputValue);
 
-                    image.WritePFMFile(stream, Endianness.BigEndian); // salvo le immagini in memoria...
-                    try // ... e le scrivo su file
+                    try
                     {
-                        var outf = pfmOutputValue;
                         {
                             image.WritePFMFile(fstream, Endianness.BigEndian);
                         }
 
-                        Console.WriteLine($" >> File {pfmOutputValue} has been written to disk.");
+                        Console.WriteLine($"    File {pfmOutputValue} has been written to disk.");
                     }
                     catch
                     {
@@ -331,18 +330,20 @@
                     }
                     
                     // 6.convertire a PNG
+                    Console.WriteLine("\nConverting and saving PNG image...");
+                    
                     image.NormalizeImage(luminosityFactorValue);
                     image.ClampImage();
 
                     // salvo in file PNG, a seconda delle opzioni
+                    
                     try
                     {
-                        var outf = pngOutputValue;
                         {
-                            image.WriteLdrImage(outf, "PNG", gammaFactorValue);
+                            image.WriteLdrImage(pngOutputValue, "PNG", gammaFactorValue);
                         }
 
-                        Console.WriteLine($" >> File {pngOutputValue} has been written to disk.");
+                        Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
                     }
                     catch
                     {
@@ -380,180 +381,158 @@
             };
             rootCommand.AddCommand(render);
             
-            render.SetHandler((string scenefileValue, int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
-                    string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
-                    ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
+            render.SetHandler((string scenefileValue, int widthValue, int heightValue, float angleDegValue,
+                string pfmOutputValue,
+                string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue,
+                int maxDepthValue, ulong initStateValue,
+                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
+            {
+                Console.WriteLine("");
+                Console.WriteLine("=====================================");
+                Console.WriteLine("Initializing scene...");
+
+                Stream scene_stream = new FileStream(scenefileValue, FileMode.Open);
+                Dictionary<string, float> dict = new Dictionary<string, float>();
+
+                Scene scene = new Scene();
+
+                scene = ExpectParse.parse_scene(new InputStream(scene_stream), dict);
+
+                // ------ prove --------
+                Console.WriteLine("Number of shapes in world: " + scene.World.Shapes.Count);
+                Console.WriteLine(scene.World.Shapes[0].Material.EmittedRadiance.GetColor(new Vec2d(0, 0)));
+                // ---------------------
+
+                // 4.Run raytracer
+                Console.WriteLine("\nRunning raytracer...");
+
+                var image = new HdrImage(widthValue, heightValue);
+                Console.WriteLine(
+                    $"    Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
+
+                var tracer = new ImageTracer(image, scene.Camera);
+
+                if (algorithmValue == "onoff")
                 {
-                    Stream scene_stream = new FileStream(scenefileValue, FileMode.Open);
-                    Dictionary<string, float> dict = new Dictionary<string, float>();
-
-
-                    Scene scene = new Scene();
-                    
-                    scene = ExpectParse.parse_scene(new InputStream(scene_stream), dict);
-
-                    Console.WriteLine("Number of shapes in world: "+ scene.World.Shapes.Count);
-                    Console.WriteLine(scene.World.Shapes);
-                    
-                    // 4.Run raytracer
-
-                    var image = new HdrImage(widthValue, heightValue);
-                    Console.WriteLine($"Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
-
-                    var tracer = new ImageTracer(image, scene.Camera);
+                    Console.WriteLine("Using on/off renderer");
+                    var renderer = new OnOffRenderer(scene.World);
+                    tracer.FireAllRays(renderer.Call);
+                }
+                else if (algorithmValue == "flat")
+                {
+                    Console.WriteLine("Using flat renderer");
+                    var renderer = new FlatRenderer(scene.World);
+                    tracer.FireAllRays(renderer.Call);
+                }
+                else if (algorithmValue == "pathtracing")
+                {
+                    Console.WriteLine("    Using pathtracing");
+                    var renderer = new PathTracer(
+                        scene.World,
+                        new PCG(initStateValue, initSeqValue),
+                        raysNumValue,
+                        maxDepthValue
+                    );
+                    tracer.FireAllRays(renderer.Call);
+                }
                 
-                    if (algorithmValue == "onoff")
+                //scene_stream.Close();
+
+                // 5.salvare PFM 
+                Console.WriteLine("\nSaving PFM image...");
+
+                using FileStream fstream = File.OpenWrite(pfmOutputValue);
+
+                try
+                {
                     {
-                        Console.WriteLine("Using on/off renderer");
-                        var renderer = new OnOffRenderer(scene.World);
-                        tracer.FireAllRays(renderer.Call);
+                        image.WritePFMFile(fstream, Endianness.BigEndian);
                     }
-                    else if(algorithmValue == "flat")
-                    {
-                        Console.WriteLine("Using flat renderer");
-                        var renderer = new FlatRenderer(scene.World);
-                        tracer.FireAllRays(renderer.Call);
-                    }
-                    else if (algorithmValue == "pathtracing")
-                    {
-                        Console.WriteLine("Using pathtracing");
-                        var renderer = new PathTracer(
-                            scene.World,
-                            new PCG(initStateValue, initSeqValue), 
-                            raysNumValue, 
-                            maxDepthValue
-                        );
-                        tracer.FireAllRays(renderer.Call);
-                    }
+
+                    Console.WriteLine($"    File {pfmOutputValue} has been written to disk.");
+                }
+                catch
+                {
+                    Console.WriteLine(
+                        $"Error: couldn't write file {pfmOutputValue}");
+                }
+
+                // 6.convertire a PNG
+                Console.WriteLine("\nConverting and saving PNG image...");
+
+                image.NormalizeImage(luminosityFactorValue);
+                image.ClampImage();
+
+                // salvo in file PNG, a seconda delle opzioni
                 
-
-                    // 5.salvare PFM 
-                    Console.WriteLine("Saving PFM image...");
-
-                    var stream = new MemoryStream();
-                    using FileStream fstream = File.OpenWrite(pfmOutputValue);
-
-                    image.WritePFMFile(stream, Endianness.BigEndian); // salvo le immagini in memoria...
-                    try // ... e le scrivo su file
+                try
+                {
                     {
-                        var outf = pfmOutputValue;
-                        {
-                            image.WritePFMFile(fstream, Endianness.BigEndian);
-                        }
-
-                        Console.WriteLine($"    File {pfmOutputValue} has been written to disk.");
+                        image.WriteLdrImage(pngOutputValue, "PNG", gammaFactorValue);
                     }
-                    catch
-                    {
-                        Console.WriteLine(
-                            $"Error: couldn't write file {pfmOutputValue}");
-                    }
-                    
-                    // 6.convertire a PNG
-                    Console.WriteLine("Converting and saving PNG image...");
 
-                    image.NormalizeImage(luminosityFactorValue);
-                    image.ClampImage();
+                    Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
+                }
+                catch
+                {
+                    Console.WriteLine(
+                        $"Error: couldn't write file {pngOutputValue}");
+                }
+            },
 
-                    // salvo in file PNG, a seconda delle opzioni
-                    try
-                    {
-                        var outf = pngOutputValue;
-                        {
-                            image.WriteLdrImage(outf, "PNG", gammaFactorValue);
-                        }
-
-                        Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
-                    }
-                    catch
-                    {
-                        Console.WriteLine(
-                            $"Error: couldn't write file {pngOutputValue}");
-                    }
-                    
-                },
-                scenefile, width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
+            scenefile, width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
                 initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel );
             
             
             //==============================================================================================================
             //Pfm2png con SystemCommandLine
             //==============================================================================================================
-
-            var factor = new Option<float>(
-                name: "--factor",
-                description: "Multiplicative factor.",
-                getDefaultValue: () => 0.2f);
             
-            var gamma = new Option<float>(
-                name: "--gamma",
-                description: "Exponent for gamma correction.",
-                getDefaultValue: () => 1.0f);
-            
-            var inputPfmFileName = new Option<string>(
+            var pfmInput = new Option<string>(
                 name: "--input-pfm",
                 description: "PFM file to be converted.",
                 getDefaultValue: () => "input.pfm");
             
-            var outputPngFileName = new Option<string>(
-                name: "--output-png",
-                description: "PNG output file.",
-                getDefaultValue: () => "output.png");
-
-            // ----- << linee cambiate da martin
             var pfm2png = new Command("pfm2png", "Convert a PFM file to a PNG")
             {
-                factor,
-                gamma,
-                inputPfmFileName,
-                outputPngFileName
+                luminosityFactor,
+                gammaFactor,
+                pfmInput,
+                pngOutput
             };
+            
             rootCommand.AddCommand(pfm2png);
-            // ----- >>
-
-            pfm2png.SetHandler((float factorValue, float gammaValue, string inputPfmFileNameValue, string outputPngFileNameValue) =>
+            pfm2png.SetHandler((float luminosityFactorValue, float gammaFactorValue, string pfmInputValue, string pngOutputValue) =>
                 {
-                    /*
-            Parameters parameters = new Parameters();
-        
-            // riempio i parametri
-            try { parameters.parse_command_line(argv); }
-            catch (RuntimeError)
-            {
-                Console.WriteLine("Error: invalid number of parameters. Please, follow usage instructions.");
-                return;
-            }
-            */
-    
                     HdrImage img = new HdrImage(0,0);
             
                     // leggo l'immagine HDR in formato PFM
-                    using (var inpf = new FileStream(inputPfmFileNameValue, FileMode.Open, FileAccess.Read))
+                    using (var inpf = new FileStream(pfmInputValue, FileMode.Open, FileAccess.Read))
                     { img = img.ReadPFMFile(inpf); }
     
-                    Console.WriteLine($" >> File {inputPfmFileNameValue} has been read from disk.");
+                    Console.WriteLine($" >> File {pfmInputValue} has been read from disk.");
     
                     // converto i dati in formato LDR
-                    img.NormalizeImage(factorValue);
+                    img.NormalizeImage(luminosityFactorValue);
                     img.ClampImage();
     
                     // salvo in file PNG, a seconda delle opzioni
                     try
                     {
-                        string outf = outputPngFileNameValue;
+                        string outf = pngOutputValue;
                         {
-                            img.WriteLdrImage(outf, "PNG", gammaValue);
+                            img.WriteLdrImage(outf, "PNG", gammaFactorValue);
                         }
     
-                        Console.WriteLine($" >> File {outputPngFileNameValue} has been written to disk.");
+                        Console.WriteLine($" >> File {pngOutputValue} has been written to disk.");
                     }
                     catch
                     {
                         Console.WriteLine(
-                            "Error: couldn't write file {0}.", outputPngFileNameValue);
+                            "Error: couldn't write file {0}.", pngOutputValue);
                     }
                 },
-                factor, gamma, inputPfmFileName, outputPngFileName);
+                luminosityFactor, gammaFactor, pfmInput, pngOutput);
             
             return await rootCommand.InvokeAsync(args);
         }
