@@ -216,14 +216,14 @@ namespace PGENLib
         /// We provide this implementation for reference, but we are not going to use it (neither in the path tracer
         /// nor in the point-light tracer).
         /// </summary>
-        /// <param name="normal"></param>
-        /// <param name="inDir"></param>
-        /// <param name="outDir"></param>
-        /// <param name="uv"></param>
+        /// <param name="normal">normal</param>
+        /// <param name="inDir">Vec</param>
+        /// <param name="outDir">Vec</param>
+        /// <param name="uv">Vec2d</param>
         /// <returns></returns>
         public override Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
         {
-            var thetaIn = Math.Acos(Vec.DotProd(normal.ToVec(), inDir));
+            var thetaIn = Math.Acos(Vec.NormalizeDot(normal.ToVec(), inDir));
             var thetaOut = Math.Acos(Vec.DotProd(normal.ToVec(), outDir));
 
             if (Math.Abs(thetaIn - thetaOut) < TresholdAngleRad)
@@ -261,8 +261,8 @@ namespace PGENLib
     /// </summary>
     public class Material
     {
-        protected internal BRDF Brdf;
-        protected internal Pigment EmittedRadiance; 
+        public BRDF Brdf;
+        public Pigment EmittedRadiance; 
         public Material()
         {
             Brdf = new DiffuseBRDF();

@@ -33,6 +33,7 @@ using static System.Data.DataSet;
 using System.Data;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Linq.Expressions;
 using System.Net;
 using System.Numerics;
 
@@ -306,13 +307,12 @@ namespace PGENLib
     {
         public Dictionary<string, Material> Materials = new Dictionary<string, Material>();
 
-        public World World;
+        public World World = new World();
 
         public ICamera Camera; 
 
         public Dictionary<string, float> FloatVariables = new Dictionary<string, float>();
 
-        //public DataSet<string> OverriddenVariables = new DataSet<string>(); // come faccio a indicare che devono essere stringhe?
         public Dictionary<string, float>.KeyCollection OverriddenVariables = 
             new Dictionary<string, float>.KeyCollection(new Dictionary<string, float>()); // come faccio a indicare che devono essere stringhe?
     }
@@ -416,14 +416,13 @@ namespace PGENLib
             }
             else
             {
-                
                 //Read a new character from the stream
                 int byteRead = Stream.ReadByte();
+                // if i read the end-of-file byte, set ch to \0
                 if (byteRead == -1)
                     ch = '\0';
                 else
                     ch = Convert.ToChar(byteRead);
-
             }
 
             SavedLocation = Location.ShallowCopy();
@@ -500,7 +499,7 @@ namespace PGENLib
             {
                 var ch = ReadChar();
                 char[] e = { 'e', 'E' };
-                if (Char.IsDigit(ch) || ch == '.' || e.Contains(ch))
+                if (!(Char.IsDigit(ch) || ch == '.' || e.Contains(ch)))
                 {
                     UnreadChar(ch);
                     break;
@@ -566,8 +565,8 @@ namespace PGENLib
             // ... else go on and look for another token
             SkipWhitespacesAndComments();
 
-            // Now ch does *not* contain a whitespace character.
-            var ch = ReadChar();
+            // Now ch does NOT contain a whitespace character.
+            char ch = ReadChar();
 
             if (ch == '\0')
             {
@@ -575,11 +574,15 @@ namespace PGENLib
                 return new StopToken(Location);
             }
 
+            // At this point we must check what kind of token begins
+            // with the "ch" character (which has been
+            // put back in the stream with self.unread_char).
+            
             //We first save the position in the stream.
             SourceLocation tokenLocation = Location.ShallowCopy();
 
             //Now, which token begins with the "ch" character?
-            char[] symb = {'(', ')', '<', '>', '[', ']', '*'};
+            char[] symb = {'(', ')', '<', '>', '[', ']',',', '*'};
             char[] op = {'+', '-', '.'};
             if (symb.Contains(ch))
             {
@@ -615,7 +618,7 @@ namespace PGENLib
         public void UnreadToken(Token token)
         {
             // <<<< NON CI PIAE CHE QUESTO ERRORE NON SIA SOTTO CONTROLLO
-            Debug.Assert(SavedToken != null);
+            Debug.Assert(SavedToken == null);
             SavedToken = token;
         }
 
@@ -884,7 +887,7 @@ namespace PGENLib
 
                 if (transformationKw == KeywordList.Identity)
                 {
-                    continue;// Do nothing (a primitive form of optimization!)
+                    //continue;// Do nothing (a primitive form of optimization!)
                 }
                 else if (transformationKw == KeywordList.Translation)
                 {
@@ -927,6 +930,7 @@ namespace PGENLib
                     inputFile.UnreadToken(nextKw);
                     break;
                 }
+                
             }
 
             return result;
@@ -976,20 +980,23 @@ namespace PGENLib
 
         public static XyPlane parse_plane(InputStream inputFile, Scene scene)
         {
+            XyPlane plane;
+            
             expect_symbol(inputFile, "(");
-
+            // material
             string materialName = expect_identifier(inputFile);
             if(! scene.Materials.ContainsKey(materialName))
             {
                 // We raise the exception here because inputFile is pointing to the end of the wrong identifier
                 throw new GrammarErrorException($"Unknown material {materialName}", inputFile.Location);
             }
-
             expect_symbol(inputFile, ",");
+            // transformation
             Transformation transformation = parse_transformation(inputFile, scene);
             expect_symbol(inputFile, ")");
-
-            return new XyPlane(transformation, scene.Materials[materialName]);
+            
+            plane = new XyPlane(transformation, scene.Materials[materialName]);
+            return plane;
         }
         
         public static ICamera parse_camera(InputStream inputFile, Scene scene)
@@ -1031,59 +1038,74 @@ namespace PGENLib
         public static Scene parse_scene(InputStream inputFile, Dictionary<string, float> variables)
         {
             Scene scene = new Scene();
-            scene.FloatVariables = variables;
-            scene.OverriddenVariables = variables.Keys;
 
-            while (true)
+            try
             {
-                Token what = inputFile.ReadToken();
-                if (what is StopToken)
-                    break;
-                if (what is not KeywordToken)
-                    throw new GrammarErrorException($"Expected a keyword instead of '{what}'", what.Location);
-                if (((KeywordToken)what).Keyword == KeywordList.Float)
+                scene.FloatVariables = variables;
+                scene.OverriddenVariables = variables.Keys;
+
+                while (true)
                 {
-                    string variableName = expect_identifier(inputFile);
+                    Token what = inputFile.ReadToken();
+                    if (what is StopToken)
+                        break;
+                    if (what is not KeywordToken)
+                        throw new GrammarErrorException($"parsing, expected a keyword instead of '{what}'", what.Location);
 
-                    // Save this for the error message
-                    SourceLocation variableLoc = inputFile.Location;
 
-                    expect_symbol(inputFile, "(");
-                    float variableValue = expect_number(inputFile, scene);
-                    expect_symbol(inputFile, ")");
-
-                    if (scene.FloatVariables.ContainsKey(variableName) &&
-                        !(scene.OverriddenVariables.Contains(variableName)))
+                    if (((KeywordToken)what).Keyword == KeywordList.Float)
                     {
-                        throw new GrammarErrorException($"variable «{variableName}» cannot be redefined", variableLoc);
+                        string variableName = expect_identifier(inputFile);
+
+                        // Save this for the error message
+                        SourceLocation variableLoc = inputFile.Location;
+
+                        expect_symbol(inputFile, "(");
+                        float variableValue = expect_number(inputFile, scene);
+                        expect_symbol(inputFile, ")");
+
+                        if (scene.FloatVariables.ContainsKey(variableName) &&
+                            !(scene.OverriddenVariables.Contains(variableName)))
+                        {
+                            throw new GrammarErrorException($"variable «{variableName}» cannot be redefined",
+                                variableLoc);
+                        }
+
+                        if (!scene.OverriddenVariables.Contains(variableName))
+                        {
+                            // Only define the variable if it was not defined by the user OUTSIDE the scene file
+                            // (e.g., from the command line)
+                            scene.FloatVariables[variableName] = variableValue;
+                        }
+                    }
+                    else if (((KeywordToken)what).Keyword == KeywordList.Sphere)
+                        scene.World.AddShape(parse_sphere(inputFile, scene));
+                    else if (((KeywordToken)what).Keyword == KeywordList.Plane)
+                        scene.World.AddShape(parse_plane(inputFile, scene));
+                    else if (((KeywordToken)what).Keyword == KeywordList.Camera)
+                    {
+                        if (scene.Camera != null)
+                            throw new GrammarErrorException("You cannot define more than one camera", what.Location);
+                        scene.Camera = parse_camera(inputFile, scene);
                     }
 
-                    if (!scene.OverriddenVariables.Contains(variableName))
+
+                    else if (((KeywordToken)what).Keyword == KeywordList.Material)
                     {
-                        // Only define the variable if it was not defined by the user OUTSIDE the scene file
-                        // (e.g., from the command line)
-                        scene.FloatVariables[variableName] = variableValue;
+                        (string name, Material material) = parse_material(inputFile, scene);
+                        scene.Materials[name] = material;
                     }
-                }
-                else if (((KeywordToken)what).Keyword == KeywordList.Sphere)
-                    scene.World.AddShape(parse_sphere(inputFile, scene));
-                else if (((KeywordToken)what).Keyword == KeywordList.Plane)
-                    scene.World.AddShape(parse_plane(inputFile, scene));
-                else if (((KeywordToken)what).Keyword == KeywordList.Camera)
-                {
-                    if (scene.Camera != null)
-                        throw new GrammarErrorException("You cannot define more than one camera", what.Location);
-                    scene.Camera = parse_camera(inputFile, scene);
+
                 }
 
-                else if (((KeywordToken)what).Keyword == KeywordList.Material)
-                {
-                    (string name, Material material) = parse_material(inputFile, scene);
-                    scene.Materials[name] = material;
-                }
+            }
+            catch (GrammarErrorException grex)
+            {
+                Console.WriteLine($"Grammar error: {grex.Message} \n   >>> In inputfile (line, row):{grex.SourceLocation}");
             }
 
             return scene;
+            
         }
     }
 }
