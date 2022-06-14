@@ -4,18 +4,24 @@
 
 material sky_material(       diffuse(uniform(<0, 0, 0>)),          uniform(<1.5, 1.5, 1.5>)    )
 material ground_material(    diffuse(checkered(<0.3, 0.5, 0.1>,    <0.1, 0.2, 0.5>, 4)),    uniform(<0, 0, 0>)    )
-material sphere_material(    diffuse(uniform(<0.5, 0.5, 0.5>)),    uniform(<0, 0, 0>)    )
-material mirror_material(    specular(uniform(<1.5, 0.2, 0.2>)),   uniform(<0, 0, 0>)    )
-#material cyl_material(       diffuse(uniform(<0.5, 0.7, 0>)),      uniform(<0, 0, 0>)    )
+material sphere1_material(    diffuse(uniform(<2, 2, 2>)),    uniform(<0, 0, 0>)    )
+material sphere2_material(    diffuse(uniform(<0, 0.1, 0.2>)),    uniform(<0, 0, 0>)    )
+material sphere3_material(    diffuse(uniform(<0.0, 0.0, 0.0>)),    uniform(<0, 0, 0>)    )
+material mirror_material(    specular(uniform(<0.8, 0.8, 0.8>)),   uniform(<0, 0, 0>)    )
+
+# material cyl_material(       diffuse(uniform(<0.5, 0.7, 0>)),      uniform(<0, 0, 0>)    )
 
 #---------------  SHAPES  ---------------
 
 sphere (sky_material, translation([0, 0, 0.4]) * scaling([200, 200, 200]))
 plane (ground_material, identity)
-sphere (sphere_material, translation([0, 0, 1]))
-sphere (mirror_material, translation([0, 2, 0]))
-#cylinder (cyl_material, translation([0, -1.5, 1]), 0, 3, 1)
+sphere (sphere1_material, translation([-6.5, 0, 1]))
+sphere (sphere2_material, translation([-5.75, 0, 1])*scaling([0.3,0.5,0.5]))
+sphere (sphere3_material, translation([-5.5, 0, 1])*scaling([0.1,0.23,0.23]))
+sphere (mirror_material, translation([-3.9, 0, 1]))
+
+# cylinder (cyl_material, translation([0, -1.5, 1]), 0, 3, 1)
 
 #---------------  CAMERA  ---------------
 
-camera(perspective, rotation_y(17)*translation([-5, 0, 4]), 1.0, 1.0)
+camera(perspective, translation([-5, -2, 1.5])*rotation_z(100), 1.0, 1.0)
