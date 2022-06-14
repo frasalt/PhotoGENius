@@ -163,11 +163,16 @@ namespace PGENLib.Tests
         
     }
 
+    //==============================================================================================================
+    //Antialiasing
+    //==============================================================================================================
     public class TestAntialiasing
     {
         int numOfRays = 0;
         private Ray ray = new Ray();
+        
         [Fact]
+        
         public void AntialiasTest()
         {
             var smallImg = new HdrImage(1, 1);

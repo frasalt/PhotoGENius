@@ -206,13 +206,11 @@ namespace PGENLib
             return t;
         }
         
-           
         /// <summary>
-        /// Create a orthonormal basis (Onb) from a vector representing the z axis (normalized)
-        /// Return a tuple containing the three vectors (e1, e2, e3) of the basis. The result is such
-        /// that e3 = normal.
-        /// The `normal` vector must be normalized.
+        /// Create a orthonormal basis (Onb) from a vector representing the z axis (which must be normalized).
         /// </summary>
+        /// <param name="e3"> normalized Normal vector, on the z axis</param>
+        /// <returns> Tuple containing the three vectors of the basis, such that e3 = normal</returns>
         public static Tuple CreateOnbFromZ(Normal e3)
         {
             float sign;
@@ -233,22 +231,64 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Normalize two vectors or normals and apply the dot product.
+        /// Normalize two vectors or normals and evaluate the dot product.
         /// The result is the cosine of the angle between the two vectors/normals.
         /// </summary>
-        /// <param name="v1"></param>
-        /// <param name="v2"></param>
-        /// <returns></returns>
-        
-        //DEVO IMPLEMENTEARE UNION PER FORZA PERCHè COSì VALE SIA PER I VETTORI CHE PER LE NORMALI
-        public float NormalizeDot(Vec v1, Vec v2)
+        /// <param name="v1">Vector</param>
+        /// <param name="v2">Vector</param>
+        /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
+        public static float NormalizeDot(Vec v1, Vec v2)
         {
-            Vec v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
-            Vec v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
-            float r = Vec.DotProd(v1Vec, v2Vec);
+            var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
+            var v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
+            float r = DotProd(v1Vec, v2Vec);
             return r;
         }
         
+        /// <summary>
+        /// Normalize two vectors or normals and evaluate the dot product.
+        /// The result is the cosine of the angle between the two vectors/normals.
+        /// </summary>
+        /// <param name="v1">Normal</param>
+        /// <param name="v2">Normal</param>
+        /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
+        public static float NormalizeDot(Normal v1, Normal v2)
+        {
+            var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
+            var v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
+            float r = DotProd(v1Vec, v2Vec);
+            return r;
+        }
+        
+        /// <summary>
+        /// Normalize two vectors or normals and evaluate the dot product.
+        /// The result is the cosine of the angle between the two vectors/normals.
+        /// </summary>
+        /// <param name="v1">Normal</param>
+        /// <param name="v2">Vec</param>
+        /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
+        public static float NormalizeDot(Normal v1, Vec v2)
+        {
+            var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
+            var v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
+            float r = DotProd(v1Vec, v2Vec);
+            return r;
+        }
+        
+        /// <summary>
+        /// Normalize two vectors or normals and evaluate the dot product.
+        /// The result is the cosine of the angle between the two vectors/normals.
+        /// </summary>
+        /// <param name="v1">Vec</param>
+        /// <param name="v2">Normal</param>
+        /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
+        public static float NormalizeDot(Vec v1, Normal v2)
+        {
+            var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
+            var v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
+            float r = DotProd(v1Vec, v2Vec);
+            return r;
+        }
     }
     //==========================================================================================================
     //Tuple 
@@ -290,7 +330,7 @@ namespace PGENLib
     //==================================================================================================================
     //Point
     //==================================================================================================================
-
+    
     public struct Point
     {
         public float x;
@@ -829,8 +869,58 @@ namespace PGENLib
         
     }
     
+    //==================================================================================================================
+    //Vec2d
+    //==================================================================================================================
+    /// <summary>
+    /// A 2D vector, with two floating point fields u and v.
+    /// </summary>
+    public struct Vec2d
+    {
+        internal float u;
+        internal float v;
 
+        /// <summary>
+        /// Empty constructor.
+        /// </summary>
+        public Vec2d()
+        {
+            u = 0;
+            v = 0;
+
+        }
+
+        /// <summary>
+        /// Constructor with float parameters.
+        /// </summary>
+        public Vec2d(float u, float v)
+        {
+            this.u = u;
+            this.v = v;
+
+        }
+
+        //METODI========================================================================================================
+        /// <summary>
+        /// Check weather two Vec2d objects are equals. 
+        /// </summary>
+        public static bool are_close(Vec2d p, Vec2d q)
+        {
+            var epsilon = 1E-5;
+            if (Math.Abs(p.u - q.u) < epsilon && Math.Abs(p.v - q.v) < epsilon)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         
+    }
+    
+    
+    
         
     
     
