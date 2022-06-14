@@ -319,6 +319,7 @@
                     {
                         {
                             image.WritePFMFile(fstream, Endianness.BigEndian);
+                            fstream.Close();
                         }
 
                         Console.WriteLine($"    File {pfmOutputValue} has been written to disk.");
@@ -336,7 +337,6 @@
                     image.ClampImage();
 
                     // salvo in file PNG, a seconda delle opzioni
-                    
                     try
                     {
                         {
@@ -377,7 +377,10 @@
                 raysNum,
                 maxDepth,
                 initState,
-                initSeq
+                initSeq,
+                luminosityFactor,
+                gammaFactor,
+                samplePerPixel
             };
             rootCommand.AddCommand(render);
             
@@ -391,17 +394,12 @@
                 Console.WriteLine("=====================================");
                 Console.WriteLine("Initializing scene...");
 
-                Stream scene_stream = new FileStream(scenefileValue, FileMode.Open);
+                Stream sceneStream = new FileStream(scenefileValue, FileMode.Open);
                 Dictionary<string, float> dict = new Dictionary<string, float>();
 
                 Scene scene = new Scene();
 
-                scene = ExpectParse.parse_scene(new InputStream(scene_stream), dict);
-
-                // ------ prove --------
-                Console.WriteLine("Number of shapes in world: " + scene.World.Shapes.Count);
-                Console.WriteLine(scene.World.Shapes[0].Material.EmittedRadiance.GetColor(new Vec2d(0, 0)));
-                // ---------------------
+                scene = ExpectParse.parse_scene(new InputStream(sceneStream), dict);
 
                 // 4.Run raytracer
                 Console.WriteLine("\nRunning raytracer...");
@@ -436,7 +434,7 @@
                     tracer.FireAllRays(renderer.Call);
                 }
                 
-                //scene_stream.Close();
+                sceneStream.Close();
 
                 // 5.salvare PFM 
                 Console.WriteLine("\nSaving PFM image...");
@@ -447,6 +445,7 @@
                 {
                     {
                         image.WritePFMFile(fstream, Endianness.BigEndian);
+                        fstream.Close();
                     }
 
                     Console.WriteLine($"    File {pfmOutputValue} has been written to disk.");
@@ -457,14 +456,14 @@
                         $"Error: couldn't write file {pfmOutputValue}");
                 }
 
+                
                 // 6.convertire a PNG
                 Console.WriteLine("\nConverting and saving PNG image...");
-
+                
                 image.NormalizeImage(luminosityFactorValue);
                 image.ClampImage();
 
                 // salvo in file PNG, a seconda delle opzioni
-                
                 try
                 {
                     {
