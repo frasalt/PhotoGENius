@@ -1,4 +1,4 @@
-float clock(20)
+# float clock(20)
 
 #--------------- MATERIALS ---------------
 
