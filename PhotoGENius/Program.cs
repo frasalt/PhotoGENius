@@ -168,7 +168,10 @@ class Program
                 var mirrorMaterial = new Material(
                     new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f)))
                 );
-
+                
+                //---------------------------
+                //example scene
+                //---------------------------
                 // shapes
                 Console.WriteLine("\nInitializing shapes...");
 
@@ -189,23 +192,24 @@ class Program
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
+        
                                  
-                /*
+                
                 //---------------------------
                 //tree
                 //---------------------------
                 //cilinder in the middle
                 world.AddShape(
-                    new Cilinder( Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial,
+                    new Cylinder( Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial,
                         0.0f, 2.0f, 0.3f)
                 );
                 
                 //Sphere
-                world.AddShape(
-                    new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
-                    );
+                //world.AddShape(
+                //    new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Translation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
+                //    );
                 //----------------------------
-                */
+                
 
                 
                 /*
