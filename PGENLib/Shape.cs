@@ -166,6 +166,8 @@ namespace PGENLib
         /// <summary>
         /// Convert the 3D intersection point into a 2D point, of coordinates (u,v). 
         /// </summary>
+        /// <param name="point"></param>
+        /// <returns>Vec2d</returns>
         public Vec2d SpherePointToUv(Point point)
         {
             float u = 0.0f;
