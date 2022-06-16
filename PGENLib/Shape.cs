@@ -358,11 +358,6 @@ namespace PGENLib
             Ray invRay = ray.Transform(this.Transf.Inverse());
             var originVec = invRay.Origin.PointToVec();
             
-            //if (originVec.z < Zmin | originVec.z > Zmax)
-            //{
-            //    return null;
-            //}
-            //Calculate the coefficients for the intersection equation and solve the equation
             var a = invRay.Dir.x*invRay.Dir.x + invRay.Dir.y*invRay.Dir.y;
             var b = 2*(originVec.x * invRay.Dir.x + originVec.y * invRay.Dir.y);
             var c = originVec.x * originVec.x + originVec.y * originVec.y - R * R;
@@ -372,10 +367,17 @@ namespace PGENLib
             {
                 return null;
             }
+            
             var sqrtDelta = (float) Math.Sqrt(delta);
             var tmin = (-b - sqrtDelta) / (2.0f * a);
             var tmax = (-b + sqrtDelta) / (2.0f * a);
-            ////Choose the correct solution
+            if (tmin > tmax)
+            {
+                //Swap values
+                (tmin, tmax) = (tmax, tmin); 
+            }
+            
+            //Choose the correct solution
             float tFirstHit;
             if (tmin > invRay.Tmin & tmin < invRay.Tmax)
             {
@@ -390,29 +392,40 @@ namespace PGENLib
                 return null;
             }
 
+            //Evaluate the hitpoint and phi
             var hitPoint = invRay.At(tFirstHit);
             var phi = (float)Math.Atan2(hitPoint.y, hitPoint.x);
+            
+            //Boundary conditions for z and phi
             if (phi < 0)
             {
                 phi += (float)(2 * Math.PI);
             }
-
             if (hitPoint.z < Zmin || hitPoint.z > Zmax || phi > Phimax)
             {
-                if (Math.Abs(tFirstHit - tmin) < 1E-5) return null;
+                if (Math.Abs(tFirstHit - tmax) < 1E-5)
+                {
+                    return null;
+                }
 
-                tFirstHit = tmin;
+                tFirstHit = tmax;
                 if (tFirstHit > invRay.Tmax) return null;
 
                 hitPoint = invRay.At(tFirstHit);
                 phi = (float)Math.Atan2(hitPoint.y, hitPoint.x);
 
-                if (phi < 0) phi += (float)(2 * Math.PI);
-                if (hitPoint.z < Zmin || hitPoint.z > Zmax || phi > Phimax) return null;
+                if (phi < 0)
+                {
+                    phi += (float) (2 * Math.PI);
+                }
+                if (hitPoint.z < Zmin || hitPoint.z > Zmax || phi > Phimax)
+                {
+                    return null;
+                }
             }
 
-            
-            var hit = new HitRecord(Transf*hitPoint, Transf*CylinderNormal(hitPoint, ray.Dir),
+            var normal = new Normal(hitPoint.x, hitPoint.y, 0f);
+            var hit = new HitRecord(Transf*hitPoint, Transf*normal,
                 new Vec2d(phi / Phimax, (hitPoint.z - Zmin) / (Zmax - Zmin)), tFirstHit, ray, Material);
             return hit;
         }
