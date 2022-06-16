@@ -430,46 +430,6 @@ namespace PGENLib
             return hit;
         }
         
-        
-        /// <summary>
-        /// Convert the 3D intersection point into a 2D point, of coordinates (u,v). 
-        /// </summary>
-        public Vec2d CylinderPointToUv(Point point)
-        {
-            
-            float u = (float) (Math.Atan(point.y/point.x) / Phimax); 
-            float v = (point.z - Zmin) / (Zmax - Zmin);
-            if (u < 0.0)
-            {
-                u++;
-            }
-
-            return new Vec2d(u,v);
-        }
-        
-        /// <summary>
-        /// Computes the normal in the intersection point of a ray and the surface of a cylinder.
-        /// The normal has always the opposite direction with respect to a given Ray. 
-        /// </summary>
-        /// <param name="point">Type Point</param>
-        /// <param name="dir">Type Vec</param>
-        /// <returns>Normal</returns>
-        public Normal CylinderNormal(Point point,  Vec dir)
-        {
-            Normal result = new Normal(point.x, point.y, 0.0f);
-            Normal n;
-            if (Vec.DotProd(point.PointToVec(),dir) < 0.0)
-            {
-                n = result;
-            }
-            else
-            {
-                n = result*(-1);
-            }
-            return n;
-        }
-
-        
     }
 
 }
