@@ -32,13 +32,25 @@ Image rendering can be performed via four different backwords raytracing algorit
 The user can add three types of geometric shapes to the scene (sphere, plane and cylinder), set their color properties 
 and camera position, orientation and projection (orthogonal or perspective).
 
-For further information, see this ![Application Program Interface](PGENLib.Doc/API.txt)
-manual.
+For further information, see the [Application Program Interface](PGENLib.Doc/API.txt)
+info file.
 
-#### Website
-🔗
-A webpage [Photorealistic rendering](https://elisalegnani.github.io/PhotorealisticRendering) has been created in order to give more detailed explanations.
+## Usage
+Extremely easy basic usage.\
+\
+In PhotoGENius\PhotoGENius directory:\
+to **convert file**, type
+```bash
+dotnet run PhotoGENius pfm2png --input-pfm PFM_FILE_PATH <options>
+```
+Pay attention that if your computer is set on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
 
+To **generate demo image**, type
+```bash
+dotnet run PhotoGENius render <options>
+```
+In this case, the scene content is set in an *input txt file*, like [this one](Examples/SELF_EXPLAINED.txt) in the [example directory](Examples). 
+Type anything as option to show further usage information.
 
 ## Installation
 

@@ -1,0 +1,51 @@
+
+,==========================================,
+|                  RENDER                  |
+'=========================================='
+
+Line command:
+  dotnet run PhotoGENius render --h
+
+Description:
+  Create an image.
+
+Usage:
+  PhotoGENius render [options]
+
+Options:
+  --file-name <file-name>                Input file for scene description [default: input_file.txt]
+  --width <width>                        Width of the image to render. [default: 640]
+  --height <height>                      Height of the image to render. [default: 480]
+  --angle-deg <angle-deg>                Angle of view in degrees. [default: 0]
+  --pfm-output <pfm-output>              Name of the PFM file to create. [default: output.pfm]
+  --png-output <png-output>              Name of the PNG file to create. [default: output.png]
+  --camera-type <camera-type>            Type of camera to be used: 'orthogonal' or 'perspective'. [default: orthogonal]
+  --algorithm <algorithm>                Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one or 'pathtracing' or 'pointlight'   [default: pathtracing]
+  --num-of-rays <num-of-rays>            Number of rays departing from each surface point (only applicable with --algorithm=pathtracing). [default: 10]
+  --max-depth <max-depth>                Maximum allowed ray depth (only applicable with --algorithm=pathtracing). [default: 3]
+  --init-state <init-state>              Initial seed for the random number generator (positive number, only applicable with --algorithm=pathtracing). [default: 45]
+  --init-seq <init-seq>                  Identifier of the sequence produced by the random number generator (positive number, only applicable with --algorithm=pathtracing). [default: 54]
+  --lum-fac <lum-fac>                    Regulates luminosity of rendered image. [default: 1]
+  --gamma-fac <gamma-fac>                Regulates gamma compression of rendered image. [default: 1.8]
+  --sample-per-pixel <sample-per-pixel>  Number of sample per pixel (must be a perfect square). [default: 1]
+  -?, -h, --help                         Show help and usage information
+
+,==========================================,
+|                  PFM2PNG                 |
+'=========================================='
+
+Line command:
+  dotnet run PhotoGENius render --h
+
+Description:
+  Convert a PFM file to a PNG
+
+Usage:
+  PhotoGENius pfm2png [options]
+
+Options:
+  --lum-fac <lum-fac>        Regulates luminosity of rendered image. [default: 1]
+  --gamma-fac <gamma-fac>    Regulates gamma compression of rendered image. [default: 1.8]
+  --input-pfm <input-pfm>    PFM file to be converted. [default: input.pfm]
+  --png-output <png-output>  Name of the PNG file to create. [default: output.png]
+  -?, -h, --help             Show help and usage information

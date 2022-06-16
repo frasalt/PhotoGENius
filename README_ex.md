@@ -21,11 +21,10 @@ Pay attention that if your computer is set on Italian language, you may need to 
 
 To **generate demo image**, type
 ```bash
-dotnet run PhotoGENius demo <options>
+dotnet run PhotoGENius render <options>
 ```
-Type anything as option to show further usage information.\
-Demo code can be adapted quite easily to change spheres disposition
-in the scene.
+Type anything as option to show further usage information.
+
 
 ## Examples
 
