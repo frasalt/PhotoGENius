@@ -34,6 +34,7 @@ class Program
 
     static async Task<int> Main(string[] args)
     {
+        Console.WriteLine("prova");
         var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
 
             
