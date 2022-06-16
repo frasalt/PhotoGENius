@@ -130,7 +130,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Calculate the luminosity of a color (Shirley & Morley formula).
+        /// Calculate the luminosity of a color (Shirley and Morley formula).
         /// </summary>
         public float Lum()
         {

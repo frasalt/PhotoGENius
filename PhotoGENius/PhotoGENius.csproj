@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+    
     <ItemGroup>
       <ProjectReference Include="..\PGENLib\PGENLib.csproj" />
     </ItemGroup>
@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>

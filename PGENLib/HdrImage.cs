@@ -43,10 +43,10 @@ namespace PGENLib
         /// <summary>
         /// Constructor, empty or with pixels.
         /// </summary>
-        public HdrImage(int WidthConstr, int HeightConstr, Color[]? pixels = null)
+        public HdrImage(int widthConstr, int heightConstr, Color[]? pixels = null)
         {
-            Width = WidthConstr;
-            Height = HeightConstr;
+            Width = widthConstr;
+            Height = heightConstr;
             if (pixels == null)
             {
                 pixels = new Color[Width * Height];
@@ -210,8 +210,10 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Function that reads the endianness and returns if it is little or big.
+        /// Function that reads the endianness and returns if it is little or big.
         /// </summary>
+        /// <param name="input"> string </param>
+        /// <returns></returns>
         public int ParseEndianness(string input)
         {
             double endianness = 0;
@@ -285,6 +287,8 @@ namespace PGENLib
         /// <summary>
         /// Returns the average brightness of the image.
         /// </summary>
+        /// <param name="delta"> double </param>
+        /// <returns></returns>
         public float AverageLum(double delta = 1e-10)
         {
 
@@ -303,8 +307,10 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Calculate the average brightness of an image according to the axRi / <l> formula.
+        /// Calculate the average brightness of an image according to the axRi / l formula.
         /// </summary>
+        /// <param name="factor"></param>
+        /// <param name="luminosity"></param>
         public void NormalizeImage(float factor, float? luminosity = null)
         {
             var lum = luminosity ?? AverageLum();
@@ -338,7 +344,9 @@ namespace PGENLib
         /// <summary>
         /// Convert an HDR image to LDR.
         /// </summary>
-        
+        /// <param name="output"> String </param>
+        /// <param name="format"> String </param>
+        /// <param name="gamma"> gamma </param>
         public void WriteLdrImage(String output, String format, float gamma = 1.0f)
         {
             var img = new Image<Rgb24>(this.Width, this.Height);
