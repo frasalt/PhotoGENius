@@ -261,7 +261,6 @@ namespace PGENLib
         /// </summary>
         /// <param name="ray"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public override bool QuickRayIntersection(Ray ray)
         {
             var invRay = ray.Transform(Transf.Inverse());
@@ -371,6 +370,7 @@ namespace PGENLib
             var sqrtDelta = (float) Math.Sqrt(delta);
             var tmin = (-b - sqrtDelta) / (2.0f * a);
             var tmax = (-b + sqrtDelta) / (2.0f * a);
+
             if (tmin > tmax)
             {
                 //Swap values
