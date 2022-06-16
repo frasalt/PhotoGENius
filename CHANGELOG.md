@@ -1,4 +1,6 @@
 # HEAD
+### 16-06-2022
+- Test for class World added, fixing issue [#29](https://github.com/frasalt/PhotoGENius/issues/29)
 
 ### 14-06-2022
 - Pointlight renderer implemented [#23](https://github.com/frasalt/PhotoGENius/pull/23)
