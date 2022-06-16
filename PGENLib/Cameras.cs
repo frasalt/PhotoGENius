@@ -101,13 +101,23 @@ namespace PGENLib
     public interface ICamera
     {
         Ray FireRay(float u, float v);
-
+        Transformation GetTransf();
+        void SetTransf(Transformation tr);
     }
   
     public struct OrthogonalCamera : ICamera
     {
-        private float AspectRatio;
-        private Transformation Transf;
+        public float AspectRatio;
+        public Transformation Transf;
+
+        public Transformation GetTransf()
+        {
+            return Transf;
+        }
+        public void SetTransf(Transformation tr)
+        {
+            Transf = tr;
+        }
 
         public OrthogonalCamera(float aspectRatio = 1.0f)
         {
@@ -133,9 +143,18 @@ namespace PGENLib
     
     public struct PerspectiveCamera : ICamera
     {
-        private float ScreenDistance;
-        private float AspectRatio;
-        private Transformation Transf;
+        public float ScreenDistance;
+        public float AspectRatio;
+        public Transformation Transf;
+        
+        public Transformation GetTransf()
+        {
+            return Transf;
+        }
+        public void SetTransf(Transformation tr)
+        {
+            Transf = tr;
+        }
         
         public PerspectiveCamera()
         {
@@ -215,7 +234,7 @@ namespace PGENLib
         /// <param name="camera"></param>
         /// <param name="pcg"></param>
         /// <param name="samplePerSide"></param>
-        public ImageTracer(HdrImage image, ICamera camera, PCG pcg, int samplePerSide = 0)
+        public ImageTracer(HdrImage image, ICamera camera, PCG pcg, int samplePerSide = 1)
         {
             Image = image;
             Camera = camera;
@@ -231,7 +250,7 @@ namespace PGENLib
         /// <param name="image"></param>
         /// <param name="camera"></param>
         /// <param name="samplePerSide"></param>
-        public ImageTracer(HdrImage image, ICamera camera, int samplePerSide = 0)
+        public ImageTracer(HdrImage image, ICamera camera, int samplePerSide = 1)
         {
             Image = image;
             Camera = camera;
@@ -271,6 +290,7 @@ namespace PGENLib
                 for(int col = 0; col< Image.Width; col ++)
                 {
                     var cumColor = new Color(); //Black
+                    
                     if (SamplePerSide > 0)
                     {
                         // Run stratified sampling over the pixel's surface.
@@ -287,6 +307,7 @@ namespace PGENLib
                             }
                         }
                     }
+                    
                     
                     
                 }

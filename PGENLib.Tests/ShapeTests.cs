@@ -96,7 +96,7 @@ namespace PGENLib.Tests
         [Fact]
         public void TestTransformation()
         {
-            Sphere sphere = new Sphere(Transformation.Traslation(new Vec(10.0f, 0.0f, 0.0f)));
+            Sphere sphere = new Sphere(Transformation.Translation(new Vec(10.0f, 0.0f, 0.0f)));
 
             Ray ray1 = new Ray(new Point(10f, 0f, 2f), -Vz);
             HitRecord? int1 = sphere.RayIntersection(ray1);
@@ -136,6 +136,29 @@ namespace PGENLib.Tests
         }
         
         
+    }
+
+    public class WorldTest
+    {
+        [Fact]
+        public void TestRayIntersection()
+        {
+            var world = new World();
+            var vx = new Vec(1.0f, 0f, 0f);
+            var sphere1 = new Sphere(Transformation.Translation(vx * 2f));
+            var sphere2 = new Sphere(Transformation.Translation(vx * 8f));
+            world.AddShape(sphere1);
+            world.AddShape(sphere2);
+
+            var intersection1 = world.RayIntersection(new Ray(new Point(), vx));
+            Assert.True(intersection1.HasValue &&
+                        Point.are_close(intersection1.Value.WorldPoint, new Point(1.0f, 0.0f, 0.0f)));
+
+            var intersection2 = world.RayIntersection(new Ray(new Point(10f, 0f, 0f), -vx));
+
+            Assert.True(intersection2.HasValue &&
+                        Point.are_close(intersection2.Value.WorldPoint, new Point(9f, 0.0f, 0.0f)));
+        }
     }
 
 /*
