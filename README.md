@@ -49,8 +49,11 @@ To **generate demo image**, type
 ```bash
 dotnet run PhotoGENius render <options>
 ```
-In this case, the scene content is set in an *input txt file*, like [this one](Examples/SELF_EXPLAINED.txt) in the [example directory](Examples). 
+In this case, the scene content is set in an *input txt file*, like [this self-explained one](Examples/SELF_EXPLAINED.txt) in the [example directory](Examples). \
 Type anything as option to show further usage information.
+
+
+----------da qui in giù da aggiustare-----------
 
 ## Installation
 
