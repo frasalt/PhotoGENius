@@ -1,5 +1,4 @@
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace PGENLib
 {
@@ -585,10 +584,8 @@ namespace PGENLib
             return new Vec(x, y, z);
         }
         
-        
-        
         /// <summary>
-        /// Check wheater two normal are equals. 
+        /// Check if two normals are similar enough to be considered equal. 
         /// </summary>
         public static bool are_close(Normal p, Normal q)
         {
@@ -604,9 +601,13 @@ namespace PGENLib
                 return false;
             }
         }
+        
         /// <summary>
-        ///  Returns the product between a vector and a scalar. 
+        /// Returns the product between a vector and a scalar.
         /// </summary>
+        /// <param name="n"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static Normal operator *(Normal n, float s)
         {
             var t = new Normal
@@ -617,9 +618,11 @@ namespace PGENLib
             };
             return t;
         }
+        
         /// <summary>
-        ///  Invert the direction of a normal. 
+        /// Invert the direction of a normal.
         /// </summary>
+        /// <returns></returns>
         public Normal Neg()
         {
             const float s = -1;
@@ -627,16 +630,22 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Returns the dot product between a vector and a normal.
+        /// Returns the dot product between a vector and a normal.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="w"></param>
+        /// <returns></returns>
         public static float VecDotNormal(Vec v, Normal w)
         {
             return v.x*w.x+v.y*w.y+v.z*w.z;
         }
         
         /// <summary>
-        ///  Returns the cross product between a vector and a normal.
+        /// Returns the cross product between a vector and a normal.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="w"></param>
+        /// <returns></returns>
         public static Vec VecCrossNormal(Vec v, Normal w)
         {
             var t = new Vec     
@@ -647,9 +656,13 @@ namespace PGENLib
             };
             return t;
         }
+        
         /// <summary>
-        ///  Returns the cross product between two normals.
+        /// Returns the cross product between two normals.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="w"></param>
+        /// <returns></returns>
         public static Normal NormalCrossNormal(Normal v, Normal w)
         {
             var t = new Normal 
@@ -662,24 +675,30 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Returns the squared norm of a normal.
+        /// Returns the squared norm of a normal.
         /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         public static float SquaredNorm(Normal n)
         {
             return n.x * n.x + n.y * n.y + n.z * n.z;
         }
-        /// <summary>
-        ///  Returns the norm of a normal.
-        /// </summary>
         
+        /// <summary>
+        /// Returns the norm of a normal.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+
         public static float Norm(Normal n)
         {
             return (float) Math.Sqrt(SquaredNorm(n)) ;
         }
         
         /// <summary>
-        ///  Normalize the vector, so that it's norm is equal to 1.
+        /// Normalize the normal, so that it's norm is equal to 1.
         /// </summary>
+        /// <returns></returns>
         public Normal NormalizeNormal()
         {
             var t = new Normal
@@ -706,7 +725,7 @@ namespace PGENLib
         public Matrix4x4 invm;
         
         /// <summary>
-        /// Constructor, without any parameter
+        /// Constructor, without any parameter.
         /// </summary>
         public Transformation()
         {
@@ -738,11 +757,15 @@ namespace PGENLib
             m = a;
             bool consistency = Matrix4x4.Invert(a, out invm);
         }
-        
+
         //METODI========================================================================================================
+        
         /// <summary>
         /// Check wheather two matrices are equals.
         /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static bool are_close(Matrix4x4 a, Matrix4x4 b)
         {
             var epsilon = 1E-5;
@@ -763,8 +786,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Check whether two Transformations are equals. 
+        /// Check whether two Transformations are equals.
         /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static bool are_close(Transformation a, Transformation b)
         {
             if (are_close(a.m, b.m) & are_close(a.invm, b.invm))
@@ -796,8 +822,11 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Product Transformation-Transformation, returns a Transformation.
+        /// Product Transformation-Transformation, returns a Transformation.dot
         /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static Transformation operator *(Transformation a, Transformation b)
         {
             Transformation tr = new Transformation(a.m*b.m, b.invm*a.invm);
@@ -805,8 +834,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Product Transformation-Point, returns a Point. 
+        /// Product Transformation-Point, returns a Point.
         /// </summary>
+        /// <param name="a"></param>
+        /// <param name="p"></param>
+        /// <returns>a point</returns>
         public static Point operator *(Transformation a, Point p)
         {
             Point q = new Point(p.x*a.m.M11 + p.y*a.m.M12 + p.z*a.m.M13 + a.m.M14, 
@@ -824,8 +856,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Product Transformation-Vec, returns a Vec. 
+        /// Product Transformation-Vec, returns a Vec.
         /// </summary>
+        /// <param name="a"></param>
+        /// <param name="v"></param>
+        /// <returns>a vector</returns>
         public static Vec operator *(Transformation a, Vec v)
         {
             Vec q = new Vec(v.x*a.m.M11 + v.y*a.m.M12 + v.z*a.m.M13, 
@@ -835,8 +870,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Product Transformation-Normal, returns a Normal. 
+        /// Product Transformation-Normal, returns a Normal.
         /// </summary>
+        /// <param name="a"></param>
+        /// <param name="n"></param>
+        /// <returns>a normal</returns>
         public static Normal operator *(Transformation a, Normal n)
         {
             Normal q = new Normal(n.x*a.invm.M11 + n.y*a.invm.M21 + n.z*a.invm.M31, 
@@ -844,9 +882,12 @@ namespace PGENLib
                                   n.x*a.invm.M13 + n.y*a.invm.M23 + n.z*a.invm.M33);
             return q;
         }
+        
         /// <summary>
         /// Returns a Transformation object, encoding a rigid translation.
         /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public static Transformation Translation(Vec v)
         {
             Transformation trasl = new Transformation();
@@ -942,6 +983,7 @@ namespace PGENLib
     //==================================================================================================================
     //Vec2d
     //==================================================================================================================
+    
     /// <summary>
     /// A 2D vector, with two floating point fields u and v.
     /// </summary>
@@ -963,6 +1005,8 @@ namespace PGENLib
         /// <summary>
         /// Constructor with float parameters.
         /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
         public Vec2d(float u, float v)
         {
             this.u = u;
@@ -971,9 +1015,13 @@ namespace PGENLib
         }
 
         //METODI========================================================================================================
+        
         /// <summary>
-        /// Check weather two Vec2d objects are equals. 
+        /// Check weather two Vec2d objects are equals.
         /// </summary>
+        /// <param name="p"></param>
+        /// <param name="q"></param>
+        /// <returns></returns>
         public static bool are_close(Vec2d p, Vec2d q)
         {
             var epsilon = 1E-5;
@@ -986,16 +1034,5 @@ namespace PGENLib
                 return false;
             }
         }
-        
     }
-    
-    
-    
-        
-    
-    
-    
-
-    
-
 }

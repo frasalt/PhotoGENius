@@ -20,11 +20,6 @@ namespace PGENLib.Tests
             {
                Assert.True(expected[i] == pcg.Random());
             }
-            
-
         }
-
-        
-        
     }
 }

@@ -1,5 +1,3 @@
-using System;
-using SixLabors.ImageSharp;
 
 namespace PGENLib
 {

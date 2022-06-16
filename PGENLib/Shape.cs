@@ -169,7 +169,6 @@ namespace PGENLib
         public Vec2d SpherePointToUv(Point point)
         {
             float u = 0.0f;
-            // <<<<<< ho aggiunto questo controllo per evitare divisioni per zero (martin)
             if (point.x != 0)
             {
                 double arg = point.y / (double)point.x;
@@ -180,7 +179,6 @@ namespace PGENLib
                 if (point.y > 0) u = 1.0f;
                 else if (point.y < 0) u = -1.0f;
             }
-            // <<<<<<<<<<
             float v = (float)Math.Acos(point.z) / (float)Math.PI;
             
             if (u >= 0.0)
@@ -195,13 +193,15 @@ namespace PGENLib
                 return tot;
             }
         }
-        
- 
     }
 
     //==============================================================================================================
     //Plane
     //==============================================================================================================
+    
+    /// <summary>
+    ///  A 2D plane that you can put in the scene. Unless transformations are applied, the z=0 plane is constructed.
+    /// </summary>
     public class XyPlane : Shape
     {
         /// <summary>
@@ -273,13 +273,15 @@ namespace PGENLib
             var t = -invRay.Origin.z / invRay.Dir.z;
             return t > invRay.Tmin && t < invRay.Tmax;
         }
-
         
     }
     
     //==============================================================================================================
     //Cylinder
     //==============================================================================================================
+    /// <summary>
+    /// Class to represent a cylinder.
+    /// </summary>
     public class Cylinder : Shape
     {
         public float R;
@@ -357,11 +359,6 @@ namespace PGENLib
         {
             Ray invRay = ray.Transform(this.Transf.Inverse());
             var originVec = invRay.Origin.PointToVec();
-            
-            //if (originVec.z < Zmin | originVec.z > Zmax)
-            //{
-            //    return null;
-            //}
             //Calculate the coefficients for the intersection equation and solve the equation
             var a = invRay.Dir.x*invRay.Dir.x + invRay.Dir.y*invRay.Dir.y;
             var b = 2*(originVec.x * invRay.Dir.x + originVec.y * invRay.Dir.y);
@@ -455,8 +452,6 @@ namespace PGENLib
             }
             return n;
         }
-
-        
     }
 
 }

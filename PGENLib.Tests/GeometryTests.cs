@@ -51,7 +51,6 @@ namespace PGENLib.Tests
             Assert.False(Point.are_close(b, a));
         }
         
-        
         [Fact]
         public void test_point_operations()
         {
@@ -83,7 +82,6 @@ namespace PGENLib.Tests
             Assert.True(Math.Abs(Normal.SquaredNorm(a) - 14.0f) < 1E-5);
             Assert.True(Math.Abs(Normal.Norm(a_norm)-1.0f) < 1E-5);
         }
-        
         
         [Fact]
         public void test_are_transf_close()
@@ -253,11 +251,6 @@ namespace PGENLib.Tests
                 Assert.True(((float)Vec.SquaredNorm(T.e2)-1f)<1E-5f);
                 Assert.True(((float)Vec.SquaredNorm(T.e3)-1f)<1E-5f);
             }
-            
         }
-        
-        
-        
     }
-    
 }

@@ -1,10 +1,6 @@
-using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace PGENLib
 {
-    
-    
     //==================================================================================================================
     //HitRecords
     //==================================================================================================================
@@ -51,6 +47,12 @@ namespace PGENLib
         /// <summary>
         /// Constructor with parameters.
         /// </summary>
+        /// <param name="worldPoint"></param>
+        /// <param name="normal"></param>
+        /// <param name="surfacePoint"></param>
+        /// <param name="t"></param>
+        /// <param name="ray"></param>
+        /// <param name="material"></param>
         public HitRecord(Point worldPoint, Normal normal, Vec2d surfacePoint, float t, Ray ray, Material material)
         {
             WorldPoint = worldPoint;
@@ -62,9 +64,13 @@ namespace PGENLib
         }
         
         //METODI========================================================================================================
+        
         /// <summary>
-        /// Check weather two HitRecord objects are equals. 
+        /// Check weather two HitRecord objects are equals.
         /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static bool are_close(HitRecord a, HitRecord b)
         {
             var epsilon = 1E-5;
@@ -81,7 +87,5 @@ namespace PGENLib
                 return false;
             }
         }
-        
-        
     }
 }

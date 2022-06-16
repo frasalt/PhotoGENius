@@ -35,15 +35,13 @@ namespace PGENLib
         /// Calculate a color (type color) associated with a (u,v) coordinate.
         /// </summary>
         /// <param name="uv"> 2D vector </param>
-        /// <returns></returns>
+        /// <returns>the color of the pigment at the specified coordinates</returns>
         public virtual Color GetColor(Vec2d uv)
         {
-            //Color pigm = new Color();
-            //return pigm;
             throw new NotImplementedException("Method Pigment.GetColor is abstract and cannot be called");
-
         }
     }
+    
     /// <summary>
     /// A uniform pigment.
     /// </summary>
@@ -99,7 +97,9 @@ namespace PGENLib
         }
     }
 
-
+    /// <summary>
+    /// The texture is given through a PFM image.
+    /// </summary>
     public class ImagePigment : Pigment
     {
         public HdrImage Image;
@@ -125,7 +125,7 @@ namespace PGENLib
     }
 
     /// <summary>
-    /// An abstract class representing a Bidirectional Reflectance Distribution Function (BRDF.
+    /// An abstract class representing a Bidirectional Reflectance Distribution Function (BRDF).
     /// </summary>
     public abstract class BRDF
     {
@@ -279,5 +279,4 @@ namespace PGENLib
             Brdf = brdf;
         }
     }
-        
 }

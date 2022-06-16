@@ -50,6 +50,10 @@ namespace PGENLib
         }
     }
 
+    /// <summary>
+    /// This renderer estimates the solution of the rendering equation by neglecting any contribution of the light.
+    /// It just uses the pigment of each surface to determine how to compute the final radiance.
+    /// </summary>
     public class FlatRenderer : Renderer
     {
         public FlatRenderer(World world, Color backGroundColor = default) : base(world, backGroundColor){}
@@ -68,6 +72,28 @@ namespace PGENLib
         }
     }
 
+    /// <summary>
+    /// The algorithm implemented here allows the caller to tune number of rays thrown at each iteration, as well as the
+    /// maximum depth. It implements Russian roulette to reduce the number of recursive calls.
+    /// <list type="table">
+    /// <item>
+    ///     <term>Pcg</term>
+    ///     <description> Random number generator</description>
+    /// </item>
+    /// <item>
+    ///     <term>NumbOfRays</term>
+    ///     <description> Number of rays to be fired at each iteration</description>
+    /// </item>
+    /// <item>
+    ///     <term>MaxDepth</term>
+    ///     <description> Maximum number of reflections for any ray </description>
+    /// </item>
+    ///  <item>
+    ///     <term>RussianRouletteLimit</term>
+    ///     <description> Minimum number of reflections for the Russian Roulette algorith to start </description>
+    /// </item>
+    /// </list>
+    /// </summary>
     public class PathTracer : Renderer
     {
         public PCG Pcg;
@@ -137,8 +163,10 @@ namespace PGENLib
         }
     }
 
+    
     /// <summary>
-    /// A simple point light Renderer, similar to the one that POV-Ray provides by default.
+    /// Class that implements a Point Light renderer. The solid angle integral of the rendering equations
+    /// can be simplified, because the integrand contains some localized Dirac deltas.
     /// </summary>
     public class PointLightRenderer : Renderer
     {

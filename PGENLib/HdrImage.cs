@@ -17,32 +17,50 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System.Diagnostics;
-using System;
-using System.IO;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+
 
 namespace PGENLib
 {
     public enum Endianness
     {
+        //Kinds of byte/bit endianness
         LittleEndian,
         BigEndian,
     }
 
+    /// <summary>
+    /// A High-Dynamic-Range 2D image.
+    /// This class has 3 members:
+    /// <list type="table">
+    /// <item>
+    ///     <term> Width</term>
+    ///     <description> number (int) of columns in the 2D matrix of colors</description>
+    /// </item>
+    /// <item>
+    ///     <term>Height</term>
+    ///     <description> number (int) of rows in the 2D matrix of colors</description>
+    /// </item>
+    /// <item>
+    ///     <term>Pixel</term>
+    ///     <description> the 2D matrix (array of `Color`), represented as a 1D array </description>
+    /// </item>
+    /// </list>
+    /// </summary>
     public class HdrImage
     {
         public int Width;
         public int Height;
         public Color[] Pixels; // Color type vector that contains all the pixels
+        
         /// <summary>
         /// Constructor, empty or with pixels.
         /// </summary>
+        /// <param name="WidthConstr"></param>
+        /// <param name="HeightConstr"></param>
+        /// <param name="pixels"></param>
         public HdrImage(int WidthConstr, int HeightConstr, Color[]? pixels = null)
         {
             Width = WidthConstr;
@@ -58,6 +76,9 @@ namespace PGENLib
         /// <summary>
         /// Check that given coordinates have values between 0 and the number of rows / columns.
         /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns>True if ``(x, y)`` are coordinates within the 2D matrix</returns>
         public bool ValidCoord(int x, int y)
         {
             return (x >= 0 && y >= 0 && x < Width && y < Height);
@@ -66,6 +87,9 @@ namespace PGENLib
         /// <summary>
         /// Given a pair of coordinates, it returns the position of the pixel in the storage vector.
         /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns>the position in the 1D array of the specified pixel</returns>
         private int PixelOffset(int x, int y)
         {
             Debug.Assert(this.ValidCoord(x, y));
@@ -73,8 +97,11 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Sets the color of a pixel of given coordinates.
+        ///  Sets the color of a pixel of given coordinates.
         /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="newCol"></param>
         public void SetPixel(int x, int y, Color newCol)
         {
             Debug.Assert(ValidCoord(x, y));
@@ -84,6 +111,9 @@ namespace PGENLib
         /// <summary>
         /// Given a pair of coordinates, it returns the color of the corresponding pixel.
         /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public Color GetPixel(int x, int y)
         {
             Debug.Assert(this.ValidCoord(x, y));
@@ -93,9 +123,11 @@ namespace PGENLib
         //=========================== FUNCTIONS FOR READING FROM FILE ======================================
 
         /// <summary>
-        /// Function that reads a PFM file and writes the content to a new HDR image.
+        ///  Function that reads a PFM file and writes the content to a new HDR image.
         /// </summary>
-
+        /// <param name="input"></param>
+        /// <returns>a ``HdrImage`` object containing the image. If an error occurs, raise a
+       /// ``InvalidPfmFileFormat`` exception.</returns>
         public HdrImage ReadPFMFile(Stream input)
         {
             string magic = ReadLine(input);
@@ -125,15 +157,16 @@ namespace PGENLib
                     myimg.SetPixel(x, y, newcol);
                 }
             }
-
             return myimg;
         }
 
         /// <summary>
-        /// Function that reads a byte and transforms it into an ASCII character.
+        /// Reads a byte and transforms it into an ASCII character.
         /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         
-        public string ReadLine(Stream input) //DA SISTEMARE!
+        public string ReadLine(Stream input)
         {
             string str = "";
             byte[] mybyte = new byte[1];
@@ -142,21 +175,20 @@ namespace PGENLib
             {
                 mybyte[0] = (byte) input.ReadByte(); // overwrite current byte on previous byte
                 
-                // provare ad aggiungere la seconda condizione (lo stream è finito) (?)
-                //if (Encoding.ASCII.GetString(mybyte) != "\n" && Encoding.ASCII.GetString(mybyte) != "")
-                
                 if (Encoding.ASCII.GetString(mybyte) != "\n") // verify current byte
                 {
                     str += Encoding.ASCII.GetString(mybyte);
                 }
             }
-
             return str;
         }
         
         /// <summary>
         /// Reads a 32-bit sequence from a stream and converts it to a floating-point number.
         /// </summary>
+        /// <param name="input"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
 
         public static float ReadFloat(Stream input, Endianness end)
         {
@@ -169,12 +201,11 @@ namespace PGENLib
                 bytes[2] = (byte) input.ReadByte();
                 bytes[3] = (byte) input.ReadByte();
             }
-            
             catch
             {
-                //throw new InvalidPfmFileFormat("Unable to read float!");
+                throw new InvalidPfmFileFormat("Unable to read float!");
             }
-
+            
             // I ask if the operating system is aligned with endianness, otherwise I overturn the bytes.
             if (end == Endianness.BigEndian && BitConverter.IsLittleEndian)
             {
@@ -192,6 +223,8 @@ namespace PGENLib
         /// <summary>
         /// Image size reading function.
         /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public int[] ParseImgSize(string str)
         {
             int[] dim = new int[2];
@@ -203,15 +236,17 @@ namespace PGENLib
             }
             catch
             {
-                //throw new InvalidPfmFileFormat("Second line of the header must be two spaced integers");
+                throw new InvalidPfmFileFormat("Second line of the header must be two spaced integers");
             }
-
+            
             return dim;
         }
 
         /// <summary>
-        ///  Function that reads the endianness and returns if it is little or big.
+        /// Reads the endianness and returns if it is little or big.
         /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public int ParseEndianness(string input)
         {
             double endianness = 0;
@@ -234,9 +269,10 @@ namespace PGENLib
         //=========================== FUNCTIONS FOR WRITING TO FILE ====================================
 
         /// <summary>
-        /// Function that writes a PFM file from an HDR image.
+        ///  Function that writes a PFM file from an HDR image.
         /// </summary>
-
+        /// <param name="output"></param>
+        /// <param name="endian"></param>
         public void WritePFMFile(Stream output, Endianness endian)
         {
             Debug.Assert(endian is Endianness.LittleEndian or Endianness.BigEndian);
@@ -249,6 +285,7 @@ namespace PGENLib
             var header = Encoding.ASCII.GetBytes($"PF\n{Width} {Height}\n{end}.0\n");
             output.Write(header);
             
+            //Convert an HDR image to LDR.
             for (int y = Height - 1; y >= 0; y--)
             {
                 for (int x = 0; x < Width; x++)
@@ -264,7 +301,9 @@ namespace PGENLib
         /// <summary>
         /// Method of writing a 32-bit floating-point number in binary.
         /// </summary>
-
+        /// <param name="outputStream"></param>
+        /// <param name="value"></param>
+        /// <param name="end"></param>
         private static void WriteFloat(Stream outputStream, float value, Endianness end)
         {
             var seq = BitConverter.GetBytes(value);
@@ -282,9 +321,13 @@ namespace PGENLib
         }
 
         //=========================== LUMINOSITY OF THE PIXELS ==============================================
+        
         /// <summary>
         /// Returns the average brightness of the image.
+        /// The `delta` parameter is used to prevent  numerical problems for underilluminated pixels.
         /// </summary>
+        /// <param name="delta"></param>
+        /// <returns></returns>
         public float AverageLum(double delta = 1e-10)
         {
 
@@ -305,6 +348,8 @@ namespace PGENLib
         /// <summary>
         /// Calculate the average brightness of an image according to the axRi / <l> formula.
         /// </summary>
+        /// <param name="factor"></param>
+        /// <param name="luminosity"></param>
         public void NormalizeImage(float factor, float? luminosity = null)
         {
             var lum = luminosity ?? AverageLum();
@@ -317,6 +362,8 @@ namespace PGENLib
         /// <summary>
         /// Maps a float from [0, + inf) to [0,1].
         /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         public float ClampFloat(float x)
         {
             return x / (1 + x);
@@ -336,9 +383,14 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Convert an HDR image to LDR.
+        /// Convert an HDR image to LDR format.
+        /// Before calling this function, you should apply a tone-mapping algorithm to the image and be sure that
+        /// the R, G, and B values of the colors in the image are all in the range [0, 1]. Use ``HdrImage.NormalizeImage``
+        ///and ``HdrImage.ClampImage`` to do this.
         /// </summary>
-        
+        /// <param name="output"></param>
+        /// <param name="format"></param>
+        /// <param name="gamma"></param>
         public void WriteLdrImage(String output, String format, float gamma = 1.0f)
         {
             var img = new Image<Rgb24>(this.Width, this.Height);
@@ -361,7 +413,3 @@ namespace PGENLib
         }
     }
 }
-
-    
-
-

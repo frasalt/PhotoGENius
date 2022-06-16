@@ -1,6 +1,5 @@
 namespace PGENLib
 {
-    
     /// <summary>
     /// PCG Uniform Pseudo-random Number Generator.
     /// </summary>
@@ -12,8 +11,9 @@ namespace PGENLib
         /// <summary>
         /// PCG constructor.
         /// </summary>
-        /// <param name="initState"></param>
-        /// <param name="initSeq"></param>
+        /// <param name="initState"> initial seed</param>
+        /// <param name="initSeq"> Identifier of the sequence produced by the random number generator (positive number, " +
+        ///"only applicable with --algorithm=pathtracing)</param>
         public PCG(ulong initState = 42, ulong initSeq = 54)
         {
             State = 0;
@@ -48,7 +48,6 @@ namespace PGENLib
         /// <returns></returns>
         public float RandomFloat()
         {
-            //return Random()/ 0xffffffff;
             return (float)Random()/4294967295.0f;
         }
     }

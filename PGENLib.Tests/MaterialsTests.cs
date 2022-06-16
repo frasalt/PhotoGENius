@@ -1,8 +1,5 @@
 using Xunit;
 using System;
-using System.Net.Sockets;
-using System.Numerics;
-using PGENLib;
 
 namespace PGENLib.Tests{
 
@@ -29,12 +26,6 @@ namespace PGENLib.Tests{
             
             Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.25f,0.25f)),col1));
             Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.75f, 0.25f)), col2));
-
-
-
-            //Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.25f,0.75f)),col2));
-            //Assert.True(Color.are_close(pigm.GetColor(new Vec2d(0.75f,0.75f)),col1));
-
         }
         
         [Fact]
@@ -147,10 +138,6 @@ namespace PGENLib.Tests{
                 Assert.True(Math.Abs(color.b - expected) < 1E-03);
                 
             }
-
         }
-        
-        
     }
-    
 }

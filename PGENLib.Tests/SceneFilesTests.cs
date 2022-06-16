@@ -104,8 +104,6 @@ namespace PGENLib.Tests
         [Fact]
         public void TestLexer()
         {
-            //la @ serve per una stringa letterale complessa
-            
             string test = @"
                 # This is a comment 
                 # This is another comment

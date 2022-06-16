@@ -20,8 +20,7 @@ namespace PGENLib.Tests
             Sphere sphere = new Sphere();
             var epsilon = 1E-5;
             Vec2d p, q;
-
-            // prova 1
+            
             Ray ray1 = new Ray(origin: new Point(0f, 0f, 2f), dir: -Vz);
             HitRecord? int1 = sphere.RayIntersection(ray1);
             Assert.True(int1 != null);
@@ -33,19 +32,10 @@ namespace PGENLib.Tests
                 ray1,
                 sphere.Material
             );
-            /*
-            Assert.True(int1 != null && Point.are_close(hit1.WorldPoint, int1.Value.WorldPoint)); 
-            Assert.True(int1 != null && Normal.are_close(hit1.Normal, int1.Value.Normal));
-            p = hit1.SurfacePoint;
-            q = int1.Value.SurfacePoint;
-            Assert.True(int1 != null && Vec2d.are_close(p, q));
-            Assert.True(int1 != null && Math.Abs(hit1.t-int1.Value.t)<epsilon);
-            Assert.True(int1 != null && Ray.are_close(hit1.Ray, int1.Value.Ray));
-            */
-            Assert.True(HitRecord.are_close(hit1, int1.Value));
 
+            Assert.True(HitRecord.are_close(hit1, int1.Value));
             
-            // prova 2
+            
             Ray ray2 = new Ray(new Point(3f, 0f, 0f), -Vx);
             HitRecord? int2 = sphere.RayIntersection(ray2);
             Assert.True(int2 != null);
@@ -57,18 +47,8 @@ namespace PGENLib.Tests
                 ray2,
                 sphere.Material
             );
-            /*
-            Assert.True(int2 != null && Point.are_close(hit2.WorldPoint, int2.Value.WorldPoint)); 
-            Assert.True(int2 != null && Normal.are_close(hit2.Normal, int2.Value.Normal));
-            p = hit2.SurfacePoint;
-            q = int2.Value.SurfacePoint;
-            Assert.True(int2 != null && Vec2d.are_close(p, q));
-            Assert.True(int2 != null && Math.Abs(hit2.t-int2.Value.t)<epsilon);
-            Assert.True(int2 != null && Ray.are_close(hit2.Ray, int2.Value.Ray));
-            */
+
             Assert.True(HitRecord.are_close(hit2, int2.Value));
-
-
             Assert.True(sphere.RayIntersection(new Ray(new Point(0f, 10f, 2f), -Vz)) == null); // cosìè questo???
                        
         }
