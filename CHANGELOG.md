@@ -1,7 +1,7 @@
 # HEAD
 ### 16-06-2022
-- Test for class Plane completed, fixing issue [#31](https://github.com/frasalt/PhotoGENius/issues/31)
-- Test for class World added, fixing issue [#29](https://github.com/frasalt/PhotoGENius/issues/29)
+- Test for class `Plane` completed, fixing issue [#31](https://github.com/frasalt/PhotoGENius/issues/31)
+- Test for class `World` added, fixing issue [#29](https://github.com/frasalt/PhotoGENius/issues/29)
 
 ### 14-06-2022
 - Pointlight renderer implemented [#23](https://github.com/frasalt/PhotoGENius/pull/23)
@@ -18,7 +18,7 @@
 
 
 ## Version 0.2.0
-- **Breaking change**: implement *demo* and *pfm2png* commands and implement easy CL interfece to use them.
+- **Breaking change**: implement `demo` and `pfm2png` commands and implement easy CL interfece to use them.
 
 
 ### 27-04-2022
