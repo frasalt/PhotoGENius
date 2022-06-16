@@ -45,7 +45,6 @@ namespace PGENLib.Tests
             var ray4 = cam.FireRay(1.0f, 1.0f);
             
             //Are rays parallel (as they should be)?
-            //Assert.True(Math.Abs(Vec.SquaredNorm(Vec.CrossProduct(ray1.Dir, ray2.Dir)), 0.0f)<1E-5);
             Assert.True(Vec.SquaredNorm(Vec.CrossProduct(ray1.Dir, ray2.Dir)) == 0.0f);
             Assert.True(Vec.SquaredNorm(Vec.CrossProduct(ray1.Dir, ray3.Dir)) == 0.0f);
             Assert.True(Vec.SquaredNorm(Vec.CrossProduct(ray1.Dir, ray4.Dir)) == 0.0f);
@@ -107,13 +106,11 @@ namespace PGENLib.Tests
                 _camera = new PerspectiveCamera(2);
                 _tracer = new ImageTracer(_image, _camera);
             }
-
             
             [Fact]
             public void test_orientation()
             {
                 // Fire a ray against top-left corner of the screen
-
                 Ray topLeftRay = _tracer.FireRay(0, 0, 0.0f, 0.0f);
                 Point point = new Point(0.0f, 2.0f, 1.0f);
                 Point rayPoint = topLeftRay.At(1.0f);
@@ -126,7 +123,6 @@ namespace PGENLib.Tests
                 Assert.True(Point.are_close(point,rayPoint)); 
             }
             
-
             [Fact]
             public void test_uv_submapping() 
             {
@@ -194,7 +190,5 @@ namespace PGENLib.Tests
             numOfRays += 1;
             return new Color();
         }
-        
     }
-    
 }

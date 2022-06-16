@@ -2,6 +2,8 @@ using PGENLib;
 
 namespace PGENLib
 {
+    // RGB Color
+    // The class has three floating-point members: 'r' = red, `g`= green, and `b`= blue.
     public struct Color
     {
         public float r;
@@ -66,8 +68,11 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Returns the color sum (on the various components). 
+        /// Returns the color sum (on the various components).
         /// </summary>
+        /// <param name="col1"></param>
+        /// <param name="col2"></param>
+        /// <returns>The color sum</returns>
         public static Color operator +(Color col1, Color col2)
         {
             Color col3 = new Color();
@@ -78,8 +83,11 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Returns the color difference (on the various components). 
+        ///  Returns the color difference (on the various components).
         /// </summary>
+        /// <param name="col1"></param>
+        /// <param name="col2"></param>
+        /// <returns>The color difference</returns>
         public static Color operator -(Color col1, Color col2)
         {
             Color col3 = new Color();
@@ -90,8 +98,11 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Returns the color multiplied by a scalar (on the various components).
+        /// Returns the color multiplied by a scalar (on the various components).
         /// </summary>
+        /// <param name="col1"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static Color operator *(Color col1, float s)
         {
             Color col2;
@@ -102,8 +113,11 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Returns the product between two colors (on the various components).
+        /// Returns the product between two colors (on the various components).
         /// </summary>
+        /// <param name="col1"></param>
+        /// <param name="col2"></param>
+        /// <returns></returns>
         public static Color operator *(Color col1, Color col2)
         {
             Color col3;
@@ -114,7 +128,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Check if two colors are the same.
+        /// Check if two colors are similar enough to be considered equal.
         /// </summary>
         public static bool are_close(Color p, Color q)
         {
@@ -128,13 +142,14 @@ namespace PGENLib
                 return false;
             }
         }
-        
+
         /// <summary>
-        ///  Calculate the luminosity of a color (Shirley & Morley formula).
+        /// Calculate the luminosity of a color (Shirley and Morley formula).
         /// </summary>
+        /// <returns></returns>
         public float Lum()
         {
-            float lum = Math.Max((Math.Max(this.r, this.b)), this.g) + Math.Min((Math.Min(this.r, this.b)), this.g);
+            float lum = Math.Max((Math.Max(r, b)), g) + Math.Min((Math.Min(r, b)),g);
             return lum/2;
         }
 
@@ -149,4 +164,3 @@ namespace PGENLib
         }
     }
 }
-

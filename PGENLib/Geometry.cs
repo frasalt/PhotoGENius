@@ -30,6 +30,9 @@ namespace PGENLib
         /// <summary>
         /// Constructor with float parameters.
         /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public Vec(float x, float y, float z)
         {
             this.x = x;
@@ -38,16 +41,18 @@ namespace PGENLib
         }
         
         //METODI========================================================================================================
+        
         /// <summary>
-        /// Returns x, y, z as a string.
+        /// Returns vector's components x, y, z as a string.
         /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"Vec(x={x}, y={y}, z={z})";
         }
         
         /// <summary>
-        /// Check weather two vectors Vec are equals. 
+        /// Check if two vectors are similar enough to be considered equal. 
         /// </summary>
         public static bool are_close(Vec p, Vec q)
         {
@@ -65,8 +70,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Returns the sum of two Vec.  
+        ///  Returns the sum of two vectors.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="w"></param>
+        /// <returns></returns>
         public static Vec operator +(Vec v, Vec w)
         {
             var t = new Vec
@@ -79,8 +87,11 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Returns the difference between two Vec. 
+        /// Returns the difference between two vectors.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="w"></param>
+        /// <returns></returns>
         public static Vec operator -(Vec v, Vec w)
         {
             var t = new Vec
@@ -93,8 +104,11 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Returns the product between a vector and a scalar.
+        /// Returns the product between a vector and a scalar.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static Vec operator *(Vec v, float s)
         {
             var t = new Vec
@@ -107,8 +121,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Returns the division between a Vec and a float, which is a Vec.
+        /// Returns the division between a vector and a float, which is a vector.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="s"></param>
+        /// <returns>a vector</returns>
         public static Vec operator /(Vec v, float s)
         {
             var t = new Vec
@@ -119,11 +136,11 @@ namespace PGENLib
             };
             return t;
         }
-
-    
+        
         /// <summary>
-        ///  Return the reversed vector.
+        /// Return the reversed vector.
         /// </summary>
+        /// <returns></returns>
         public Vec Neg()
         {
             float s = -1;
@@ -131,8 +148,10 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Return the reversed vector.
+        /// Return the reversed vector.
         /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
         public static Vec operator-(Vec a)
         {
             float s = -1;
@@ -140,16 +159,22 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Returns the dot product between two vectors.
+        /// Returns the dot product between two vectors.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="w"></param>
+        /// <returns></returns>
         public static float DotProd(Vec v, Vec w)
         {
             return v.x*w.x+v.y*w.y+v.z*w.z;
         }
         
         /// <summary>
-        ///  Returns the cross product between two vectors.
+        /// Returns the cross product between two vectors.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="w"></param>
+        /// <returns></returns>
         public static Vec CrossProduct(Vec v, Vec w)
         {
             var t = new Vec
@@ -162,24 +187,29 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Return the squared norm (Euclidean length) of a vector. 
+        /// Return the squared norm (Euclidean length) of a vector.
         /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public static float SquaredNorm(Vec v)
         {
             return DotProd(v,v);
         }
         
         /// <summary>
-        ///  Return the norm (Euclidean length) of a vector. 
+        /// Return the norm (Euclidean length) of a vector.
         /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public static float Norm(Vec v)
         {
             return (float) Math.Sqrt(DotProd(v,v));
         }
         
         /// <summary>
-        ///  Normalize the vector, so that it's norm is equal to 1.
+        /// Normalize the vector, so that it's norm is equal to 1.
         /// </summary>
+        /// <returns></returns>
         public Vec NormalizeVec()
         {
             var t = new Vec
@@ -193,8 +223,9 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Turns a vector in a normal, and returns the normal.
+        /// Turns a vector in a normal, and returns the normal.
         /// </summary>
+        /// <returns></returns>
         public Normal VecToNorm()
         {
             var t = new Normal
@@ -290,9 +321,12 @@ namespace PGENLib
             return r;
         }
     }
+    
     //==========================================================================================================
     //Tuple 
     //==========================================================================================================
+    
+    
     public struct Tuple
     {
         public Vec e1;
@@ -318,6 +352,9 @@ namespace PGENLib
         /// <summary>
         /// Constructor with float parameters.
         /// </summary>
+        /// <param name="e1"></param>
+        /// <param name="e2"></param>
+        /// <param name="e3"></param>
         public Tuple(Vec e1, Vec e2, Vec e3)
         {
             this.e1 = e1;
@@ -330,9 +367,13 @@ namespace PGENLib
     //==================================================================================================================
     //Point
     //==================================================================================================================
-    
+    /// <summary>
+    /// A point in 3D space.
+    /// This struct has three floating-point fields: `x`, `y`, and `z`.
+    /// </summary>
     public struct Point
     {
+        
         public float x;
         public float y;
         public float z;
@@ -348,8 +389,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Constructor with parameter. 
+        /// Constructor with float parameters.
         /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public Point(float x, float y, float z)
         {
             this.x = x;
@@ -358,8 +402,9 @@ namespace PGENLib
         }
         
         //METODI========================================================================================================
+        
         /// <summary>
-        /// Returns x, y, z as a string.
+        /// Returns point's components x, y, z as a string.
         /// </summary>
         public override string ToString()
         {
@@ -367,7 +412,7 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Check weather two vectors are equals.  
+        /// Check if two points are similar enough to be considered equal.  
         /// </summary>
         public static bool are_close(Point p, Point q)
         {
@@ -385,8 +430,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Return the sum between a point and a vector, which is a point.
+        /// Return the sum between a point and a vector, which is a point.
         /// </summary>
+        /// <param name="p"></param>
+        /// <param name="v"></param>
+        /// <returns>point</returns>
         public static Point operator +(Point p, Vec v)
         {
             var q = new Point
@@ -399,8 +447,11 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Returns the product between a point and a scalar.
+        /// Returns the product between a point and a scalar.
         /// </summary>
+        /// <param name="p"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
         public static Point operator *(Point p, float a)
         {
             var q = new Point
@@ -411,9 +462,13 @@ namespace PGENLib
             };
             return q;
         }
+        
         /// <summary>
-        ///  Returns the difference between two points, as a vector.
+        /// Returns the difference between two points, as a vector.
         /// </summary>
+        /// <param name="p"></param>
+        /// <param name="q"></param>
+        /// <returns>vector</returns>
         public static Vec operator -(Point p, Point q)
         {
             var v = new Vec
@@ -426,8 +481,11 @@ namespace PGENLib
         }
         
         /// <summary>
-        ///  Return the difference between a point and a vector, as point.
+        /// Return the difference between a point and a vector, as point.
         /// </summary>
+        /// <param name="p"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public static Point operator -(Point p, Vec v)
         {
             var q = new Point
@@ -440,8 +498,9 @@ namespace PGENLib
         }
 
         /// <summary>
-        ///  Turns a point into a vector and returns it.
+        /// Turns a point into a vector and returns it.
         /// </summary>
+        /// <returns></returns>
         public Vec PointToVec()
         {
             var q = new Vec
@@ -452,9 +511,13 @@ namespace PGENLib
             };
             return q;
         }
+        
         /// <summary>
-        ///  Returns the division between a point and a scalar. 
+        ///  Returns the division between a point and a scalar.
         /// </summary>
+        /// <param name="v"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static Point operator /(Point v, float s)
         {
             var t = new Point
@@ -466,6 +529,7 @@ namespace PGENLib
             return t;
         }
     }
+    
     //==================================================================================================================
     //Normal
     //==================================================================================================================
@@ -490,18 +554,24 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Constructor with float parameters. 
+        /// Constructor with float parameters.
         /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public Normal(float x, float y, float z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
         }
+        
         //METODI========================================================================================================
+        
         /// <summary>
-        /// Returns x, y, z as astring.
+        /// Returns normal's components x, y, z as a string.
         /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"Normal(x={x}, y={y}, z={z})";

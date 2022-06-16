@@ -1,0 +1,30 @@
+Documentation:
+-Cameras.cs DONE
+-Color.cs DONE
+-Exceptions.cs DA RIGUARDARE DOPO
+-Geometry.cs
+-HdrImage.cs
+-HitRecord.cs
+-Light.cs
+-Materials.cs
+-pcg.cs
+-Renderer.cs
+-SceneFiles.cs
+-Shape.cs
+-World.cs
+
+TEST:
+Documentation:
+-Cameras.cs DONE
+-Color.cs DONE
+-Exceptions.cs DA RIGUARDARE DOPO
+-Geometry.cs
+-HdrImage.cs
+-HitRecord.cs
+-Light.cs
+-Materials.cs
+-pcg.cs
+-Renderer.cs
+-SceneFiles.cs
+-Shape.cs
+-World.cs

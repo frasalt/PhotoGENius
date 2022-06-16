@@ -8,13 +8,19 @@ namespace PGENLib
     //Ray
     //==============================================================================================================
     public struct Ray
-    {
+    { 
+        // The class contains the following members:
+        // - `origin` (``Point``): the 3D point where the ray originated
+        // - `dir` (``Vec``): the 3D direction along which this ray propagates
+        // - `tmin` (float): the minimum distance travelled by the ray is this number times `dir`
+        // - `tmax` (float): the maximum distance travelled by the ray is this number times `dir`
+        // - `depth` (int): number of times this ray was reflected/refracted
+        
         public Point Origin;
         public Vec Dir;
         public float Tmin;
         public float Tmax;
-        public int Depth;
-
+        public int Depth; 
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -60,7 +66,12 @@ namespace PGENLib
         {
             return Dir;
         }
-
+        /// <summary>
+        /// Check if two rays are similar enough to be considered equal.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static bool are_close(Ray a, Ray b)
         {
             if (Point.are_close(a.Origin, b.Origin) & Vec.are_close(a.Dir, b.Dir))
@@ -78,6 +89,11 @@ namespace PGENLib
             return this.Origin + this.Dir * t;
         }
 
+        /// <summary>
+        /// This method returns a new ray whose origin and direction are the transformation of the original ray.
+        /// </summary>
+        /// <param name="tr"></param>
+        /// <returns></returns>
         public Ray Transform(Transformation tr)
         {
             var newRay = new Ray(tr*Origin, tr*Dir)
@@ -95,6 +111,7 @@ namespace PGENLib
     //Cameras
     //==============================================================================================================
     /// <summary>
+    /// An interface representing an observer.
     /// Interface for camera: the method FireRay will be implemented in two different ways by OrthogonalCamera and
     /// PerspectiveCamera.
     /// </summary>
@@ -103,11 +120,17 @@ namespace PGENLib
         Ray FireRay(float u, float v);
 
     }
-  
+   /// <summary>
+   /// This struct implements an observer seeing the world through an orthogonal projection.
+   /// </summary>
     public struct OrthogonalCamera : ICamera
     {
         private float AspectRatio;
         private Transformation Transf;
+        
+        // The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
+        // images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
+        // used in modern monitors.
 
         public OrthogonalCamera(float aspectRatio = 1.0f)
         {
@@ -121,8 +144,28 @@ namespace PGENLib
             Transf = tr;
         }
         
+
+        
+
+       
+        /// <summary>
+        /// Shoot a ray through the camera's screen
+        /// </summary>
+        /// <param name="u">x-axis</param>
+        /// <param name="v">y-axis</param>
+        /// <returns></returns>
+        /// The coordinates (u, v) specify the point on the screen where the ray crosses it.
+        /// The following diagram represents the coordinates (0,0); (1,0); (0,1); (1,1):
+        ///   (0, 1)                          (1, 1)
+        ///      +------------------------------+
+        ///      |                              |
+        ///      |                              |
+        ///      |                              |
+        ///      +------------------------------+
+        ///   (0, 0)                          (1, 0)
         public Ray FireRay(float u, float v)
         {
+
             var origin = new Point(-1.0f, (1.0f - 2.0f * u) * this.AspectRatio, 2.0f * v - 1.0f);
             var direction = new Vec(1.0f, 0.0f, 0.0f);
             var rayToFire = new Ray(origin, direction);
@@ -131,8 +174,17 @@ namespace PGENLib
         }
     }
     
+   /// <summary>
+   /// This class implements an observer seeing the world through a perspective projection.
+   /// </summary>
     public struct PerspectiveCamera : ICamera
     {
+        // The parameter `screen_distance` tells how much far from the eye of the observer is the screen,
+        // and it influences the so-called «aperture» (the field-of-view angle along the horizontal direction).
+        // The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
+        // images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
+        // used in modern monitors.
+
         private float ScreenDistance;
         private float AspectRatio;
         private Transformation Transf;
@@ -143,8 +195,6 @@ namespace PGENLib
             AspectRatio = 1.0f;
             Transf = new Transformation();
         }
-        
-        // Martin: ho aggiunto questo costruttore che mi era comodo per il test di ImageTracer
         public PerspectiveCamera(float aspectRatio) 
         {
             ScreenDistance = 1.0f;
@@ -163,7 +213,21 @@ namespace PGENLib
             AspectRatio = aspectRatio;
             Transf = tr;
         }
-
+        /// <summary>
+        /// Shoot a ray through the camera's screen
+        /// </summary>
+        /// <param name="u">x-axis</param>
+        /// <param name="v">y-axis</param>
+        /// <returns></returns>
+        /// The coordinates (u, v) specify the point on the screen where the ray crosses it.
+        /// The following diagram represents the coordinates (0,0); (1,0); (0,1); (1,1):
+        ///   (0, 1)                          (1, 1)
+        ///      +------------------------------+
+        ///      |                              |
+        ///      |                              |
+        ///      |                              |
+        ///      +------------------------------+
+        ///   (0, 0)                          (1, 0)
         public Ray FireRay(float u, float v)
         {
             var origin = new Point(-this.ScreenDistance, 0.0f, 0.0f);
@@ -191,7 +255,7 @@ namespace PGENLib
     /// </item>
     /// <item>
     ///     <term>Pcg</term>
-    ///     <description> </description>
+    ///     <description> random number generator</description>
     /// </item>
     /// <item>
     ///     <term>SamplePerSize</term>
@@ -288,13 +352,8 @@ namespace PGENLib
                             }
                         }
                     }
-                    
-                    
-                    
                 }
             }
         }
-        
-
     }
 }
