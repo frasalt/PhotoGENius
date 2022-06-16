@@ -261,7 +261,6 @@ namespace PGENLib
         /// </summary>
         /// <param name="ray"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public override bool QuickRayIntersection(Ray ray)
         {
             var invRay = ray.Transform(Transf.Inverse());
@@ -375,7 +374,7 @@ namespace PGENLib
             var sqrtDelta = (float) Math.Sqrt(delta);
             var tmin = (-b - sqrtDelta) / (2.0f * a);
             var tmax = (-b + sqrtDelta) / (2.0f * a);
-            ////Choose the correct solution
+            //Choose the correct solution
             float tFirstHit;
             if (tmin > invRay.Tmin & tmin < invRay.Tmax)
             {
@@ -410,7 +409,7 @@ namespace PGENLib
                 if (phi < 0) phi += (float)(2 * Math.PI);
                 if (hitPoint.z < Zmin || hitPoint.z > Zmax || phi > Phimax) return null;
             }
-
+            
             
             var hit = new HitRecord(Transf*hitPoint, Transf*CylinderNormal(hitPoint, ray.Dir),
                 new Vec2d(phi / Phimax, (hitPoint.z - Zmin) / (Zmax - Zmin)), tFirstHit, ray, Material);
