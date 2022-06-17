@@ -48,8 +48,49 @@ dotnet run PhotoGENius render <options>
 In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.txt) in the [example directory](InputSceneFiles). \
 Type ```-?``` as option to show further usage information.
 
+## Examples
 
-----------da qui in giù da aggiustare-----------
+### PFM to PGN convertion
+Luminosity factor =10 and gamma compression =0.1 :
+```bash
+dotnet run -- pfm2png '# use converter' \
+           --lum-fac 10 \
+           --gamma-fac 0.1 \
+           --input-pfm ../Media/Readme_imgs/memorial.pfm '# input file path' \
+           --output-png ../Media/Readme_imgs/prova1.png '# output file path'
+ ```
+![](Media/Readme_imgs/prova1.png)
+
+Luminosity factor =0.01 and gamma compression =2 :
+```bash
+dotnet run -- pfm2png '# use converter' \
+           --lum-fac 0.01 \
+           --gamma-fac 2 \
+           --input-pfm ../Media/Readme_imgs/memorial.pfm '# input file path' \
+           --output-png ../Media/Readme_imgs/prova2.png '# output file path'
+ ```
+![](Media/Readme_imgs/prova2.png)
+
+### Generate a brief animation
+
+To **generate frames**, in ```PhotoGENius/BashScripts``` directory, run [this script](BashScripts/generate-frames.sh):
+```bash
+./generate-frames.sh
+```
+It takes in input a series of input scene files which must be located in ```InputSceneFiles/serial```,
+and be named ```inputNNN.txt``` where ```NNN``` stands for a 3 digits integer. \
+Automatic generation of the scene files can be done e.g. via a python program (or write them by hand, if you prefer...).
+
+You can quite easily adapt the script to your needs and make it executable if necessary (chmod +x on Linux and MacOS).
+
+To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download.html), type
+```bash
+./generate-video.sh
+```
+
+>>>>>>Add a video?
+
+----------inizio cantiere-----------
 
 ## Installation
 

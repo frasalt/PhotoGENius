@@ -1,31 +1,3 @@
-# PhotoGENius - _Your wish, my duty_
-### Photorealistic images generation
-
-![](logoPGEN.png) 
-
-## Features
-
-In its second release, PhotoGENius can:
-- read a PFM file and convert it to a PNG file, given an output luminosity parameter `alpha` and a calibration factor `gamma`.
-- generate demonstrative scene in both PNG and PFM format, given a set of options, including view angle.
-- assemble different frames to generate a simple animation.
-
-## Usage
-Easy to use: go to PhotoGENius\PhotoGENius directory.
-
-To **convert file**, type
-```bash
-dotnet run PhotoGENius pfm2png --input-pfm PFM_FILE_PATH_NAME <options>
-```
-Pay attention that if your computer is set on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
-
-To **generate demo image**, type
-```bash
-dotnet run PhotoGENius render <options>
-```
-Type anything as option to show further usage information.
-
-
 ## Examples
 
 ### PFM to PGN convertion
