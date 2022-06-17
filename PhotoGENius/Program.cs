@@ -183,7 +183,7 @@ class Program
                 world.AddShape(
                     new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
-                
+            /*    
                 //sphere in the middle
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial)
@@ -192,8 +192,9 @@ class Program
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
-        
-                                 
+
+            */                     
+
                 
                 //---------------------------
                 //tree
@@ -203,13 +204,14 @@ class Program
                     new Cylinder( Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial,
                         0.0f, 2.0f, 0.3f)
                 );
-                
-                //Sphere
-                //world.AddShape(
-                //    new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Translation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
-                //    );
-                //----------------------------
-                
+
+                /*    
+                    //Sphere
+                    world.AddShape(
+                        new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
+                        );
+                    //----------------------------
+                */
 
                 
                 /*
