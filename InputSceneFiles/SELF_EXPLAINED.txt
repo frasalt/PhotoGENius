@@ -65,12 +65,14 @@ cylinder (cyl_material, translation([0, -2.5, 1]), 0, 3, 1)
 #------------------------------------------------------------------------|
 #                                CAMERA                                  |
 #------------------------------------------------------------------------|
-# camera("projection", "transformation", "x_ratio", "y_ratio")           |
+# camera("projection", "transformation", "aspectRatio", "screenDistance")|
 # where:                                                                 |
 #   "projection" =  orthogonal,                                          |
 #                   perspective                                          |
-#   "x_ratio", "y_ratio" = floating point number, representing camera    |
-#                          amplitude in that direction                   |
-#                          (not to be confused with image size!)         |
+#   "aspectRatio" = floating point number, defines how larger than the   |
+#                   height is the image                                  |
+#   "screenDistance" = floating point number, representing how far       |        
+#                      from the eye of the observer is the screen        |
+#                                                                        |
 #------------------------------------------------------------------------|
 camera(perspective, rotation_y(17)*translation([-5, 0, 4]), 1.0, 1.0)
