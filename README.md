@@ -4,7 +4,7 @@
 ![release](https://img.shields.io/github/v/release/frasalt/PhotoGENius)
 ![OS](https://img.shields.io/badge/OS-Linux%20%7C%20MacOS%20%7C%20Windows-yellow)
 ![license](https://img.shields.io/github/license/frasalt/PhotoGENius)
-![](https://img.shields.io/github/workflow/status/frasalt/PhotoGENius/PGENLib.test)
+![build](https://img.shields.io/github/workflow/status/frasalt/PhotoGENius/PGENLib.test)
 ![Top Language](https://img.shields.io/github/languages/top/frasalt/PhotoGENius)
 
 ![](Media/Readme_imgs/logoPGEN.png)
@@ -19,10 +19,10 @@ Main contributors: [Francesca Salteri](https://github.com/frasalt) (owner), [Ter
 
 ## Features
 
-This library is meant to **render photorealistic images**, given an input txt file containing user instructions.
+This library is meant to 🌅 **create photorealistic images**, given an input txt file containing user instructions.
 The user can assemble different images to generate short animations, thanks to a simple *bash script*.
 
-Besides that, it's also possible to **convert HDR images to LDR** (from PFM format to PNG).
+Besides that, it's also possible to 🔄 **convert HDR images to LDR** (from PFM format to PNG).
 
 Image rendering can be performed via four different backwords raytracing algorithms (onoff, flat, pathtracer, pointlight tracer).
 The user can add three types of geometric shapes to the scene (sphere, plane and cylinder), set their color properties 
@@ -36,19 +36,22 @@ Extremely easy basic usage.
 
 Go to ```PhotoGENius\PhotoGENius``` directory.
 
-To **convert file**, type
+To 🔄 **convert file**, type
 ```bash
-dotnet run -- pfm2png --pfm-input PFM_FILE_PATH <options>
+dotnet run -- pfm2png --pfm-input [PFM_FILE_PATH] {options}
 ```
 Pay attention that if your computer is set on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
 
-To **generate demo image**, type
+To 🌅 **create an image**, type
 ```bash
-dotnet run -- render <options>
+dotnet run -- render {options}
 ```
 In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.txt) in the [scene files directory](InputSceneFiles).
 
 Type ```-?``` as option to show further usage information.
+
+The command line interface is built using the argument parsing library [System.CommandLine](https://docs.microsoft.com/en-us/dotnet/standard/commandline/).
+
 
 ## Examples
 
@@ -59,20 +62,18 @@ Luminosity factor =10 and gamma compression =0.1 (copy and paste to command line
 dotnet run -- pfm2png '# use converter' \
            --lum-fac 10 \
            --gamma-fac 0.1 \
-           --pfm-output ../Media/Readme_imgs/memorial.pfm '# input image path' \
-           --png-output ../Media/Readme_imgs/prova1.png '# output image path'
+           --png-output ../Media/Readme_imgs/memorial1.png '# output image path'
  ```
-![](Media/Readme_imgs/prova1.png)
+![](Media/Readme_imgs/memorial1.png)
 
 For a less saturated result: luminosity factor =0.01 and gamma compression =2 (copy and paste as above):
 ```bash
 dotnet run -- pfm2png '# use converter' \
            --lum-fac 0.01 \
            --gamma-fac 2 \
-           --pfm-output ../Media/Readme_imgs/memorial.pfm '# input image path' \
-           --png-output ../Media/Readme_imgs/prova2.png '# output image path'
+           --png-output ../Media/Readme_imgs/memorial2.png '# output image path'
  ```
-![](Media/Readme_imgs/prova2.png)
+![](Media/Readme_imgs/memorial2.png)
 
 ### Photorealistic image generation
 
@@ -102,23 +103,29 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ./generate-video.sh
 ```
 
->>>>>> Add a video?
+>>>> Add a nice video?
+<!---
+<p align="center">
+<img width="450" src=https://user-images.githubusercontent.com/59051647/126571722-28e2cfe1-0b22-4961-bc0a-b1d05eb507ec.png>
+<img src="https://user-images.githubusercontent.com/59051647/126542691-8f384c07-c567-4276-8116-9e497611da4f.gif" width="450" />
+</p>
+--->
 
-----------inizio cantiere-----------
 
 ## Installation
 
-### Dependencies
+### Requirements
 
-A dotnet installation is needed:
+PhotoGENius can be used on Windows, Linux and MacOS systems.
+
+A dotnet installation is needed for running the code:
 - [.NET 6.0](https://dotnet.microsoft.com/en-us/download) (version 6.0 or higher)
 
-
 If you want to assemble animations, you need to install ffmpeg
-(note that *it's not needed* for running the raytracing code):
+(note that *it's not mandatory* for running the raytracing code):
 - [FFmpeg](https://www.ffmpeg.org/) (version 4.4 or higher)
 
-
+=================== This paragraph is in progress =====================
 ### Download latest release
 You can download the latest stable release
 [here](https://github.com/frasalt/PhotoGENius/releases/tag/v0.3.0) (version 0.3.0)
@@ -136,69 +143,46 @@ You can also clone this repository through the command:
 ```bash
 git clone https://github.com/frasalt/PhotoGENius.git
 ```
-
-### Testing
-
-The code is tested at every push, so you should see the flag
-Tests are being implemented in the `test` directory.
-
-In order to test the code, run in the `build` directory:
-
-```sh
-ctest
-```
-The testing interface is built using [Catch2](https://github.com/catchorg/Catch2).
-
-----------inizio cantiere-----------
+=================== ***************************** =====================
 
 
-## Usage
+### Code testing
 
-You can run the program through the script `raytracer`, located in the `build` directory.
+The code is tested at every push, and this flag
+![build](https://img.shields.io/github/workflow/status/frasalt/PhotoGENius/PGENLib.test)
+should warn the user if something is not working.
 
-The code implements two features, that you can call with commands:
-- 🌅 `render`: creates a photorealistic image;
-- 🔄 `hdr2ldr`: converts HDR image to LDR.
 
-The basic usage is the following:
+## Potentialities
 
-```sh
-./raytracer [COMMAND] [INPUT_FILENAME] {OPTIONS}
+Some examples of what your creativity can lead to, using **PhotoGENius** in its full potential. 
 
-```
-The `[INPUT_FILENAME]` is required. There are some examples in the `examples` directory if you want to give it a try or play with the code.
-
-To have more information about available `{OPTIONS}`, a commmand-line help shows more details about program features and parameters:
-
-```sh
-./raytracer --help
-
-```
-
-The command line interface is built using the argument parsing library [Taywee/args](https://github.com/Taywee/args).
-
-🔗 For further details, examples and full documentation of the code, see the page [Photorealistic rendering](https://elisalegnani.github.io/PhotorealisticRendering).
-
-## Potentialities and examples
-
-🤹🏻‍♀️ There is a nice [overview of the library potentialities](https://elisalegnani.github.io/PhotorealisticRendering/explore) with lots of examples, hoping this can tickle your creativity!
-
-Here is just a spoiler of what awaits you!
-
+>>>> Add nice images and videos
+<!---
 <p align="center">
        <img width="450" src=https://user-images.githubusercontent.com/59051647/126571722-28e2cfe1-0b22-4961-bc0a-b1d05eb507ec.png>
        <img src="https://user-images.githubusercontent.com/59051647/126542691-8f384c07-c567-4276-8116-9e497611da4f.gif" width="450" /> 
 </p>
+--->
 
 ## Documentation
 
-📓 The complete documentation of the library is available [here](https://elisalegnani.github.io/PhotorealisticRendering/html/index.html). It was generated with [Doxygen](http://www.doxygen.nl). This is the first versione of the documentation, any suggestions are very appreciated!
+The complete documentation of the library is available
+[here](PGENLib.Doc/PGENLib.xml)
+or [here(?)](https://frasalt.github.io/PhotoGENius/PGENLib.Doc/PGENLib.xml).
+
+If you find anything not clear in it, please let us know:
+any suggestion is appreciated and certainly useful for other users.
 
 
 ## Contributing
 
-🚧 Please open [pull requests](https://github.com/ElisaLegnani/PhotorealisticRendering/pulls) or use the [issue tracker](https://github.com/ElisaLegnani/PhotorealisticRendering/issues) to suggest any code implementations or report bugs. Any contributions are welcome!
+Please open [pull requests](https://github.com/frasalt/PhotoGENius/pulls)
+or use the [issue tracker](https://github.com/ElisaLegnani/PhotorealisticRendering/issues) to suggest any code implementations or report bugs. Any contributions are welcome!
 
 ## License
 
-📋 The code is released under the terms of the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html). See the file [LICENSE.md](https://github.com/ElisaLegnani/PhotorealisticRendering/blob/master/LICENSE.md).
+The code is released under the terms of the [GPU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).\
+Read the whole licence [here](LICENCE).
+
+
