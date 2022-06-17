@@ -1,6 +1,5 @@
-for angle in $(seq 0 10); do
-  # Angle with three digits, e.g. angle="1" → angleNNN="001"
-  angleNNN=$(printf "%03d" $angle)
-  dotnet run PhotoGENius demo --width 640 --height 480 --angle-deg $angle --camera-type perspective --png-output imgs_png/\img$angleNNN.png --pfm-output imgs_pfm/\img$angleNNN.pfm
+for i in $(seq 0 39); do
+  iNNN=$(printf "%03d" $i)
+  dotnet run PhotoGENius render --width 300 --height 250 --png-output imgs_png/\img$iNNN.png --max-depth 2 --sample-per-pixel 4 --file-name ../../../Desktop/video/script$iNNN.txt
 done
      

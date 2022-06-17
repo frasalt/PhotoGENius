@@ -34,10 +34,8 @@ class Program
 
     static async Task<int> Main(string[] args)
     {
-        Console.WriteLine("prova");
         var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
-
-            
+        
         var width = new Option<int>(
             name: "--width",
             description: "Width of the image to render.",
