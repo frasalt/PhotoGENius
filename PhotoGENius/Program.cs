@@ -167,7 +167,10 @@ class Program
                 var mirrorMaterial = new Material(
                     new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f)))
                 );
-
+                
+                //---------------------------
+                //example scene
+                //---------------------------
                 // shapes
                 Console.WriteLine("\nInitializing shapes...");
 
@@ -371,7 +374,6 @@ class Program
             angleDeg,
             pfmOutput,
             pngOutput,
-            cameraType,
             algorithm,
             raysNum,
             maxDepth,
@@ -384,7 +386,7 @@ class Program
         rootCommand.AddCommand(render);
             
         render.SetHandler((string scenefileValue, int widthValue, int heightValue, float angleDegValue,
-                string pfmOutputValue, string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue,
+                string pfmOutputValue, string pngOutputValue, string algorithmValue, int raysNumValue,
                 int maxDepthValue, ulong initStateValue, ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
             {
                 //Compute number of sample per side, which will be used for antialiasing
@@ -407,7 +409,11 @@ class Program
                 scene = ExpectParse.parse_scene(new InputStream(sceneStream), dict);
 
                 //Inserire controllo dei parametri di input letti da file
-                    
+
+                // Camera rotation
+                if (angleDegValue != 0)
+                    scene.Camera.SetTransf( Transformation.RotationZ(angleDegValue)*scene.Camera.GetTransf());
+
                 // 4.Run raytracer
                 Console.WriteLine("\nRunning raytracer...");
 
@@ -501,7 +507,7 @@ class Program
                 }
             },
 
-            scenefile, width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
+            scenefile, width, height, angleDeg, pfmOutput, pngOutput, algorithm, raysNum, maxDepth, 
             initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel );
             
             
