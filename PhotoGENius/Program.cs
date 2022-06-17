@@ -169,6 +169,7 @@ class Program
                     new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f)))
                 );
                 
+           
                 //---------------------------
                 //example scene
                 //---------------------------
