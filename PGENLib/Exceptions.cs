@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace PGENLib
 {
-    public class InvalidPfmFileFormat : Exception
+    public class InvalidPfmFileFormat : FormatException
     {
         public InvalidPfmFileFormat(string errMessage)
         {

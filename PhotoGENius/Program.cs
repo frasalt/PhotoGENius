@@ -170,9 +170,9 @@ class Program
                 );
                 
            
-                //---------------------------
+                //------------------------------------------------------
                 //example ImagePigment
-                //---------------------------
+                //------------------------------------------------------
                 /*
                  HdrImage img = new HdrImage(1, 1);
                 HdrImage ball;
@@ -182,13 +182,12 @@ class Program
                 }
 
                 var basketball = new Material(new DiffuseBRDF(new ImagePigment(ball)));
-                 
-                 */
-
+                //------------------------------------------------------ 
+                */
                 
-                //---------------------------
+                //------------------------------------------------------
                 //example scene
-                //---------------------------
+                //------------------------------------------------------
                 // shapes
                 Console.WriteLine("\nInitializing shapes...");
 
@@ -209,37 +208,35 @@ class Program
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
+                //------------------------------------------------------
                 
-                //---------------------------
+                
+                /*
+                //------------------------------------------------------
                 //tree
-                //---------------------------
+                //------------------------------------------------------
                 //cilinder in the middle
                 world.AddShape(
                     new Cylinder( Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial,
                         0.0f, 2.0f, 0.3f)
                 );
 
-                /*    
+                    
                     //Sphere
                     world.AddShape(
                         new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
                         );
-                    //----------------------------
+                //-------------------------------------------------------
                 */
 
                 
                 /*
-                //---------------------------
+                //------------------------------------------------------
                 //cube with spheres
-                //---------------------------
-                // sphere in the middle
-                world.AddShape(
-                    new Sphere(Transformation.Traslation(new Vec(0f, -2.5f, 1f)),sphereMaterial)
-                );
-                
-                //   sphere in vertices
+                //------------------------------------------------------
+                //sphere in vertices
                 var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
-                Transformation transformation;
+                Transformation transf;
                 
                 var col1 = new Color(0.5f, 0.5f, 0.5f);
                 var col2 = new Color(0.0f, 1.0f, 0.0f);
@@ -252,15 +249,15 @@ class Program
                     {
                         for (var z = -0.5f; z <= 0.5f; z++)
                         {
-                            transformation = Transformation.Traslation(new Vec(x, y, z));
+                            transf = Transformation.Translation(new Vec(x, y, z));
 
-                            var sphere = new Sphere(transformation * scaling, material);
+                            var sphere = new Sphere(transf * scaling, material);
                             world.AddShape(sphere);
                         }
                     }
                 }
 
-                //   sphere in faces
+                //sphere in faces
                 var red = new Color(1.0f, 0.0f, 0.0f);
                 var blue = new Color(0.0f, 0.0f, 1.0f);
                 var redEmittedRad = new UniformPigment(red);
@@ -268,12 +265,12 @@ class Program
                 var redMaterial = new Material(redEmittedRad, new DiffuseBRDF());
                 var blueMaterial = new Material(blueEmittedRad, new DiffuseBRDF());
 
-                transformation = Transformation.Translation(new Vec(0.0f, 0.0f, -0.5f));
-                world.AddShape(new Sphere(transformation * scaling, blueMaterial));
+                transf = Transformation.Translation(new Vec(0.0f, 0.0f, -0.5f));
+                world.AddShape(new Sphere(transf * scaling, blueMaterial));
 
-                transformation = Transformation.Translation(new Vec(0.0f, 0.5f, 0.0f));
-                world.AddShape(new Sphere(transformation * scaling, redMaterial));
-                //---------------------------
+                transf = Transformation.Translation(new Vec(0.0f, 0.5f, 0.0f));
+                world.AddShape(new Sphere(transf * scaling, redMaterial));
+                //------------------------------------------------------
                 */
 
                 world.AddLight(new PointLight(new Point(-30f, 30f, 30f), new Color(1.0f, 1.0f, 1.0f)));
@@ -573,10 +570,19 @@ class Program
             
                 // leggo l'immagine HDR in formato PFM
                 using (var inpf = new FileStream(pfmInputValue, FileMode.Open, FileAccess.Read))
-                { img = img.ReadPFMFile(inpf); }
-    
-                Console.WriteLine($" >> File {pfmInputValue} has been read from disk.");
-    
+                {
+                    try
+                    {
+                        img = img.ReadPFMFile(inpf);
+                        Console.WriteLine($" >> File {pfmInputValue} has been read from disk.");
+                    }
+                    catch (InvalidPfmFileFormat err)
+                    {
+                        Console.WriteLine($"Message: {err.Message}");
+                        Console.WriteLine($"Source: {err.Source}");
+                    }
+                }
+
                 // converto i dati in formato LDR
                 img.NormalizeImage(luminosityFactorValue);
                 img.ClampImage();
