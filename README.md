@@ -55,7 +55,7 @@ The command line interface is built using the argument parsing library [System.C
 
 ## Examples
 
-### PFM to PGN convertion
+### PFM to PNG convertion
 
 Luminosity factor =10 and gamma compression =0.1 (copy and paste to command line without comments, or in a bash script):
 ```bash
