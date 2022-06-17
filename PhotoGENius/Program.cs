@@ -34,7 +34,9 @@ class Program
     static async Task<int> Main(string[] args)
     {
 
+
         var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
+
         var width = new Option<int>(
             name: "--width",
             description: "Width of the image to render.",
@@ -53,12 +55,12 @@ class Program
         var pfmOutput = new Option<string>(
             name: "--pfm-output",
             description: "Name of the PFM file to create.",
-            getDefaultValue: () => "output.pfm");
+            getDefaultValue: () => "../Media/imgs_pfm/output.pfm");
             
         var pngOutput = new Option<string>(
             name: "--png-output",
             description: "Name of the PNG file to create.",
-            getDefaultValue: () => "output.png");
+            getDefaultValue: () => "../Media/imgs_png/output.png");
             
         var cameraType = new Option<string>(
             name: "--camera-type",
@@ -109,7 +111,7 @@ class Program
             getDefaultValue: () => 1);
             
         //==============================================================================================================
-        //Demo 
+        // Demo 
         //==============================================================================================================
 
         var demo = new Command("demo", "Create a demo image.")
@@ -207,26 +209,6 @@ class Program
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
-
-            */                     
-
-                /*
-                //---------------------------
-                //tree
-                //---------------------------
-                //cilinder in the middle
-                world.AddShape(
-                    new Cylinder( Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial,
-                        0.0f, 2.0f, 0.3f)
-                );
-*/
-                /*    
-                    //Sphere
-                    world.AddShape(
-                        new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
-                        );
-                    //----------------------------
-                */
 
                 
                 /*
@@ -401,7 +383,7 @@ class Program
         var scenefile = new Option<string>(
             name: "--file-name",
             description: "Input file for scene description",
-            getDefaultValue: () => "input_file.txt");
+            getDefaultValue: () => "../InputSceneFiles/DEFAULT_INPUT.txt");
 
         var render = new Command("render", "Create an image.")
         {
@@ -549,13 +531,13 @@ class Program
             
             
         //==============================================================================================================
-        //Pfm2png con SystemCommandLine
+        // Pfm2png 
         //==============================================================================================================
             
         var pfmInput = new Option<string>(
-            name: "--input-pfm",
+            name: "--pfm-input",
             description: "PFM file to be converted.",
-            getDefaultValue: () => "input.pfm");
+            getDefaultValue: () => "../Media/Readme_imgs/memorial.pfm");
             
         var pfm2png = new Command("pfm2png", "Convert a PFM file to a PNG")
         {
