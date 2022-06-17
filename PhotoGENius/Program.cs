@@ -170,6 +170,21 @@ class Program
                 );
                 
                 //---------------------------
+                //example ImagePigment
+                //---------------------------
+                /*
+                 HdrImage img = new HdrImage(1, 1);
+                HdrImage ball;
+                using (Stream input = File.OpenRead(@"pp3.pfm"))
+                {
+                    ball = img.ReadPFMFile(input);
+                }
+
+                var basketball = new Material(new DiffuseBRDF(new ImagePigment(ball)));
+                 
+                 */
+                
+                //---------------------------
                 //example scene
                 //---------------------------
                 // shapes
