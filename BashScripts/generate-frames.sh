@@ -1,6 +1,6 @@
 for i in $(seq 0 39); do
   iNNN=$(printf "%03d" $i)
-  dotnet run -- render \
+  dotnet run --project ../PhotoGENius render \
         --width 150 --height 100 \
         --max-depth 2 \
         --lum-fac 0.6 \

@@ -94,7 +94,8 @@ To **generate frames**, in ```PhotoGENius/BashScripts``` directory, run [this sc
 ```
 It takes in input a series of input scene files which must be located in ```InputSceneFiles/serial```,
 and be named ```inputNNN.txt``` where ```NNN``` stands for a 3 digits integer. \
-Automatic generation of the scene files can be done e.g. via a python program (or write them by hand, if you prefer...).
+Automatic generation of the scene files can be done e.g. via a python program 
+similar to [this one](InputSceneFiles/serial/inp_txt.py) (or write them by hand, if you prefer...).
 
 You can quite easily adapt the script to your needs and make it executable if necessary (chmod +x on Linux and MacOS).
 
@@ -178,7 +179,7 @@ any suggestion is appreciated and certainly useful for other users.
 ## Contributing
 
 Please open [pull requests](https://github.com/frasalt/PhotoGENius/pulls)
-or use the [issue tracker](https://github.com/ElisaLegnani/PhotorealisticRendering/issues) to suggest any code implementations or report bugs. Any contributions are welcome!
+or use the [issue tracker](https://github.com/frasalt/PhotoGENius/issues) to suggest any code implementations or report bugs. Any contributions are welcome!
 
 ## License
 
