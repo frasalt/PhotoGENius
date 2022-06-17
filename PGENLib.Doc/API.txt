@@ -4,7 +4,7 @@
 '=========================================='
 
 Line command:
-  dotnet run PhotoGENius render --h
+  dotnet run PhotoGENius render -?
 
 Description:
   Create an image.
@@ -35,7 +35,7 @@ Options:
 '=========================================='
 
 Line command:
-  dotnet run PhotoGENius render --h
+  dotnet run PhotoGENius render -?
 
 Description:
   Convert a PFM file to a PNG
@@ -46,6 +46,6 @@ Usage:
 Options:
   --lum-fac <lum-fac>        Regulates luminosity of rendered image. [default: 1]
   --gamma-fac <gamma-fac>    Regulates gamma compression of rendered image. [default: 1.8]
-  --input-pfm <input-pfm>    PFM file to be converted. [default: input.pfm]
+  --pfm-input <input-pfm>    PFM file to be converted. [default: input.pfm]
   --png-output <png-output>  Name of the PNG file to create. [default: output.png]
   -?, -h, --help             Show help and usage information

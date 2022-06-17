@@ -38,7 +38,7 @@ material cyl_material(       diffuse(uniform(<0.5, 0.7, 0>)),      uniform(<0, 0
 #                                SHAPES                                  |
 #------------------------------------------------------------------------|
 # "shape"("material", "transformation",                                  |
-#               **cylinder only: "z_min", "z_max", "radius, ""phi_max"**)|
+#               **cylinder only: "z_min", "z_max", "radius, "phi_max"**)|
 # where:                                                                 |
 #   "shape" =       sphere                                               |
 #                   plane                                                |
