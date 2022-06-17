@@ -1,6 +1,6 @@
 # HEAD
 ### 17-06-2022
--Fix ImagePigment in issue[#37](https://github.com/frasalt/PhotoGENius/issues/37)
+- Fix ImagePigment in issue[#37](https://github.com/frasalt/PhotoGENius/issues/37)
 
 ### 16-06-2022
 - Test for class `Plane` completed, fixing issue [#31](https://github.com/frasalt/PhotoGENius/issues/31)
