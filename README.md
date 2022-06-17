@@ -4,7 +4,7 @@
 ![release](https://img.shields.io/github/v/release/frasalt/PhotoGENius)
 ![OS](https://img.shields.io/badge/OS-Linux%20%7C%20MacOS%20%7C%20Windows-yellow)
 ![license](https://img.shields.io/github/license/frasalt/PhotoGENius)
-![build](https://img.shields.io/github/workflow/status/frasalt/PhotoGENius/PGENLib.test)
+![](https://img.shields.io/github/workflow/status/frasalt/PhotoGENius/PGENLib.test)
 ![Top Language](https://img.shields.io/github/languages/top/frasalt/PhotoGENius)
 
 ![](Media/Readme_imgs/logoPGEN.png)
@@ -32,44 +32,58 @@ For further information, see the [Application Program Interface](PGENLib.Doc/API
 info file.
 
 ## Usage
-Extremely easy basic usage.\
-\
-In PhotoGENius\PhotoGENius directory:\
-to **convert file**, type
+Extremely easy basic usage.
+
+Go to ```PhotoGENius\PhotoGENius``` directory.
+
+To **convert file**, type
 ```bash
-dotnet run PhotoGENius pfm2png --input-pfm PFM_FILE_PATH <options>
+dotnet run -- pfm2png --pfm-input PFM_FILE_PATH <options>
 ```
 Pay attention that if your computer is set on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
 
 To **generate demo image**, type
 ```bash
-dotnet run PhotoGENius render <options>
+dotnet run -- render <options>
 ```
-In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.txt) in the [example directory](InputSceneFiles). \
+In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.txt) in the [scene files directory](InputSceneFiles).
+
 Type ```-?``` as option to show further usage information.
 
 ## Examples
 
 ### PFM to PGN convertion
-Luminosity factor =10 and gamma compression =0.1 :
+
+Luminosity factor =10 and gamma compression =0.1 (copy and paste to command line without comments, or in a bash script):
 ```bash
 dotnet run -- pfm2png '# use converter' \
            --lum-fac 10 \
            --gamma-fac 0.1 \
-           --input-pfm ../Media/Readme_imgs/memorial.pfm '# input file path' \
-           --output-png ../Media/Readme_imgs/prova1.png '# output file path'
+           --pfm-output ../Media/Readme_imgs/memorial.pfm '# input image path' \
+           --png-output ../Media/Readme_imgs/prova1.png '# output image path'
  ```
 ![](Media/Readme_imgs/prova1.png)
 
-Luminosity factor =0.01 and gamma compression =2 :
+For a less saturated result: luminosity factor =0.01 and gamma compression =2 (copy and paste as above):
 ```bash
 dotnet run -- pfm2png '# use converter' \
            --lum-fac 0.01 \
            --gamma-fac 2 \
-           --input-pfm ../Media/Readme_imgs/memorial.pfm '# input file path' \
-           --output-png ../Media/Readme_imgs/prova2.png '# output file path'
+           --pfm-output ../Media/Readme_imgs/memorial.pfm '# input image path' \
+           --png-output ../Media/Readme_imgs/prova2.png '# output image path'
  ```
 ![](Media/Readme_imgs/prova2.png)
+
+### Photorealistic image generation
+
+Generate a demo image (copy and paste as above):
+```bash
+dotnet run -- render '# use renderer' \
+           --file-name ../InputSceneFiles/SELF_EXPLAINED.txt '# input scene file path' \
+           --png-output ../Media/Readme_imgs/my_first_image.png
+```
+![](Media/Readme_imgs/my_first_image.png)
+
 
 ### Generate a brief animation
 
@@ -88,7 +102,7 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ./generate-video.sh
 ```
 
->>>>>>Add a video?
+>>>>>> Add a video?
 
 ----------inizio cantiere-----------
 
@@ -96,50 +110,36 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 
 ### Dependencies
 
-A C++ compiler is needed (C++14 or higher).
+A dotnet installation is needed:
+- [.NET 6.0](https://dotnet.microsoft.com/en-us/download) (version 6.0 or higher)
 
-You also need to install the following dependencies:
-- [Cmake](https://cmake.org/) (version 3.12 or higher);
-- [GD library](https://libgd.github.io/) (version 2.3.0 or higher).
 
-If you want to parallelize the execution or run animations, the required dependencies are:
-- [GNU Parallel](https://www.gnu.org/software/parallel/)
+If you want to assemble animations, you need to install ffmpeg
+(note that *it's not needed* for running the raytracing code):
 - [FFmpeg](https://www.ffmpeg.org/) (version 4.4 or higher)
 
-> *Note*: they are not needed for running the raytracing code.
 
 ### Download latest release
-You can download the latest stable release [here](https://github.com/ElisaLegnani/PhotorealisticRendering/releases/tag/v1.1.0) (version 1.1.0) and then unpack it running in the command line (Linux):
+You can download the latest stable release
+[here](https://github.com/frasalt/PhotoGENius/releases/tag/v0.3.0) (version 0.3.0)
+and then unpack it running in the command line (Linux):
 
-```sh
-tar -xvf PhotorealisticRendering-1.0.0.tar
+```bash
+tar -xvf PhotoGENius-0.3.0.tar
 ```
 The command is ```tar xopf``` for MacOS.
 
-### Install from git repository
+### Clone from git repository
 
 You can also clone this repository through the command:
 
-```sh
-git clone https://github.com/ElisaLegnani/PhotorealisticRendering.git
+```bash
+git clone https://github.com/frasalt/PhotoGENius.git
 ```
-
-### Compile
-
-In order to build and compile the code, run the following commands:
-
-```sh
-cd PhotorealisticRendering
-mkdir build
-cd build
-cmake ..
-make
-```
-
-Executables files can be found in the `build` directory.
 
 ### Testing
 
+The code is tested at every push, so you should see the flag
 Tests are being implemented in the `test` directory.
 
 In order to test the code, run in the `build` directory:
@@ -148,6 +148,9 @@ In order to test the code, run in the `build` directory:
 ctest
 ```
 The testing interface is built using [Catch2](https://github.com/catchorg/Catch2).
+
+----------inizio cantiere-----------
+
 
 ## Usage
 

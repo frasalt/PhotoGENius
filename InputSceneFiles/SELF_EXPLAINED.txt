@@ -8,7 +8,7 @@
 
 # In this scene we want a checkered blue and green floor, a bright
 # shining sky, a red mirroring sphere intersecting the floor on the
-# left, a grey sphere in the center and a 3/4 green cylinder on the right.
+# left, a grey sphere quite far in the center and a 3/4 green cylinder on the right.
 # The point of view is quite high, looking a bit downward.
 
 #------------------------------------------------------------------------|

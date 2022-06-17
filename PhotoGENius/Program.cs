@@ -510,7 +510,7 @@ class Program
         //==============================================================================================================
             
         var pfmInput = new Option<string>(
-            name: "--input-pfm",
+            name: "--pfm-input",
             description: "PFM file to be converted.",
             getDefaultValue: () => "../Media/Readme_imgs/memorial.pfm");
             

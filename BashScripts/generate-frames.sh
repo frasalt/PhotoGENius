@@ -9,6 +9,6 @@ for i in $(seq 0 39); do
         --sample-per-pixel 4 \
         --camera-type perspective \
         --png-output ../Media/imgs_png/\img$iNNN.png \
-        --file-name ../BashScripts/serial/input$iNNN.txt
+        --file-name ../InputSceneFiles/serial/input$iNNN.txt
 done
      
