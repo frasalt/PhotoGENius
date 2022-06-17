@@ -24,18 +24,19 @@ using PGENLib;
 using Color = PGENLib.Color;
 using System.Diagnostics;
 
-
 namespace PhotoGENius; 
 
 class Program
 {
     static Color WHITE = new Color(1.0f, 1.0f, 1.0f);
     static Color BLACK = new Color(0.0f, 0.0f, 0.0f);
-
+    
     static async Task<int> Main(string[] args)
     {
+
+
         var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
-        
+
         var width = new Option<int>(
             name: "--width",
             description: "Width of the image to render.",
@@ -208,7 +209,6 @@ class Program
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
-            */
 
                 
                 /*

@@ -1,8 +1,40 @@
+/*
+PhotoGENius : photorealistic images generation.
+Copyright (C) 2022  Lamorte Teresa, Salteri Francesca, Zanetti Martino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 namespace PGENLib
 {
+    //==================================================================================================================
+    //Renderers
+    //==================================================================================================================
     /// <summary>
     /// A class implementing a solver of the rendering equation.
     /// This is an abstract class; you should use a derived concrete class.
+    /// This class has 2 members:
+    /// <list type="table">
+    /// <item>
+    ///     <term> World</term>
+    ///     <description> type `World`</description>
+    /// </item>
+    /// <item>
+    ///     <term>BackGroundColor</term>
+    ///     <description> type `Color`</description>
+    /// </item>
+    /// </list>
     /// </summary>
     public abstract class Renderer
     {
@@ -28,8 +60,18 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
+    //Onoff renderer
+    //==================================================================================================================
     /// <summary>
     /// A on/off renderer, produces black and white images and is useful for debugging purposes.
+    /// Other than Renderer's member it has the third member
+    /// <list type="table">
+    /// <item>
+    ///     <term> Color</term>
+    ///     <description> type `Color`</description>
+    /// </item>
+    /// </list>
     /// </summary>
     public class OnOffRenderer : Renderer
     {
@@ -50,6 +92,13 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
+    //Flat renderer
+    //==================================================================================================================
+    /// <summary>
+    /// This renderer estimates the solution of the rendering equation by neglecting any contribution of the light.
+    /// It just uses the pigment of each surface to determine how to compute the final radiance.
+    /// </summary>
     public class FlatRenderer : Renderer
     {
         public FlatRenderer(World world, Color backGroundColor = default) : base(world, backGroundColor){}
@@ -68,6 +117,31 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
+    //PathTracer renderer
+    //==================================================================================================================
+    /// <summary>
+    /// The algorithm implemented here allows the caller to tune number of rays thrown at each iteration, as well as the
+    /// maximum depth. It implements Russian roulette to reduce the number of recursive calls.
+    /// <list type="table">
+    /// <item>
+    ///     <term>Pcg</term>
+    ///     <description> Random number generator</description>
+    /// </item>
+    /// <item>
+    ///     <term>NumbOfRays</term>
+    ///     <description> Number of rays to be fired at each iteration</description>
+    /// </item>
+    /// <item>
+    ///     <term>MaxDepth</term>
+    ///     <description> Maximum number of reflections for any ray </description>
+    /// </item>
+    ///  <item>
+    ///     <term>RussianRouletteLimit</term>
+    ///     <description> Minimum number of reflections for the Russian Roulette algorith to start </description>
+    /// </item>
+    /// </list>
+    /// </summary>
     public class PathTracer : Renderer
     {
         public PCG Pcg;
@@ -137,8 +211,12 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
+    //Pointlight renderer
+    //==================================================================================================================
     /// <summary>
-    /// A simple point light Renderer, similar to the one that POV-Ray provides by default.
+    /// Class that implements a Point Light renderer. The solid angle integral of the rendering equations
+    /// can be simplified, because the integrand contains some localized Dirac deltas.
     /// </summary>
     public class PointLightRenderer : Renderer
     {

@@ -1,8 +1,24 @@
+/*
+PhotoGENius : photorealistic images generation.
+Copyright (C) 2022  Lamorte Teresa, Salteri Francesca, Zanetti Martino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 using Xunit;
 using System;
-using System.Net.Sockets;
 using System.Numerics;
-using PGENLib;
 
 namespace PGENLib.Tests
 {
@@ -51,7 +67,6 @@ namespace PGENLib.Tests
             Assert.False(Point.are_close(b, a));
         }
         
-        
         [Fact]
         public void test_point_operations()
         {
@@ -83,7 +98,6 @@ namespace PGENLib.Tests
             Assert.True(Math.Abs(Normal.SquaredNorm(a) - 14.0f) < 1E-5);
             Assert.True(Math.Abs(Normal.Norm(a_norm)-1.0f) < 1E-5);
         }
-        
         
         [Fact]
         public void test_are_transf_close()
@@ -253,11 +267,6 @@ namespace PGENLib.Tests
                 Assert.True(((float)Vec.SquaredNorm(T.e2)-1f)<1E-5f);
                 Assert.True(((float)Vec.SquaredNorm(T.e3)-1f)<1E-5f);
             }
-            
         }
-        
-        
-        
     }
-    
 }
