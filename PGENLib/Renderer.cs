@@ -18,9 +18,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace PGENLib
 {
+    //==================================================================================================================
+    //Renderers
+    //==================================================================================================================
     /// <summary>
     /// A class implementing a solver of the rendering equation.
     /// This is an abstract class; you should use a derived concrete class.
+    /// This class has 2 members:
+    /// <list type="table">
+    /// <item>
+    ///     <term> World</term>
+    ///     <description> type `World`</description>
+    /// </item>
+    /// <item>
+    ///     <term>BackGroundColor</term>
+    ///     <description> type `Color`</description>
+    /// </item>
+    /// </list>
     /// </summary>
     public abstract class Renderer
     {
@@ -46,8 +60,18 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
+    //Onoff renderer
+    //==================================================================================================================
     /// <summary>
     /// A on/off renderer, produces black and white images and is useful for debugging purposes.
+    /// Other than Renderer's member it has the third member
+    /// <list type="table">
+    /// <item>
+    ///     <term> Color</term>
+    ///     <description> type `Color`</description>
+    /// </item>
+    /// </list>
     /// </summary>
     public class OnOffRenderer : Renderer
     {
@@ -68,6 +92,9 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
+    //Flat renderer
+    //==================================================================================================================
     /// <summary>
     /// This renderer estimates the solution of the rendering equation by neglecting any contribution of the light.
     /// It just uses the pigment of each surface to determine how to compute the final radiance.
@@ -90,6 +117,9 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
+    //PathTracer renderer
+    //==================================================================================================================
     /// <summary>
     /// The algorithm implemented here allows the caller to tune number of rays thrown at each iteration, as well as the
     /// maximum depth. It implements Russian roulette to reduce the number of recursive calls.
@@ -181,7 +211,9 @@ namespace PGENLib
         }
     }
 
-    
+    //==================================================================================================================
+    //Pointlight renderer
+    //==================================================================================================================
     /// <summary>
     /// Class that implements a Point Light renderer. The solid angle integral of the rendering equations
     /// can be simplified, because the integrand contains some localized Dirac deltas.

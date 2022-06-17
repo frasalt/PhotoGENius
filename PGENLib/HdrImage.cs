@@ -31,6 +31,9 @@ namespace PGENLib
         BigEndian,
     }
 
+    //==================================================================================================================
+    //HdrImage
+    //==================================================================================================================
     /// <summary>
     /// A High-Dynamic-Range 2D image.
     /// This class has 3 members:
@@ -99,9 +102,9 @@ namespace PGENLib
         /// <summary>
         ///  Sets the color of a pixel of given coordinates.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="newCol"></param>
+        /// <param name="x"> type `int`</param>
+        /// <param name="y"> type `int`</param>
+        /// <param name="newCol"> type `Color`</param>
         public void SetPixel(int x, int y, Color newCol)
         {
             Debug.Assert(ValidCoord(x, y));
@@ -111,9 +114,9 @@ namespace PGENLib
         /// <summary>
         /// Given a pair of coordinates, it returns the color of the corresponding pixel.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
+        /// <param name="x"> type int</param>
+        /// <param name="y"> type int</param>
+        /// <returns>Pixel's Color in coordinates (x,y)</returns>
         public Color GetPixel(int x, int y)
         {
             Debug.Assert(this.ValidCoord(x, y));
@@ -121,15 +124,15 @@ namespace PGENLib
         }
 
         //=========================== FUNCTIONS FOR READING FROM FILE ======================================
-
         /// <summary>
         ///  Function that reads a PFM file and writes the content to a new HDR image.
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="input"> type `Stream`</param>
         /// <returns>a ``HdrImage`` object containing the image. If an error occurs, raise a
        /// ``InvalidPfmFileFormat`` exception.</returns>
         public HdrImage ReadPFMFile(Stream input)
         {
+            //Check PF, Image Size and Endianness
             string magic = ReadLine(input);
             Debug.Assert(magic == "PF");
 
@@ -143,6 +146,7 @@ namespace PGENLib
             Endianness end = Endianness.BigEndian;
             if (endi == -1) end = Endianness.LittleEndian;
 
+            //Set pixel's color
             HdrImage myimg = new HdrImage(Width, Height);
             for (int y = Height - 1; y >= 0; y--)
             {
@@ -161,21 +165,22 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Reads a byte and transforms it into an ASCII character.
+        /// Reads a line of a stream.
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        
+        /// <param name="input"> type `Stream`</param>
+        /// <returns>String containing the line of the input stream</returns>
         public string ReadLine(Stream input)
         {
             string str = "";
             byte[] mybyte = new byte[1];
-
-            while (Encoding.ASCII.GetString(mybyte) != "\n") // verify that previous byte was not a return
+            // verify that previous byte was not a return
+            while (Encoding.ASCII.GetString(mybyte) != "\n") 
             {
-                mybyte[0] = (byte) input.ReadByte(); // overwrite current byte on previous byte
+                // overwrite current byte on previous byte
+                mybyte[0] = (byte) input.ReadByte(); 
                 
-                if (Encoding.ASCII.GetString(mybyte) != "\n") // verify current byte
+                // verify current byte
+                if (Encoding.ASCII.GetString(mybyte) != "\n") 
                 {
                     str += Encoding.ASCII.GetString(mybyte);
                 }
@@ -186,10 +191,9 @@ namespace PGENLib
         /// <summary>
         /// Reads a 32-bit sequence from a stream and converts it to a floating-point number.
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-
+        /// <param name="input"> `Stream`</param>
+        /// <param name="end"> `Endianness`</param>
+        /// <returns>float</returns>
         public static float ReadFloat(Stream input, Endianness end)
         {
             byte[] bytes = new byte[4];
@@ -223,8 +227,8 @@ namespace PGENLib
         /// <summary>
         /// Image size reading function.
         /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
+        /// <param name="str"> input string</param>
+        /// <returns>int[2] containing Width and Height</returns>
         public int[] ParseImgSize(string str)
         {
             int[] dim = new int[2];
@@ -245,8 +249,8 @@ namespace PGENLib
         /// <summary>
         /// Reads the endianness and returns if it is little or big.
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <param name="input"> string</param>
+        /// <returns> +1 if endianness=big or -1 if endianness=small </returns>
         public int ParseEndianness(string input)
         {
             double endianness = 0;
@@ -321,7 +325,6 @@ namespace PGENLib
         }
 
         //=========================== LUMINOSITY OF THE PIXELS ==============================================
-        
         /// <summary>
         /// Returns the average brightness of the image.
         /// The `delta` parameter is used to prevent  numerical problems for underilluminated pixels.
