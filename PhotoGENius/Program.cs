@@ -168,6 +168,23 @@ class Program
                     new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f)))
                 );
                 
+           
+                //---------------------------
+                //example ImagePigment
+                //---------------------------
+                /*
+                 HdrImage img = new HdrImage(1, 1);
+                HdrImage ball;
+                using (Stream input = File.OpenRead(@"pp3.pfm"))
+                {
+                    ball = img.ReadPFMFile(input);
+                }
+
+                var basketball = new Material(new DiffuseBRDF(new ImagePigment(ball)));
+                 
+                 */
+
+                
                 //---------------------------
                 //example scene
                 //---------------------------
@@ -182,7 +199,7 @@ class Program
                 world.AddShape(
                     new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
-                
+            /*    
                 //sphere in the middle
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial)
@@ -191,6 +208,8 @@ class Program
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
+            */
+
                 
                 /*
                 //---------------------------

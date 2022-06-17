@@ -1,7 +1,11 @@
 # HEAD
+### 17-06-2022
+- Fix ImagePigment in issue[#37](https://github.com/frasalt/PhotoGENius/issues/37)
+
 ### 16-06-2022
 - Test for class `Plane` completed, fixing issue [#31](https://github.com/frasalt/PhotoGENius/issues/31)
 - Test for class `World` added, fixing issue [#29](https://github.com/frasalt/PhotoGENius/issues/29)
+- Fixed isseus [#33](https://github.com/frasalt/PhotoGENius/issues/33) and [#35](https://github.com/frasalt/PhotoGENius/issues/35) about the class `Cylinder`: the pointlight renderer option is available for it now.
 
 ### 14-06-2022
 - Pointlight renderer implemented [#23](https://github.com/frasalt/PhotoGENius/pull/23)
