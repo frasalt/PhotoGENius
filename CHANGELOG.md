@@ -1,5 +1,6 @@
 # HEAD
 ### 17-06-2022
+- Update readme [#26](https://github.com/frasalt/PhotoGENius/pull/26)
 - Add documentation [#39](https://github.com/frasalt/PhotoGENius/issues/39)
 - Fix ImagePigment in issue[#37](https://github.com/frasalt/PhotoGENius/issues/37)
 
