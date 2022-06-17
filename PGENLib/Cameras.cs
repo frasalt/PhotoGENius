@@ -133,19 +133,32 @@ namespace PGENLib
     public interface ICamera
     {
         Ray FireRay(float u, float v);
-
+        Transformation GetTransf();
+        void SetTransf(Transformation tr);
     }
    /// <summary>
    /// This struct implements an observer seeing the world through an orthogonal projection.
    /// </summary>
     public struct OrthogonalCamera : ICamera
     {
-        private float AspectRatio;
-        private Transformation Transf;
+
         
         // The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
         // images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
         // used in modern monitors.
+
+        public float AspectRatio;
+        public Transformation Transf;
+
+        public Transformation GetTransf()
+        {
+            return Transf;
+        }
+        public void SetTransf(Transformation tr)
+        {
+            Transf = tr;
+        }
+
 
         public OrthogonalCamera(float aspectRatio = 1.0f)
         {
@@ -194,15 +207,26 @@ namespace PGENLib
    /// </summary>
     public struct PerspectiveCamera : ICamera
     {
+
         // The parameter `screen_distance` tells how much far from the eye of the observer is the screen,
         // and it influences the so-called «aperture» (the field-of-view angle along the horizontal direction).
         // The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
         // images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
         // used in modern monitors.
 
-        private float ScreenDistance;
-        private float AspectRatio;
-        private Transformation Transf;
+        public float ScreenDistance;
+        public float AspectRatio;
+        public Transformation Transf;
+        
+        public Transformation GetTransf()
+        {
+            return Transf;
+        }
+        public void SetTransf(Transformation tr)
+        {
+            Transf = tr;
+        }
+
         
         public PerspectiveCamera()
         {

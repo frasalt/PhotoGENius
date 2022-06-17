@@ -166,7 +166,27 @@ class Program
                 var mirrorMaterial = new Material(
                     new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f)))
                 );
+                
+           
+                //---------------------------
+                //example ImagePigment
+                //---------------------------
+                /*
+                 HdrImage img = new HdrImage(1, 1);
+                HdrImage ball;
+                using (Stream input = File.OpenRead(@"pp3.pfm"))
+                {
+                    ball = img.ReadPFMFile(input);
+                }
 
+                var basketball = new Material(new DiffuseBRDF(new ImagePigment(ball)));
+                 
+                 */
+
+                
+                //---------------------------
+                //example scene
+                //---------------------------
                 // shapes
                 Console.WriteLine("\nInitializing shapes...");
 
@@ -178,7 +198,7 @@ class Program
                 world.AddShape(
                     new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
-                
+            /*    
                 //sphere in the middle
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial)
@@ -187,22 +207,25 @@ class Program
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
-                                 
+
+            */                     
+
                 /*
                 //---------------------------
                 //tree
                 //---------------------------
                 //cilinder in the middle
                 world.AddShape(
-                    new Cilinder( Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial,
+                    new Cylinder( Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial,
                         0.0f, 2.0f, 0.3f)
                 );
-                
-                //Sphere
-                world.AddShape(
-                    new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
-                    );
-                //----------------------------
+*/
+                /*    
+                    //Sphere
+                    world.AddShape(
+                        new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
+                        );
+                    //----------------------------
                 */
 
                 
@@ -388,7 +411,6 @@ class Program
             angleDeg,
             pfmOutput,
             pngOutput,
-            cameraType,
             algorithm,
             raysNum,
             maxDepth,
@@ -401,7 +423,7 @@ class Program
         rootCommand.AddCommand(render);
             
         render.SetHandler((string scenefileValue, int widthValue, int heightValue, float angleDegValue,
-                string pfmOutputValue, string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue,
+                string pfmOutputValue, string pngOutputValue, string algorithmValue, int raysNumValue,
                 int maxDepthValue, ulong initStateValue, ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
             {
                 //Compute number of sample per side, which will be used for antialiasing
@@ -424,7 +446,11 @@ class Program
                 scene = ExpectParse.parse_scene(new InputStream(sceneStream), dict);
 
                 //Inserire controllo dei parametri di input letti da file
-                    
+
+                // Camera rotation
+                if (angleDegValue != 0)
+                    scene.Camera.SetTransf( Transformation.RotationZ(angleDegValue)*scene.Camera.GetTransf());
+
                 // 4.Run raytracer
                 Console.WriteLine("\nRunning raytracer...");
 
@@ -518,7 +544,7 @@ class Program
                 }
             },
 
-            scenefile, width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
+            scenefile, width, height, angleDeg, pfmOutput, pngOutput, algorithm, raysNum, maxDepth, 
             initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel );
             
             

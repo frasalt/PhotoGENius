@@ -1010,8 +1010,10 @@ namespace PGENLib
             float zmax = expect_number(inputFile, scene);
             expect_symbol(inputFile, ",");
             float r = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float phiMax = expect_number(inputFile, scene);
             expect_symbol(inputFile, ")");
-
+            
             return new Cylinder(transformation, scene.Materials[materialName], zmin, zmax, r);
         }
 

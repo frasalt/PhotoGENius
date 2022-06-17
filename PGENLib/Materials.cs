@@ -139,8 +139,8 @@ namespace PGENLib
 
         public override Color GetColor(Vec2d uv)
         {
-            int col = (int)uv.u * Image.Width;
-            int row = (int)uv.v * Image.Height;
+            int col = (int)(uv.u * Image.Width);
+            int row = (int)(uv.v * Image.Height);
             if (col >= Image.Width)
             {
                 col = Image.Width - 1;

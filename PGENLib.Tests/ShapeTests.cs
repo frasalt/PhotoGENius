@@ -120,61 +120,66 @@ namespace PGENLib.Tests
             Assert.True(sphere.RayIntersection(new Ray(new Point(-10f, 0f, 0f), -Vz)) == null);
         }
 
+        private readonly Vec _vx = new Vec(1.0f, 0.0f, 0.0f);
+        private readonly Vec _vy = new Vec(0.0f, 1.0f, 0.0f);
+        private readonly Vec _vz = new Vec(0.0f, 0.0f, 1.0f);
+
+
         [Fact]
-        public void CilinderTests()
-        {
-            
-        }
-        
-        
-    }
-
-/*
-    public class PlaneTests
-    {
-        private readonly Vec Vx = new Vec(1.0f, 0.0f, 0.0f);
-        private readonly Vec Vz = new Vec(0.0f, 0.0f, 1.0f);
-
-        public void TestHit()
+        public void TestHitPlane()
         {
             var plane = new XyPlane();
 
-            var ray1 = new Ray(new Point(0.0f, 0.0f, 1.0f), -Vz);
+            var ray1 = new Ray(new Point(0.0f, 0.0f, 1.0f), -_vz);
             var intersection1 = plane.RayIntersection(ray1);
             Assert.True(intersection1.HasValue);
             var hit = new HitRecord(new Point(0.0f, 0.0f, 0.0f), 
                 new Normal(0.0f, 0.0f, 1.0f), 
                 new Vec2d(0.0f, 0.0f),
                 1.0f, ray1, plane.Material);
-            
-            HitRecord.are_close()
-                
-            assert HitRecord(
-                world_point=Point(0.0, 0.0, 0.0),
-            normal=Normal(0.0, 0.0, 1.0),
-            surface_point=Vec2d(0.0, 0.0),
-            t=1.0,
-            ray=ray1,
-            material=plane.material,
-                ).is_close(intersection1)
+            if (intersection1.HasValue)
+            {
+                HitRecord.are_close(hit, intersection1.Value);
+            }
 
-            ray2 = Ray(origin=Point(0, 0, 1), dir=VEC_Z)
-            intersection2 = plane.ray_intersection(ray2)
-            assert not intersection2
+            var ray2 = new Ray(new Point(0f, 0f, 1f), _vz);
+            var intersection2 = plane.RayIntersection(ray2); 
+                Assert.False(intersection2.HasValue);
 
-                ray3 = Ray(origin=Point(0, 0, 1), dir=VEC_X)
-            intersection3 = plane.ray_intersection(ray3)
-            assert not intersection3
+            var ray3 = new Ray(new Point(0f, 0f, 1f), _vx);
+            var intersection3 = plane.RayIntersection(ray3);
+            Assert.False(intersection3.HasValue);
 
-                ray4 = Ray(origin=Point(0, 0, 1), dir=VEC_Y)
-            intersection4 = plane.ray_intersection(ray4)
-            assert not intersection4
+            var ray4 = new Ray(new Point(0f, 0f, 1f), _vy);
+            var intersection4 = plane.RayIntersection(ray4);
+            Assert.False(intersection4.HasValue);
 
         }
         
-
     }
-*/
+  
+  public class WorldTest
+    {
+        [Fact]
+        public void TestRayIntersection()
+        {
+            var world = new World();
+            var vx = new Vec(1.0f, 0f, 0f);
+            var sphere1 = new Sphere(Transformation.Translation(vx * 2f));
+            var sphere2 = new Sphere(Transformation.Translation(vx * 8f));
+            world.AddShape(sphere1);
+            world.AddShape(sphere2);
+
+            var intersection1 = world.RayIntersection(new Ray(new Point(), vx));
+            Assert.True(intersection1.HasValue &&
+                        Point.are_close(intersection1.Value.WorldPoint, new Point(1.0f, 0.0f, 0.0f)));
+
+            var intersection2 = world.RayIntersection(new Ray(new Point(10f, 0f, 0f), -vx));
+
+            Assert.True(intersection2.HasValue &&
+                        Point.are_close(intersection2.Value.WorldPoint, new Point(9f, 0.0f, 0.0f)));
+        }
+    }
 
 }
 
