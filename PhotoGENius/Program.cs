@@ -212,7 +212,7 @@ class Program
 
             */                     
 
-                
+                /*
                 //---------------------------
                 //tree
                 //---------------------------
@@ -221,7 +221,7 @@ class Program
                     new Cylinder( Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial,
                         0.0f, 2.0f, 0.3f)
                 );
-
+*/
                 /*    
                     //Sphere
                     world.AddShape(
