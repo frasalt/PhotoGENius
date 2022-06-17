@@ -34,7 +34,7 @@ info file.
 ## Usage
 Extremely easy basic usage.
 
-Go to ```PhotoGENius\PhotoGENius``` directory.
+Go to ```PhotoGENius/PhotoGENius``` directory.
 
 To 🔄 **convert file**, type
 ```bash
