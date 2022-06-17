@@ -7,11 +7,7 @@
 ![build](https://img.shields.io/github/workflow/status/frasalt/PhotoGENius/PGENLib.test)
 ![Top Language](https://img.shields.io/github/languages/top/frasalt/PhotoGENius)
 
-<!--- se ci piace di più così possiamo metterlo
-![build](https://github.com/frasalt/PhotoGENius/actions/workflows/actions.yml/badge.svg)
---->
-
-![](logoPGEN.png)
+![](Media/Readme_imgs/logoPGEN.png)
 
 
 A basic library for generating photorealistic images,
@@ -49,8 +45,8 @@ To **generate demo image**, type
 ```bash
 dotnet run PhotoGENius render <options>
 ```
-In this case, the scene content is set in an *input txt file*, like [this self-explained one](Examples/SELF_EXPLAINED.txt) in the [example directory](Examples). \
-Type anything as option to show further usage information.
+In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.txt) in the [example directory](InputSceneFiles). \
+Type ```-?``` as option to show further usage information.
 
 
 ----------da qui in giù da aggiustare-----------

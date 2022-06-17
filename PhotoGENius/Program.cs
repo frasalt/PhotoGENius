@@ -54,12 +54,12 @@ class Program
         var pfmOutput = new Option<string>(
             name: "--pfm-output",
             description: "Name of the PFM file to create.",
-            getDefaultValue: () => "output.pfm");
+            getDefaultValue: () => "../Media/imgs_pfm/output.pfm");
             
         var pngOutput = new Option<string>(
             name: "--png-output",
             description: "Name of the PNG file to create.",
-            getDefaultValue: () => "output.png");
+            getDefaultValue: () => "../Media/imgs_png/output.png");
             
         var cameraType = new Option<string>(
             name: "--camera-type",
@@ -188,24 +188,6 @@ class Program
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
-                                 
-                /*
-                //---------------------------
-                //tree
-                //---------------------------
-                //cilinder in the middle
-                world.AddShape(
-                    new Cilinder( Transformation.Traslation(new Vec(0f, 0f, 1f)),sphereMaterial,
-                        0.0f, 2.0f, 0.3f)
-                );
-                
-                //Sphere
-                world.AddShape(
-                    new Sphere(Transformation.Scaling(new Vec(2f, 2f, 2f))*Transformation.Traslation(new Vec(0f, 0f, 2.0f)),sphereMaterial)
-                    );
-                //----------------------------
-                */
-
                 
                 /*
                 //---------------------------
@@ -379,7 +361,7 @@ class Program
         var scenefile = new Option<string>(
             name: "--file-name",
             description: "Input file for scene description",
-            getDefaultValue: () => "input_file.txt");
+            getDefaultValue: () => "../InputSceneFiles/SELF_EXPLAINED.txt");
 
         var render = new Command("render", "Create an image.")
         {
@@ -524,13 +506,13 @@ class Program
             
             
         //==============================================================================================================
-        //Pfm2png con SystemCommandLine
+        // Pfm2png 
         //==============================================================================================================
             
         var pfmInput = new Option<string>(
             name: "--input-pfm",
             description: "PFM file to be converted.",
-            getDefaultValue: () => "input.pfm");
+            getDefaultValue: () => "../Media/Readme_imgs/memorial.pfm");
             
         var pfm2png = new Command("pfm2png", "Convert a PFM file to a PNG")
         {
