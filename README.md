@@ -59,19 +59,13 @@ The command line interface is built using the argument parsing library [System.C
 
 Luminosity factor =10 and gamma compression =0.1 (copy and paste to command line without comments, or in a bash script):
 ```bash
-dotnet run -- pfm2png '# use converter' \
-           --lum-fac 10 \
-           --gamma-fac 0.1 \
-           --png-output ../Media/Readme_imgs/memorial1.png '# output image path'
+dotnet run -- pfm2png    --lum-fac 10   --gamma-fac 0.1   --png-output ../Media/Readme_imgs/memorial1.png
  ```
 ![](Media/Readme_imgs/memorial1.png)
 
 For a less saturated result: luminosity factor =0.01 and gamma compression =2 (copy and paste as above):
 ```bash
-dotnet run -- pfm2png '# use converter' \
-           --lum-fac 0.01 \
-           --gamma-fac 2 \
-           --png-output ../Media/Readme_imgs/memorial2.png '# output image path'
+dotnet run -- pfm2png    --lum-fac 0.01    --gamma-fac 2    --png-output ../Media/Readme_imgs/memorial2.png
  ```
 ![](Media/Readme_imgs/memorial2.png)
 
@@ -79,9 +73,7 @@ dotnet run -- pfm2png '# use converter' \
 
 Generate a demo image (copy and paste as above):
 ```bash
-dotnet run -- render '# use renderer' \
-           --file-name ../InputSceneFiles/SELF_EXPLAINED.txt '# input scene file path' \
-           --png-output ../Media/Readme_imgs/my_first_image.png
+dotnet run -- render    --file-name ../InputSceneFiles/SELF_EXPLAINED.txt    --png-output ../Media/Readme_imgs/my_first_image.png
 ```
 ![](Media/Readme_imgs/my_first_image.png)
 
