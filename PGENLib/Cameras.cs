@@ -208,7 +208,7 @@ namespace PGENLib
     public struct PerspectiveCamera : ICamera
     {
 
-        // The parameter `screen_distance` tells how much far from the eye of the observer is the screen,
+        // The parameter `screen_distance` tells how far from the eye of the observer is the screen,
         // and it influences the so-called «aperture» (the field-of-view angle along the horizontal direction).
         // The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
         // images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
