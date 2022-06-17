@@ -73,7 +73,7 @@ dotnet run -- pfm2png    --lum-fac 0.01    --gamma-fac 2    --png-output ../Medi
 
 Generate a demo image (copy and paste as above):
 ```bash
-dotnet run -- render    --file-name ../InputSceneFiles/SELF_EXPLAINED.txt    --png-output ../Media/Readme_imgs/my_first_image.png
+dotnet run -- render    --file-name ../InputSceneFiles/DEFAULT_INPUT.txt    --png-output ../Media/Readme_imgs/my_first_image.png
 ```
 ![](Media/Readme_imgs/my_first_image.png)
 

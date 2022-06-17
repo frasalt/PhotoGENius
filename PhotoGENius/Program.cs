@@ -110,7 +110,7 @@ class Program
             getDefaultValue: () => 1);
             
         //==============================================================================================================
-        //Demo 
+        // Demo 
         //==============================================================================================================
 
         var demo = new Command("demo", "Create a demo image.")
@@ -361,7 +361,7 @@ class Program
         var scenefile = new Option<string>(
             name: "--file-name",
             description: "Input file for scene description",
-            getDefaultValue: () => "../InputSceneFiles/SELF_EXPLAINED.txt");
+            getDefaultValue: () => "../InputSceneFiles/DEFAULT_INPUT.txt");
 
         var render = new Command("render", "Create an image.")
         {

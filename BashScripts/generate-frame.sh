@@ -8,8 +8,7 @@ dotnet run --project ../PhotoGENius render \
       --angle-deg $1 \
       --sample-per-pixel 4 \
       --camera-type perspective \
-      --file-name ../InputSceneFiles/SELF_EXPLAINED.txt \
+      --file-name ../InputSceneFiles/DEFAULT_INPUT.txt \
       --png-output ../Media/imgs_png/\img$angleNNN.png \
-      --pfm-output ../Media/imgs_pfm/\img$angleNNN.pfm 
 
      
