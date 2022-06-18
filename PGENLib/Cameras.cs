@@ -160,10 +160,11 @@ namespace PGENLib
     {
 
         
-        // The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
-        // images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
-        // used in modern monitors.
-
+        /// <summary>
+        /// The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
+        /// images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
+        /// used in modern monitors.
+        /// </summary>
         public float AspectRatio;
         public Transformation Transf;
 
@@ -224,14 +225,16 @@ namespace PGENLib
    /// </summary>
     public struct PerspectiveCamera : ICamera
     {
-
-        // The parameter `screen_distance` tells how far from the eye of the observer is the screen,
-        // and it influences the so-called «aperture» (the field-of-view angle along the horizontal direction).
-        // The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
-        // images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
-        // used in modern monitors.
-
+        /// <summary>
+        /// The parameter `screen_distance` tells how far from the eye of the observer is the screen,
+        /// and it influences the so-called «aperture» (the field-of-view angle along the horizontal direction).
+        /// </summary>
         public float ScreenDistance;
+        /// <summary>
+        /// The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
+        /// images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
+        /// used in modern monitors.
+        /// </summary>
         public float AspectRatio;
         public Transformation Transf;
         
