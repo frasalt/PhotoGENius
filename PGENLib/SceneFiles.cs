@@ -824,6 +824,7 @@ namespace PGENLib
                 using (Stream imageFile = File.OpenRead(fileName))
                 {
                     image = image.ReadPFMFile(imageFile);
+                    
                 }
 
                 result = new ImagePigment(image);
@@ -831,7 +832,6 @@ namespace PGENLib
             else
             {
                 //assert False, 
-                // non capisco bene cosa intendesse tomasi in queste righe di codice
                 throw new Exception("This line should be unreachable");
             }
 
