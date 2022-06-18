@@ -46,7 +46,7 @@ To 🌅 **create an image**, type
 ```bash
 dotnet run -- render {options}
 ```
-In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.txt) in the [scene files directory](InputSceneFiles).
+In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.pdf) in the [scene files directory](InputSceneFiles).
 
 Type ```-?``` as option to show further usage information.
 
