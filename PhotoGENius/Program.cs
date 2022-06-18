@@ -174,16 +174,16 @@ class Program
                 //example ImagePigment
                 //---------------------------
                 /*
-                 HdrImage img = new HdrImage(1, 1);
-                HdrImage ball;
-                using (Stream input = File.OpenRead(@"pp3.pfm"))
+                HdrImage appo = new HdrImage(1, 1);
+                HdrImage img;
+                using (Stream input = File.OpenRead(@"..\Media\imgs_pfm\pgen_rett1.pfm"))
                 {
-                    ball = img.ReadPFMFile(input);
+                   img = appo.ReadPFMFile(input);
                 }
 
-                var basketball = new Material(new DiffuseBRDF(new ImagePigment(ball)));
+                var imageMaterial = new Material(new DiffuseBRDF(new ImagePigment(img)));
+                */ 
                  
-                 */
 
                 
                 //---------------------------
@@ -200,11 +200,13 @@ class Program
                 world.AddShape(
                     new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
                 );
-            /*    
+                
                 //sphere in the middle
                 world.AddShape(
-                    new Sphere(Transformation.Translation(new Vec(0f, 0f, 1f)),sphereMaterial)
+                    new Sphere(Transformation.Translation(new Vec(0f, 0f, 1f)),imageMaterial)
                 );
+                /*
+                
                 // sphere aside
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
@@ -259,12 +261,12 @@ class Program
                 //---------------------------
                 */
 
-                world.AddLight(new PointLight(new Point(-30f, 30f, 30f), new Color(1.0f, 1.0f, 1.0f)));
+                world.AddLight(new PointLight(new Point(-30f, 0f, 20f), new Color(1.0f, 1.0f, 1.0f)));
                     
                 // 2.Camera initialization
                 Console.WriteLine("\nInitializing camera...");
 
-                Transformation transformation = Transformation.Translation(new Vec(-3.0f, 1.0f, 1.5f));
+                Transformation transformation = Transformation.Translation(new Vec(-3.0f, 1.0f, 1f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
 
