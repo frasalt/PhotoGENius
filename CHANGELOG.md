@@ -1,5 +1,8 @@
 # HEAD
 ### 17-06-2022
+- Fix bug in computation of sphere (u,v) coordinates in issue [#41](https://github.com/frasalt/PhotoGENius/issues/41)
+- Update readme [#26](https://github.com/frasalt/PhotoGENius/pull/26)
+- Add documentation [#39](https://github.com/frasalt/PhotoGENius/issues/39)
 - Fix ImagePigment in issue[#37](https://github.com/frasalt/PhotoGENius/issues/37)
 
 ### 16-06-2022

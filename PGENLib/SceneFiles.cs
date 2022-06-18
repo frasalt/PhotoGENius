@@ -15,29 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-
-using System.Data;
 using System.Diagnostics;
-
-/*
-using System.Net.Mail;
-using System.Text.RegularExpressions;
-using System;
-using System.IO;
-using System.Linq;
-using System.Globalization;
-using System.Collections.Generic;
-using static System.Data.DataSet;
-*/
-using System.Data;
-using System.Diagnostics;
-using System.IO.Compression;
-using System.Linq.Expressions;
-using System.Net;
-using System.Numerics;
-
-
 
 namespace PGENLib
 {
@@ -67,7 +45,7 @@ namespace PGENLib
         public int ColNum;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="lineNum"></param>
@@ -80,7 +58,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="lineNum"></param>
         /// <param name="colNum"></param>
@@ -101,7 +79,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Print a source location
+        /// Print a source location.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -112,14 +90,14 @@ namespace PGENLib
     }
     
     /// <summary>
-    /// A lexical token, used when parsing a scene file
+    /// A lexical token, used when parsing a scene file.
     /// </summary>
     public class Token
     {
         public SourceLocation Location;
 
         /// <summary>
-        /// Constructor, with a `SourceLocation` object as input parameter
+        /// Constructor, with a `SourceLocation` object as input parameter.
         /// </summary>
         /// <param name="location"></param>
         public Token(SourceLocation location)
@@ -128,6 +106,9 @@ namespace PGENLib
         }
     }
     
+    /// <summary>
+    /// A token representing the end of a file.
+    /// </summary>
     public class StopToken : Token
     {
         public StopToken(SourceLocation location) : base(location)
@@ -135,6 +116,9 @@ namespace PGENLib
         }
     }
 
+    /// <summary>
+    /// Enumeration of all possible keywords encountered in a Scene File.
+    /// </summary>
     public enum KeywordList
     {
         New = 1,
@@ -156,8 +140,8 @@ namespace PGENLib
         Orthogonal = 17,
         Perspective = 18,
         Float = 19,
-        Pointlight = 20,
-        Cylinder = 21
+        Cylinder = 20,
+        PointLight = 21
     }
 
     /// <summary>
@@ -180,7 +164,7 @@ namespace PGENLib
         public KeywordList Keyword;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="location"></param>
         /// <param name="keyword"></param>
@@ -215,7 +199,7 @@ namespace PGENLib
             { "orthogonal", KeywordList.Orthogonal },
             { "perspective", KeywordList.Perspective },
             { "float", KeywordList.Float },
-            { "pointlight", KeywordList.Pointlight }
+            { "pointlight", KeywordList.PointLight }
 
         };
 
@@ -227,7 +211,7 @@ namespace PGENLib
     }
 
     /// <summary>
-    /// A token containing an identifier
+    /// A token containing an identifier.
     /// </summary>
     public class IdentifierToken : Token
     {
@@ -301,7 +285,7 @@ namespace PGENLib
     }
     
     /// <summary>
-    /// A scene read from a scene file
+    /// A scene read from a scene file.
     /// </summary>
     public class Scene
     {
@@ -403,7 +387,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Read a new character from the stream
+        /// Read a new character from the stream.
         /// </summary>
         public char ReadChar()
         {
@@ -452,12 +436,9 @@ namespace PGENLib
             {
                 if (ch == '#')
                 {
-                    //It's a comment! Keep reading until the end of the line (include the case "", the end-of-file)
-                    //while (ch != '\r' || ch != '\n' || ch != ' ') // <<<< ma così non è la fine del file!
-                    // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
                     while (ch is not ('\r' or '\n' or '\0'))
                     {
-                        ch = ReadChar(); // <<<<< CORRETTO? lui scriveva solo "continue"
+                        ch = ReadChar();
                     }
                 }
 
@@ -472,6 +453,11 @@ namespace PGENLib
             UnreadChar(ch);
         }
 
+        /// <summary>
+        /// Read a StringToken in a given location.
+        /// </summary>
+        /// <param name="tokenLocation"> The location in the file</param>
+        /// <returns> The StringToken we just read.</returns>
         public StringToken ParseStringToken(SourceLocation tokenLocation)
         {
             var token = "";
@@ -491,6 +477,13 @@ namespace PGENLib
             return new StringToken(tokenLocation, token);
         }
 
+        /// <summary>
+        /// Read a LiteralNumberToken in a given location.
+        /// </summary>
+        /// <param name="firstChar"></param>
+        /// <param name="tokenLocation"></param>
+        /// <returns></returns>
+        /// <exception cref="GrammarErrorException"></exception>
         public LiteralNumberToken ParseFloatToken(string firstChar, SourceLocation tokenLocation)
         {
             var token = firstChar;
@@ -520,6 +513,12 @@ namespace PGENLib
             return new LiteralNumberToken(tokenLocation, value);
         }
 
+        /// <summary>
+        /// Read either a KeywordTokeN or a IdentifierToken in a given location.
+        /// </summary>
+        /// <param name="firstChar"></param>
+        /// <param name="tokenLocation"></param>
+        /// <returns></returns>
         private Token ParseKeywordOrIdentifierToken(char firstChar, SourceLocation tokenLocation)
         {
             string token = firstChar.ToString();
@@ -548,7 +547,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Reads a token from tge stream 
+        /// Reads a token from the stream 
         /// </summary>
         /// <returns></returns>
         /// <exception cref="GrammarErrorException"> a lexical error is found</exception>
@@ -627,8 +626,6 @@ namespace PGENLib
     
     public class ExpectParse
     {
-        // << perchè siamo obbligati a wrappare in una classe le expect-functions per farle funzionare?
-
         //=============== EXPECT ============================
 
         /// <summary>
@@ -770,7 +767,32 @@ namespace PGENLib
 
             return new Vec(x, y, z);
         }
+        
+        /// <summary>
+        /// Parse symbles and numbers to return a point of floats
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        public static Point parse_point(InputStream inputFile, Scene scene)
+        {
+            expect_symbol(inputFile, "[");
+            float x = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float y = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float z = expect_number(inputFile, scene);
+            expect_symbol(inputFile, "]");
 
+            return new Point(x, y, z);
+        }
+
+        /// <summary>
+        /// Parse a <see cref="Color"/> object from a file and store it into memory.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
         public static Color parse_color(InputStream inputFile, Scene scene)
         {
             expect_symbol(inputFile, "<");
@@ -784,7 +806,13 @@ namespace PGENLib
             return new Color(red, green, blue);
         }
 
-
+        /// <summary>
+        /// Parse a <see cref="Pigment"/> object from a file and store it into memory.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static Pigment parse_pigment(InputStream inputFile, Scene scene)
         {
 
@@ -825,6 +853,7 @@ namespace PGENLib
                         Console.WriteLine($"Message: {err.Message}");
                         Console.WriteLine($"Source: {err.Source}");
                     }
+
                 }
 
                 result = new ImagePigment(image);
@@ -832,7 +861,6 @@ namespace PGENLib
             else
             {
                 //assert False, 
-                // non capisco bene cosa intendesse tomasi in queste righe di codice
                 throw new Exception("This line should be unreachable");
             }
 
@@ -841,6 +869,13 @@ namespace PGENLib
             return result;
         }
 
+        /// <summary>
+        /// Parse a <see cref="BRDF"/> object from a file and store it into memory.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static BRDF parse_brdf(InputStream inputFile, Scene scene)
         {
 
@@ -857,12 +892,16 @@ namespace PGENLib
                 return new SpecularBRDF(pigment);
             else
             {
-                //assert False, 
-                // come prima non capisco bene cosa intendesse tomasi in queste righe di codice
                 throw new Exception("This line should be unreachable");
             }
         }
 
+        /// <summary>
+        /// Parse a <see cref="Material"/> object and its name from a file and store it into memory.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
         public static Tuple<string, Material> parse_material(InputStream inputFile, Scene scene)
         {
             string name = expect_identifier(inputFile);
@@ -876,6 +915,12 @@ namespace PGENLib
             return new Tuple<string, Material>(name, new Material(emittedRadiance, brdf));
         }
 
+        /// <summary>
+        /// Parse a <see cref="Transformation"/> object from a file and store it into memory.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
         public static Transformation parse_transformation(InputStream inputFile, Scene scene)
         {
             Transformation result = new Transformation();
@@ -895,7 +940,6 @@ namespace PGENLib
 
                 if (transformationKw == KeywordList.Identity)
                 {
-                    //continue;// Do nothing (a primitive form of optimization!)
                 }
                 else if (transformationKw == KeywordList.Translation)
                 {
@@ -944,6 +988,13 @@ namespace PGENLib
             return result;
         }
 
+        /// <summary>
+        /// Parse a <see cref="Sphere"/> object from a file and store it into memory.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        /// <exception cref="GrammarErrorException"></exception>
         public static Sphere parse_sphere(InputStream inputFile, Scene scene)
         {
             expect_symbol(inputFile, "(");
@@ -962,6 +1013,13 @@ namespace PGENLib
             return new Sphere(transformation, scene.Materials[materialName]);
         }
 
+        /// <summary>
+        /// Parse a <see cref="Cylinder"/> object from a file and store it into memory.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        /// <exception cref="GrammarErrorException"></exception>
         public static Cylinder parse_cylinder(InputStream inputFile, Scene scene)
         {
             expect_symbol(inputFile, "(");
@@ -983,9 +1041,16 @@ namespace PGENLib
             float phiMax = expect_number(inputFile, scene);
             expect_symbol(inputFile, ")");
             
-            return new Cylinder(transformation, scene.Materials[materialName], zmin, zmax, r);
+            return new Cylinder(transformation, scene.Materials[materialName], zmin, zmax,phiMax, r );
         }
 
+        /// <summary>
+        /// Parse a <see cref="Plane"/> object from a file and store it into memory.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        /// <exception cref="GrammarErrorException"></exception>
         public static XyPlane parse_plane(InputStream inputFile, Scene scene)
         {
             XyPlane plane;
@@ -1006,7 +1071,29 @@ namespace PGENLib
             plane = new XyPlane(transformation, scene.Materials[materialName]);
             return plane;
         }
+
+        public static PointLight parse_pointlight(InputStream inputFile, Scene scene)
+        {
+            expect_symbol(inputFile, "(");
+            Point position = parse_point(inputFile, scene); 
+            
+            expect_symbol(inputFile, ",");
+            Color color = parse_color(inputFile, scene);
+            
+            expect_symbol(inputFile, ",");
+            float linearRadius = expect_number(inputFile, scene);
+            
+            expect_symbol(inputFile, ")");
+            
+            return new PointLight(position, color, linearRadius);
+        }
         
+        /// <summary>
+        /// Parse a <see cref="Camera"/> object from a file and store it into memory.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
         public static ICamera parse_camera(InputStream inputFile, Scene scene)
         {
             ICamera result;
@@ -1026,17 +1113,13 @@ namespace PGENLib
             {
                 result = new PerspectiveCamera(distance, aspectRatio, transformation);
             }
-            else // (typeKw == KeywordList.Orthogonal)
-                 // SIAMO TRANQUILLI: NON È POSSIBILE ARRIVARE FIN QUI CON TYPEKW DIVERSO DA PERSPECTIVE O ORTHOGONAL
-            {
+            else {
                 result = new OrthogonalCamera(aspectRatio, transformation);
             }
 
             return result;
         }
-
         
-
         /// <summary>
         /// Read a scene description from a stream and return a :class:`.Scene` object
         /// </summary>
@@ -1058,52 +1141,52 @@ namespace PGENLib
                     if (what is StopToken)
                         break;
                     if (what is not KeywordToken)
-                        throw new GrammarErrorException($"parsing, expected a keyword instead of '{what}'", what.Location);
+                        throw new GrammarErrorException(msg: $"Parsing, expected a keyword instead of '{what}'", sourceLocation: what.Location);
 
 
                     if (((KeywordToken)what).Keyword == KeywordList.Float)
                     {
-                        string variableName = expect_identifier(inputFile);
+                        string variableName = expect_identifier(inputFile: inputFile);
 
                         // Save this for the error message
                         SourceLocation variableLoc = inputFile.Location;
 
-                        expect_symbol(inputFile, "(");
-                        float variableValue = expect_number(inputFile, scene);
-                        expect_symbol(inputFile, ")");
+                        expect_symbol(inputFile: inputFile, symbol: "(");
+                        float variableValue = expect_number(inputFile: inputFile, scene: scene);
+                        expect_symbol(inputFile: inputFile, symbol: ")");
 
-                        if (scene.FloatVariables.ContainsKey(variableName) &&
-                            !(scene.OverriddenVariables.Contains(variableName)))
+                        if (scene.FloatVariables.ContainsKey(key: variableName) &&
+                            !(scene.OverriddenVariables.Contains(value: variableName)))
                         {
-                            throw new GrammarErrorException($"variable «{variableName}» cannot be redefined",
-                                variableLoc);
+                            throw new GrammarErrorException(msg: $"Variable «{variableName}» cannot be redefined",
+                                sourceLocation: variableLoc);
                         }
 
-                        if (!scene.OverriddenVariables.Contains(variableName))
+                        if (!scene.OverriddenVariables.Contains(value: variableName))
                         {
                             // Only define the variable if it was not defined by the user OUTSIDE the scene file
                             // (e.g., from the command line)
-                            scene.FloatVariables[variableName] = variableValue;
+                            scene.FloatVariables[key: variableName] = variableValue;
                         }
                     }
                     else if (((KeywordToken)what).Keyword == KeywordList.Sphere)
-                        scene.World.AddShape(parse_sphere(inputFile, scene));
+                        scene.World.AddShape(sh: parse_sphere(inputFile: inputFile, scene: scene));
                     else if (((KeywordToken)what).Keyword == KeywordList.Plane)
-                        scene.World.AddShape(parse_plane(inputFile, scene));
+                        scene.World.AddShape(sh: parse_plane(inputFile: inputFile, scene: scene));
                     else if (((KeywordToken)what).Keyword == KeywordList.Cylinder)
-                        scene.World.AddShape(parse_cylinder(inputFile, scene));
+                        scene.World.AddShape(sh: parse_cylinder(inputFile: inputFile, scene: scene));
+                    else if (((KeywordToken)what).Keyword == KeywordList.PointLight)
+                        scene.World.AddLight(light: parse_pointlight(inputFile: inputFile, scene: scene));
                     else if (((KeywordToken)what).Keyword == KeywordList.Camera)
                     {
                         if (scene.Camera != null)
-                            throw new GrammarErrorException("You cannot define more than one camera", what.Location);
-                        scene.Camera = parse_camera(inputFile, scene);
+                            throw new GrammarErrorException(msg: "You cannot define more than one camera", sourceLocation: what.Location);
+                        scene.Camera = parse_camera(inputFile: inputFile, scene: scene);
                     }
-
-
                     else if (((KeywordToken)what).Keyword == KeywordList.Material)
                     {
-                        (string name, Material material) = parse_material(inputFile, scene);
-                        scene.Materials[name] = material;
+                        (string name, Material material) = parse_material(inputFile: inputFile, scene: scene);
+                        scene.Materials[key: name] = material;
                     }
 
                 }
@@ -1111,7 +1194,7 @@ namespace PGENLib
             }
             catch (GrammarErrorException grex)
             {
-                Console.WriteLine($"Grammar error: {grex.Message} \n   >>> In inputfile (line, row):{grex.SourceLocation}");
+                Console.WriteLine(value: $"Grammar error: {grex.Message} \n   >>> In inputfile (line, row):{grex.SourceLocation}");
             }
 
             return scene;

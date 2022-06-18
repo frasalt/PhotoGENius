@@ -24,19 +24,19 @@ using PGENLib;
 using Color = PGENLib.Color;
 using System.Diagnostics;
 
-
 namespace PhotoGENius; 
 
 class Program
 {
     static Color WHITE = new Color(1.0f, 1.0f, 1.0f);
     static Color BLACK = new Color(0.0f, 0.0f, 0.0f);
-
+    
     static async Task<int> Main(string[] args)
     {
+
+
         var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
 
-            
         var width = new Option<int>(
             name: "--width",
             description: "Width of the image to render.",
@@ -55,12 +55,12 @@ class Program
         var pfmOutput = new Option<string>(
             name: "--pfm-output",
             description: "Name of the PFM file to create.",
-            getDefaultValue: () => "output.pfm");
+            getDefaultValue: () => "../Media/imgs_pfm/output.pfm");
             
         var pngOutput = new Option<string>(
             name: "--png-output",
             description: "Name of the PNG file to create.",
-            getDefaultValue: () => "output.png");
+            getDefaultValue: () => "../Media/imgs_png/output.png");
             
         var cameraType = new Option<string>(
             name: "--camera-type",
@@ -109,9 +109,9 @@ class Program
             name: "--sample-per-pixel",
             description: "Number of sample per pixel (must be a perfect square).",
             getDefaultValue: () => 1);
-            
+        
         //==============================================================================================================
-        //Demo 
+        // Demo 
         //==============================================================================================================
 
         var demo = new Command("demo", "Create a demo image.")
@@ -208,6 +208,7 @@ class Program
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
+
                 //------------------------------------------------------
                 
                 
@@ -228,7 +229,7 @@ class Program
                         );
                 //-------------------------------------------------------
                 */
-
+                
                 
                 /*
                 //------------------------------------------------------
@@ -397,7 +398,7 @@ class Program
         var scenefile = new Option<string>(
             name: "--file-name",
             description: "Input file for scene description",
-            getDefaultValue: () => "input_file.txt");
+            getDefaultValue: () => "../InputSceneFiles/DEFAULT_INPUT.txt");
 
         var render = new Command("render", "Create an image.")
         {
@@ -516,7 +517,6 @@ class Program
                     Console.WriteLine(
                         $"Error: couldn't write file {pfmOutputValue}");
                 }
-
                 
                 // 6.convertire a PNG
                 Console.WriteLine("\nConverting and saving PNG image...");
@@ -545,13 +545,13 @@ class Program
             
             
         //==============================================================================================================
-        //Pfm2png con SystemCommandLine
+        // Pfm2png 
         //==============================================================================================================
             
         var pfmInput = new Option<string>(
-            name: "--input-pfm",
+            name: "--pfm-input",
             description: "PFM file to be converted.",
-            getDefaultValue: () => "input.pfm");
+            getDefaultValue: () => "../Media/Readme_imgs/memorial.pfm");
             
         var pfm2png = new Command("pfm2png", "Convert a PFM file to a PNG")
         {

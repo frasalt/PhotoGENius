@@ -1,81 +1,181 @@
 # PhotoGENius - _Your wish, my duty_
-### Photorealistic images generation
+### Photorealistic images generator
 
-![](logoPGEN.png) 
+![release](https://img.shields.io/github/v/release/frasalt/PhotoGENius)
+![OS](https://img.shields.io/badge/OS-Linux%20%7C%20MacOS%20%7C%20Windows-yellow)
+![license](https://img.shields.io/github/license/frasalt/PhotoGENius)
+![build](https://img.shields.io/github/workflow/status/frasalt/PhotoGENius/PGENLib.test)
+![Top Language](https://img.shields.io/github/languages/top/frasalt/PhotoGENius)
 
-<!-- add here a funny but explanatory image, maybe one of a genius! -->
+![](Media/Readme_imgs/logoPGEN.png)
+
+
+A basic library for generating photorealistic images,
+developed for the course 
+[*Numerical techniques for photorealistic image generation*](https://www.unimi.it/en/education/degree-programme-courses/2022/numerical-tecniques-photorealistic-image-generation)
+held by professor [Maurizio Tomasi](https://github.com/ziotom78) (University of Milan, 2021-2022).
+
+Main contributors: [Francesca Salteri](https://github.com/frasalt) (owner), [Teresa Lamorte](https://github.com/lellalamo), [Martino Zanetti](https://github.com/martinozanetti).
 
 ## Features
 
-In its second release, PhotoGENius can:
-- read a PFM file and convert it to a PNG file, given an output luminosity parameter `alpha` and a calibration factor `gamma`.
-- generate demonstrative scene in both PNG and PFM format, given a set of options, including view angle.
-- assemble different frames to generate a simple animation.
+This library is meant to 🌅 **create photorealistic images**, given an input txt file containing user instructions.
+The user can assemble different images to generate short animations, thanks to a simple *bash script*.
+
+Besides that, it's also possible to 🔄 **convert HDR images to LDR** (from PFM format to PNG).
+
+Image rendering can be performed via four different backwords raytracing algorithms (onoff, flat, pathtracer, pointlight tracer).
+The user can add three types of geometric shapes to the scene (sphere, plane and cylinder), set their color properties 
+and camera position, orientation and projection (orthogonal or perspective).
+
+For further information, see the [Application Program Interface](PGENLib.Doc/API.txt)
+info file.
 
 ## Usage
-Easy to use: go to PhotoGENius\PhotoGENius directory.
+Extremely easy basic usage.
 
-To **convert file**, type
+Go to ```PhotoGENius/PhotoGENius``` directory.
+
+To 🔄 **convert file**, type
 ```bash
-dotnet run PhotoGENius pfm2png --input-pfm PFM_FILE_PATH_NAME <options>
+dotnet run -- pfm2png --pfm-input [PFM_FILE_PATH] {options}
 ```
 Pay attention that if your computer is set on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
 
-To **generate demo image**, type
+To 🌅 **create an image**, type
 ```bash
-dotnet run PhotoGENius demo <options>
+dotnet run -- render {options}
 ```
-Type anything as option to show further usage information.\
-Demo code can be adapted quite easily to change spheres disposition
-in the scene.
+In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.pdf) in the [scene files directory](InputSceneFiles).
+
+Type ```-?``` as option to show further usage information.
+
+The command line interface is built using the argument parsing library [System.CommandLine](https://docs.microsoft.com/en-us/dotnet/standard/commandline/).
+
 
 ## Examples
 
-### PFM to PGN convertion
-Alpha=10 and gamma=0.1 : 
-```bash
-dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 10 --gamma 0.1 --output-png prova1.png
- ```
-![](PhotoGENius/prova1.png)
+### PFM to PNG convertion
 
-Alpha=0.01 and gamma=2 : 
+Luminosity factor =10 and gamma compression =0.1 (copy and paste to command line without comments, or in a bash script):
 ```bash
-dotnet run PhotoGENius pfm2png --input-pfm memorial.pfm --factor 0.01 --gamma 2 --output-png prova2.png
+dotnet run -- pfm2png    --lum-fac 10   --gamma-fac 0.1   --png-output ../Media/Readme_imgs/memorial1.png
  ```
-![](PhotoGENius/prova2.png)
+![](Media/Readme_imgs/memorial1.png)
+
+For a less saturated result: luminosity factor =0.01 and gamma compression =2 (copy and paste as above):
+```bash
+dotnet run -- pfm2png    --lum-fac 0.01    --gamma-fac 2    --png-output ../Media/Readme_imgs/memorial2.png
+ ```
+![](Media/Readme_imgs/memorial2.png)
+
+### Photorealistic image generation
+
+Generate a demo image (copy and paste as above):
+```bash
+dotnet run -- render    --file-name ../InputSceneFiles/DEFAULT_INPUT.txt    --png-output ../Media/Readme_imgs/my_first_image.png
+```
+![](Media/Readme_imgs/my_first_image.png)
+
 
 ### Generate a brief animation
 
-To **generate frames**, type
+To **generate frames**, in ```PhotoGENius/BashScripts``` directory, run [this script](BashScripts/generate-frames.sh):
 ```bash
 ./generate-frames.sh
 ```
-You can easily adapt the script to your needs and make it executable (chmod +x on Linux and MacOS).
+It takes in input a series of input scene files which must be located in ```InputSceneFiles/serial```,
+and be named ```inputNNN.txt``` where ```NNN``` stands for a 3 digits integer. \
+Automatic generation of the scene files can be done e.g. via a python program 
+similar to [this one](InputSceneFiles/serial/inp_txt.py) (or write them by hand, if you prefer...).
+
+You can quite easily adapt the script to your needs and make it executable if necessary (chmod +x on Linux and MacOS).
 
 To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download.html), type
 ```bash
 ./generate-video.sh
 ```
-This is the result with 90 frames at angles from 0° to 89°:
 
+>>>> Add a nice video?
+<!---
+<p align="center">
+<img width="450" src=https://user-images.githubusercontent.com/59051647/126571722-28e2cfe1-0b22-4961-bc0a-b1d05eb507ec.png>
+<img src="https://user-images.githubusercontent.com/59051647/126542691-8f384c07-c567-4276-8116-9e497611da4f.gif" width="450" />
+</p>
+--->
 
-https://user-images.githubusercontent.com/98329317/169061205-ffaa3a56-441c-4f3c-b908-f2402b0916b9.mp4
-
-
-![](https://github.com/frasalt/PhotoGENius/blob/fd2d075096b5d7245f448f3c12d129136049598c/PhotoGENius/video/animation.mp4)
-
-## Full documentation
-See the [UserManual](UserManual).
-
-## Requirements
-PhotoGENius can be used on Windows, Linux and MacOS systems.\
-It requires dotnet 6.0 to run.\
-To assemble generated frames in a mp4 video via out script (generate-video.sh) you need 
-to install ffmpeg (for example in the same directory as dotnet).
 
 ## Installation
 
-## Licence
-GPU3.
+### Requirements
 
+PhotoGENius can be used on Windows, Linux and MacOS systems.
+
+A dotnet installation is needed for running the code:
+- [.NET 6.0](https://dotnet.microsoft.com/en-us/download) (version 6.0 or higher)
+
+If you want to assemble animations, you need to install ffmpeg
+(note that *it's not mandatory* for running the raytracing code):
+- [FFmpeg](https://www.ffmpeg.org/) (version 4.4 or higher)
+
+=================== This paragraph is in progress =====================
+### Download latest release
+You can download the latest stable release
+[here](https://github.com/frasalt/PhotoGENius/releases/tag/v0.3.0) (version 0.3.0)
+and then unpack it running in the command line (Linux):
+
+```bash
+tar -xvf PhotoGENius-0.3.0.tar
+```
+The command is ```tar xopf``` for MacOS.
+
+### Clone from git repository
+
+You can also clone this repository through the command:
+
+```bash
+git clone https://github.com/frasalt/PhotoGENius.git
+```
+=================== ***************************** =====================
+
+
+### Code testing
+
+The code is tested at every push, and this flag
+![build](https://img.shields.io/github/workflow/status/frasalt/PhotoGENius/PGENLib.test)
+should warn the user if something is not working.
+
+
+## Potentialities
+
+Some examples of what your creativity can lead to, using **PhotoGENius** in its full potential. 
+
+>>>> Add nice images and videos
+<!---
+<p align="center">
+       <img width="450" src=https://user-images.githubusercontent.com/59051647/126571722-28e2cfe1-0b22-4961-bc0a-b1d05eb507ec.png>
+       <img src="https://user-images.githubusercontent.com/59051647/126542691-8f384c07-c567-4276-8116-9e497611da4f.gif" width="450" /> 
+</p>
+--->
+
+## Documentation
+
+The complete documentation of the library is available
+[here](PGENLib.Doc/PGENLib.xml)
+or [here(?)](https://frasalt.github.io/PhotoGENius/PGENLib.Doc/PGENLib.xml).
+
+If you find anything not clear in it, please let us know:
+any suggestion is appreciated and certainly useful for other users.
+
+
+## Contributing
+
+Please open [pull requests](https://github.com/frasalt/PhotoGENius/pulls)
+or use the [issue tracker](https://github.com/frasalt/PhotoGENius/issues) to suggest any code implementations or report bugs. Any contributions are welcome!
+
+## License
+
+The code is released under the terms of the [GPU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).\
 Read the whole licence [here](LICENCE).
+
+

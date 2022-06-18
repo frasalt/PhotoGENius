@@ -1,8 +1,23 @@
+/*
+PhotoGENius : photorealistic images generation.
+Copyright (C) 2022  Lamorte Teresa, Salteri Francesca, Zanetti Martino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 using Xunit;
 using System;
-using System.Numerics;
-using System.Reflection.PortableExecutable;
-using PGENLib;
 
 namespace PGENLib.Tests
 {
@@ -45,7 +60,6 @@ namespace PGENLib.Tests
             var ray4 = cam.FireRay(1.0f, 1.0f);
             
             //Are rays parallel (as they should be)?
-            //Assert.True(Math.Abs(Vec.SquaredNorm(Vec.CrossProduct(ray1.Dir, ray2.Dir)), 0.0f)<1E-5);
             Assert.True(Vec.SquaredNorm(Vec.CrossProduct(ray1.Dir, ray2.Dir)) == 0.0f);
             Assert.True(Vec.SquaredNorm(Vec.CrossProduct(ray1.Dir, ray3.Dir)) == 0.0f);
             Assert.True(Vec.SquaredNorm(Vec.CrossProduct(ray1.Dir, ray4.Dir)) == 0.0f);
@@ -107,13 +121,11 @@ namespace PGENLib.Tests
                 _camera = new PerspectiveCamera(2);
                 _tracer = new ImageTracer(_image, _camera);
             }
-
             
             [Fact]
             public void test_orientation()
             {
                 // Fire a ray against top-left corner of the screen
-
                 Ray topLeftRay = _tracer.FireRay(0, 0, 0.0f, 0.0f);
                 Point point = new Point(0.0f, 2.0f, 1.0f);
                 Point rayPoint = topLeftRay.At(1.0f);
@@ -126,7 +138,6 @@ namespace PGENLib.Tests
                 Assert.True(Point.are_close(point,rayPoint)); 
             }
             
-
             [Fact]
             public void test_uv_submapping() 
             {
@@ -194,7 +205,5 @@ namespace PGENLib.Tests
             numOfRays += 1;
             return new Color();
         }
-        
     }
-    
 }

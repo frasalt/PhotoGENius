@@ -17,7 +17,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 namespace PGENLib
-{
+{ 
+    //==================================================================================================================
+    //Pigments
+    //==================================================================================================================
+    
     /// <summary>
     /// This abstract class represents a pigment with a function that associates a color with
     /// each point on a parametric surface (u,v).
@@ -35,15 +39,14 @@ namespace PGENLib
         /// Calculate a color (type color) associated with a (u,v) coordinate.
         /// </summary>
         /// <param name="uv"> 2D vector </param>
-        /// <returns></returns>
+        /// <returns>the color of the pigment at the specified coordinates</returns>
         public virtual Color GetColor(Vec2d uv)
         {
-            //Color pigm = new Color();
-            //return pigm;
             throw new NotImplementedException("Method Pigment.GetColor is abstract and cannot be called");
-
         }
     }
+    
+    //==================================================================================================================
     /// <summary>
     /// A uniform pigment.
     /// </summary>
@@ -59,19 +62,36 @@ namespace PGENLib
         }
         
         /// <summary>
-        /// Associates a uniform color to the hole surface.
+        /// Associates a uniform color to the whole surface.
         /// </summary>
         /// <param name="uv"></param>
-        /// <returns></returns>
+        /// <returns>Color</returns>
         public override Color GetColor(Vec2d uv)
         { 
             return Color;
         }
     }
+    
+    //==================================================================================================================
     /// <summary>
     /// A checkered pigment.
     /// The number of rows/columns in the checkered pattern is tunable, but you cannot have a different number of
     /// repetitions along the u/v directions.
+    /// The parameters defined in this dataclass are the following:
+    /// <list type="table">
+    /// <item>
+    ///     <term>Col1</term>
+    ///     <description> first `Color`</description>
+    /// </item>
+    /// <item>
+    ///     <term>Col2</term>
+    ///     <description> second `Color`</description>
+    /// </item>
+    /// <item>
+    ///     <term>NumStep</term>
+    ///     <description> `int` number of repetition</description>
+    /// </item>
+    /// </list>
     /// </summary>
     public class CheckeredPigment : Pigment
     {
@@ -99,7 +119,16 @@ namespace PGENLib
         }
     }
 
-
+    //==================================================================================================================
+    /// <summary>
+    /// The texture is given through a PFM image. The parameters defined in this dataclass are the following:
+    /// <list type="table">
+    /// <item>
+    ///     <term>Image</term>
+    ///     <description> `HdrImage`object</description>
+    /// </item>
+    /// </list>
+    /// </summary>
     public class ImagePigment : Pigment
     {
         public HdrImage Image;
@@ -124,8 +153,11 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
+    //BRDF
+    //==================================================================================================================
     /// <summary>
-    /// An abstract class representing a Bidirectional Reflectance Distribution Function (BRDF.
+    /// An abstract class representing a Bidirectional Reflectance Distribution Function (BRDF).
     /// </summary>
     public abstract class BRDF
     {
@@ -167,6 +199,7 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
     /// <summary>
     /// A class representing an ideal diffuse BRDF.
     /// </summary>
@@ -196,6 +229,7 @@ namespace PGENLib
         }
     }
 
+    //==================================================================================================================
     /// <summary>
     /// A class representing an ideal mirror BRDF.
     /// </summary>
@@ -247,6 +281,9 @@ namespace PGENLib
         }
     }
     
+    //==================================================================================================================
+    //Material
+    //==================================================================================================================
     /// <summary>
     /// A class representing a Material.
     /// The parameters defined in this dataclass are the following:
@@ -279,5 +316,4 @@ namespace PGENLib
             Brdf = brdf;
         }
     }
-        
 }

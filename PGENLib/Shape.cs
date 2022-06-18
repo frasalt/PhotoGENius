@@ -1,6 +1,20 @@
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Xml.Schema;
+/*
+PhotoGENius : photorealistic images generation.
+Copyright (C) 2022  Lamorte Teresa, Salteri Francesca, Zanetti Martino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace PGENLib
 {
@@ -166,42 +180,27 @@ namespace PGENLib
         /// <summary>
         /// Convert the 3D intersection point into a 2D point, of coordinates (u,v). 
         /// </summary>
+        /// <param name="point"></param>
+        /// <returns>Vec2d</returns>
         public Vec2d SpherePointToUv(Point point)
         {
-            float u = 0.0f;
-            // <<<<<< ho aggiunto questo controllo per evitare divisioni per zero (martin)
-            if (point.x != 0)
+            var u = (float)(Math.Atan2(point.y, point.x) / (2.0 * Math.PI));
+            var v = (float)(Math.Acos(point.z) / Math.PI);
+            if (u >= 0)
             {
-                double arg = point.y / (double)point.x;
-                u = (float)Math.Atan(arg) / (2.0f * (float)Math.PI);
+                return new Vec2d(u, v);
             }
-            else if (point.x == 0)
-            {
-                if (point.y > 0) u = 1.0f;
-                else if (point.y < 0) u = -1.0f;
-            }
-            // <<<<<<<<<<
-            float v = (float)Math.Acos(point.z) / (float)Math.PI;
-            
-            if (u >= 0.0)
-            {
-                Vec2d tot = new Vec2d(u,v);
-                return tot;
-            }
-            else
-            {
-                u += 1.0f;
-                Vec2d tot = new Vec2d(u, v);
-                return tot;
-            }
+            return new Vec2d(u+1f, v);
         }
-        
- 
     }
 
     //==============================================================================================================
     //Plane
     //==============================================================================================================
+    
+    /// <summary>
+    ///  A 2D plane that you can put in the scene. Unless transformations are applied, the z=0 plane is constructed.
+    /// </summary>
     public class XyPlane : Shape
     {
         /// <summary>
@@ -272,13 +271,15 @@ namespace PGENLib
             var t = -invRay.Origin.z / invRay.Dir.z;
             return t > invRay.Tmin && t < invRay.Tmax;
         }
-
         
     }
     
     //==============================================================================================================
     //Cylinder
     //==============================================================================================================
+    /// <summary>
+    /// Class to represent a cylinder.
+    /// </summary>
     public class Cylinder : Shape
     {
         public float R;
@@ -356,7 +357,9 @@ namespace PGENLib
         {
             Ray invRay = ray.Transform(this.Transf.Inverse());
             var originVec = invRay.Origin.PointToVec();
-            
+
+            //Calculate the coefficients for the intersection equation and solve the equation
+
             var a = invRay.Dir.x*invRay.Dir.x + invRay.Dir.y*invRay.Dir.y;
             var b = 2*(originVec.x * invRay.Dir.x + originVec.y * invRay.Dir.y);
             var c = originVec.x * originVec.x + originVec.y * originVec.y - R * R;
@@ -473,6 +476,7 @@ namespace PGENLib
             {
                 return false;
             }
+
         
             //Evaluate the hitpoint
             var hitPoint = invRay.At(tFirstHit);

@@ -1,6 +1,23 @@
+/*
+PhotoGENius : photorealistic images generation.
+Copyright (C) 2022  Lamorte Teresa, Salteri Francesca, Zanetti Martino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 namespace PGENLib
 {
-    
     /// <summary>
     /// PCG Uniform Pseudo-random Number Generator.
     /// </summary>
@@ -12,8 +29,9 @@ namespace PGENLib
         /// <summary>
         /// PCG constructor.
         /// </summary>
-        /// <param name="initState"></param>
-        /// <param name="initSeq"></param>
+        /// <param name="initState"> initial seed</param>
+        /// <param name="initSeq"> Identifier of the sequence produced by the random number generator (positive number, " +
+        ///"only applicable with --algorithm=pathtracing)</param>
         public PCG(ulong initState = 42, ulong initSeq = 54)
         {
             State = 0;
@@ -48,7 +66,6 @@ namespace PGENLib
         /// <returns></returns>
         public float RandomFloat()
         {
-            //return Random()/ 0xffffffff;
             return (float)Random()/4294967295.0f;
         }
     }
