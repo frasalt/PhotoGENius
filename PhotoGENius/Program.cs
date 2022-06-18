@@ -152,9 +152,13 @@ class Program
                 Console.WriteLine("\n=====================================");
                 Console.WriteLine("Initializing materials...");
                 
-                var skyMaterial = new Material(
-                    new UniformPigment(new Color(2f, 1.8f, 1f)),
+                var sunMaterial = new Material(
+                    new UniformPigment(new Color(10f, 10f, 5f)),
                     new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
+                );
+                var skyMaterial = new Material(
+                    new UniformPigment(new Color(0*0.5f, 0*0.4f, 0*0.2f)),
+                    new DiffuseBRDF(new UniformPigment(new Color(1f, 1f, 1f)))
                 );
                 var groundMaterial = new Material(
                     new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), new Color(0.1f, 0.2f, 0.5f)))
@@ -166,7 +170,7 @@ class Program
                     new DiffuseBRDF(new UniformPigment(new Color(0.8f, 0.4f, 0.3f)))
                 );
                 var mirrorMaterial = new Material(
-                    new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f)))
+                    new SpecularBRDF(new UniformPigment(new Color(0.4f, 0.4f, 0.4f)))
                 );
                 
                 //---------------------------
@@ -175,6 +179,10 @@ class Program
 
                 Console.WriteLine("\nInitializing shapes...");
 
+                // sun up high
+                world.AddShape(
+                    new Sphere(Transformation.Translation(new Vec(-30f, 0f, 20f))*Transformation.Scaling(new Vec(5f,5f,5f)),sunMaterial)
+                );
                 // sky
                 world.AddShape(
                     new Sphere(Transformation.Scaling(new Vec(200f, 200f, 200f)) * Transformation.Translation(new Vec(0f, 0f, 0.4f)),skyMaterial)
