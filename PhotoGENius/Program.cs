@@ -153,12 +153,12 @@ class Program
                 Console.WriteLine("Initializing materials...");
                 
                 var sunMaterial = new Material(
-                    new UniformPigment(new Color(10f, 10f, 5f)),
+                    new UniformPigment(new Color(1f, 1f, 0.4f)),
                     new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                 );
                 var skyMaterial = new Material(
-                    new UniformPigment(new Color(0*0.5f, 0*0.4f, 0*0.2f)),
-                    new DiffuseBRDF(new UniformPigment(new Color(1f, 1f, 1f)))
+                    new UniformPigment(new Color(0.5f, 0.4f, 0.2f)),
+                    new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                 );
                 var groundMaterial = new Material(
                     new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), new Color(0.1f, 0.2f, 0.5f)))
@@ -181,7 +181,7 @@ class Program
 
                 // sun up high
                 world.AddShape(
-                    new Sphere(Transformation.Translation(new Vec(-30f, 0f, 20f))*Transformation.Scaling(new Vec(5f,5f,5f)),sunMaterial)
+                    new Sphere(Transformation.Translation(new Vec(-30f, -30f, 20f))*Transformation.Scaling(new Vec(5f,5f,5f)),sunMaterial)
                 );
                 // sky
                 world.AddShape(
