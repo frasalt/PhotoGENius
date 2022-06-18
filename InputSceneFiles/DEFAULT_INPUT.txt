@@ -37,10 +37,10 @@ material cyl_material(       diffuse(uniform(<0.5, 0.7, 0>)),      uniform(<0, 0
 #------------------------------------------------------------------------|
 #                                SHAPES                                  |
 #------------------------------------------------------------------------|
-# "shape"("material", "transformation",                                  |
-#               **cylinder only: "z_min", "z_max", "radius, "phi_max"**)|
+# "typeofshape"("material", "transformation",                            |
+#               **cylinder only: "z_min", "z_max", "radius, "phi_max"**) |
 # where:                                                                 |
-#   "shape" =       sphere                                               |
+#   "typeofshape" = sphere                                               |
 #                   plane                                                |
 #                   cylinder                                             |
 #       where: parameters are respectively inf and sup base coordinates, |
@@ -58,19 +58,40 @@ sphere (sky_material, translation([0, 0, 0.4]) * scaling([200, 200, 200]))
 plane (ground_material, identity)
 sphere (sphere_material, translation([10, 0, 1]))
 sphere (mirror_material, translation([0, 2, 0]))
-#cylinder (cyl_material, translation([0, -2.5, 1]), 0, 3, 1, 4.71)
-cylinder (cyl_material, translation([0, -2.5, 1]), 0, 3, 1)
+cylinder (cyl_material, translation([0, -2.5, 1]), 0, 3, 1, 6.29)
 
 
 #------------------------------------------------------------------------|
 #                                CAMERA                                  |
 #------------------------------------------------------------------------|
-# camera("projection", "transformation", "x_ratio", "y_ratio")           |
+# camera("projection", "transformation", "aspectRatio", "screenDistance")|
+#                                                                        |
 # where:                                                                 |
 #   "projection" =  orthogonal,                                          |
 #                   perspective                                          |
-#   "x_ratio", "y_ratio" = floating point number, representing camera    |
-#                          amplitude in that direction                   |
-#                          (not to be confused with image size!)         |
+#   "aspectRatio" = floating point number, defines how larger than the   |
+#                   height is the image                                  |
+#   "screenDistance" = floating point number, representing how far       |        
+#                      from the eye of the observer is the screen        |
+#                                                                        |
 #------------------------------------------------------------------------|
 camera(perspective, rotation_y(17)*translation([-5, 0, 4]), 1.0, 1.0)
+
+
+#------------------------------------------------------------------------|
+#                              POINTLIGHT                                |
+#------------------------------------------------------------------------|
+# pointlight("position", "color", "linearRadius")                        |
+#                                                                        |
+# where:                                                                 |
+#   "position" =  3D point identifying the position of the light         |
+#                 ["xfloat", "yfloat", "zfloat"]                         |
+#                                                                        |
+#   "color" = the color of the Point Light                               |
+#             <"rfloat", "gfloat", "bfloat">                             |
+#                                                                        |
+#   "linearRadius" = floating point number used to compute the solid     |
+#                    angle subtended by the light at a given distance    |
+#                                                                        |
+#------------------------------------------------------------------------|
+pointlight([-30, 30, 30], <1, 1, 1>, 0)
