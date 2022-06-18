@@ -22,14 +22,31 @@ namespace PGENLib
     //==============================================================================================================
     //Ray
     //==============================================================================================================
+    /// The class contains the following members:
+    /// <list type="table">
+    /// <item>
+    ///     <term>Origin</term>
+    ///     <description> the 3D `Point` where the ray originated</description>
+    /// </item>
+    /// <item>
+    ///     <term>Dir</term>
+    ///     <description> the 3D direction (`Vec`) along which this ray propagates</description>
+    /// </item>
+    /// <item>
+    ///     <term>Tmin</term>
+    ///     <description> the minimum float distance travelled by the ray is this number times `dir`</description>
+    /// </item>
+    /// <item>
+    ///     <term>Tmax</term>
+    ///     <description> the maximum distance travelled by the ray is this number times `dir`</description>
+    /// </item>
+    /// <item>
+    ///     <term>Depth</term>
+    ///     <description> `int` number of times this ray was reflected/refracted</description>
+    /// </item>
+    /// </list>
     public struct Ray
     { 
-        // The class contains the following members:
-        // - `origin` (``Point``): the 3D point where the ray originated
-        // - `dir` (``Vec``): the 3D direction along which this ray propagates
-        // - `tmin` (float): the minimum distance travelled by the ray is this number times `dir`
-        // - `tmax` (float): the maximum distance travelled by the ray is this number times `dir`
-        // - `depth` (int): number of times this ray was reflected/refracted
         
         public Point Origin;
         public Vec Dir;
@@ -65,11 +82,11 @@ namespace PGENLib
         /// </summary>
         public Ray(Point origin, Vec dir, float tmin, float tmax = float.PositiveInfinity, int depth = 0)
         {
-            this.Origin = origin;
-            this.Dir = dir;
-            this.Tmin = tmin;
-            this.Tmax = tmax;
-            this.Depth = depth;
+            Origin = origin;
+            Dir = dir;
+            Tmin = tmin;
+            Tmax = tmax;
+            Depth = depth;
         }
 
         public Point get_Origin()
@@ -143,10 +160,11 @@ namespace PGENLib
     {
 
         
-        // The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
-        // images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
-        // used in modern monitors.
-
+        /// <summary>
+        /// The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
+        /// images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
+        /// used in modern monitors.
+        /// </summary>
         public float AspectRatio;
         public Transformation Transf;
 
@@ -207,14 +225,16 @@ namespace PGENLib
    /// </summary>
     public struct PerspectiveCamera : ICamera
     {
-
-        // The parameter `screen_distance` tells how far from the eye of the observer is the screen,
-        // and it influences the so-called «aperture» (the field-of-view angle along the horizontal direction).
-        // The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
-        // images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
-        // used in modern monitors.
-
+        /// <summary>
+        /// The parameter `screen_distance` tells how far from the eye of the observer is the screen,
+        /// and it influences the so-called «aperture» (the field-of-view angle along the horizontal direction).
+        /// </summary>
         public float ScreenDistance;
+        /// <summary>
+        /// The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
+        /// images, you should probably set `aspect_ratio` to 16/9, as this is the most used aspect ratio
+        /// used in modern monitors.
+        /// </summary>
         public float AspectRatio;
         public Transformation Transf;
         

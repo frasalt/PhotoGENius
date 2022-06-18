@@ -140,8 +140,8 @@ namespace PGENLib
         Orthogonal = 17,
         Perspective = 18,
         Float = 19,
-        Pointlight = 20,
-        Cylinder = 21
+        Cylinder = 20,
+        PointLight = 21
     }
 
     /// <summary>
@@ -199,7 +199,7 @@ namespace PGENLib
             { "orthogonal", KeywordList.Orthogonal },
             { "perspective", KeywordList.Perspective },
             { "float", KeywordList.Float },
-            { "pointlight", KeywordList.Pointlight }
+            { "pointlight", KeywordList.PointLight }
 
         };
 
@@ -767,6 +767,25 @@ namespace PGENLib
 
             return new Vec(x, y, z);
         }
+        
+        /// <summary>
+        /// Parse symbles and numbers to return a point of floats
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        public static Point parse_point(InputStream inputFile, Scene scene)
+        {
+            expect_symbol(inputFile, "[");
+            float x = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float y = expect_number(inputFile, scene);
+            expect_symbol(inputFile, ",");
+            float z = expect_number(inputFile, scene);
+            expect_symbol(inputFile, "]");
+
+            return new Point(x, y, z);
+        }
 
         /// <summary>
         /// Parse a <see cref="Color"/> object from a file and store it into memory.
@@ -1014,7 +1033,7 @@ namespace PGENLib
             float phiMax = expect_number(inputFile, scene);
             expect_symbol(inputFile, ")");
             
-            return new Cylinder(transformation, scene.Materials[materialName], zmin, zmax, r);
+            return new Cylinder(transformation, scene.Materials[materialName], zmin, zmax,phiMax, r );
         }
 
         /// <summary>
@@ -1043,6 +1062,22 @@ namespace PGENLib
             
             plane = new XyPlane(transformation, scene.Materials[materialName]);
             return plane;
+        }
+
+        public static PointLight parse_pointlight(InputStream inputFile, Scene scene)
+        {
+            expect_symbol(inputFile, "(");
+            Point position = parse_point(inputFile, scene); 
+            
+            expect_symbol(inputFile, ",");
+            Color color = parse_color(inputFile, scene);
+            
+            expect_symbol(inputFile, ",");
+            float linearRadius = expect_number(inputFile, scene);
+            
+            expect_symbol(inputFile, ")");
+            
+            return new PointLight(position, color, linearRadius);
         }
         
         /// <summary>
@@ -1098,52 +1133,52 @@ namespace PGENLib
                     if (what is StopToken)
                         break;
                     if (what is not KeywordToken)
-                        throw new GrammarErrorException($"parsing, expected a keyword instead of '{what}'", what.Location);
+                        throw new GrammarErrorException(msg: $"Parsing, expected a keyword instead of '{what}'", sourceLocation: what.Location);
 
 
                     if (((KeywordToken)what).Keyword == KeywordList.Float)
                     {
-                        string variableName = expect_identifier(inputFile);
+                        string variableName = expect_identifier(inputFile: inputFile);
 
                         // Save this for the error message
                         SourceLocation variableLoc = inputFile.Location;
 
-                        expect_symbol(inputFile, "(");
-                        float variableValue = expect_number(inputFile, scene);
-                        expect_symbol(inputFile, ")");
+                        expect_symbol(inputFile: inputFile, symbol: "(");
+                        float variableValue = expect_number(inputFile: inputFile, scene: scene);
+                        expect_symbol(inputFile: inputFile, symbol: ")");
 
-                        if (scene.FloatVariables.ContainsKey(variableName) &&
-                            !(scene.OverriddenVariables.Contains(variableName)))
+                        if (scene.FloatVariables.ContainsKey(key: variableName) &&
+                            !(scene.OverriddenVariables.Contains(value: variableName)))
                         {
-                            throw new GrammarErrorException($"variable «{variableName}» cannot be redefined",
-                                variableLoc);
+                            throw new GrammarErrorException(msg: $"Variable «{variableName}» cannot be redefined",
+                                sourceLocation: variableLoc);
                         }
 
-                        if (!scene.OverriddenVariables.Contains(variableName))
+                        if (!scene.OverriddenVariables.Contains(value: variableName))
                         {
                             // Only define the variable if it was not defined by the user OUTSIDE the scene file
                             // (e.g., from the command line)
-                            scene.FloatVariables[variableName] = variableValue;
+                            scene.FloatVariables[key: variableName] = variableValue;
                         }
                     }
                     else if (((KeywordToken)what).Keyword == KeywordList.Sphere)
-                        scene.World.AddShape(parse_sphere(inputFile, scene));
+                        scene.World.AddShape(sh: parse_sphere(inputFile: inputFile, scene: scene));
                     else if (((KeywordToken)what).Keyword == KeywordList.Plane)
-                        scene.World.AddShape(parse_plane(inputFile, scene));
+                        scene.World.AddShape(sh: parse_plane(inputFile: inputFile, scene: scene));
                     else if (((KeywordToken)what).Keyword == KeywordList.Cylinder)
-                        scene.World.AddShape(parse_cylinder(inputFile, scene));
+                        scene.World.AddShape(sh: parse_cylinder(inputFile: inputFile, scene: scene));
+                    else if (((KeywordToken)what).Keyword == KeywordList.PointLight)
+                        scene.World.AddLight(light: parse_pointlight(inputFile: inputFile, scene: scene));
                     else if (((KeywordToken)what).Keyword == KeywordList.Camera)
                     {
                         if (scene.Camera != null)
-                            throw new GrammarErrorException("You cannot define more than one camera", what.Location);
-                        scene.Camera = parse_camera(inputFile, scene);
+                            throw new GrammarErrorException(msg: "You cannot define more than one camera", sourceLocation: what.Location);
+                        scene.Camera = parse_camera(inputFile: inputFile, scene: scene);
                     }
-
-
                     else if (((KeywordToken)what).Keyword == KeywordList.Material)
                     {
-                        (string name, Material material) = parse_material(inputFile, scene);
-                        scene.Materials[name] = material;
+                        (string name, Material material) = parse_material(inputFile: inputFile, scene: scene);
+                        scene.Materials[key: name] = material;
                     }
 
                 }
@@ -1151,7 +1186,7 @@ namespace PGENLib
             }
             catch (GrammarErrorException grex)
             {
-                Console.WriteLine($"Grammar error: {grex.Message} \n   >>> In inputfile (line, row):{grex.SourceLocation}");
+                Console.WriteLine(value: $"Grammar error: {grex.Message} \n   >>> In inputfile (line, row):{grex.SourceLocation}");
             }
 
             return scene;
