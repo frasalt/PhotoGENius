@@ -109,7 +109,7 @@ class Program
             name: "--sample-per-pixel",
             description: "Number of sample per pixel (must be a perfect square).",
             getDefaultValue: () => 1);
-            
+        
         //==============================================================================================================
         // Demo 
         //==============================================================================================================
@@ -502,7 +502,6 @@ class Program
                     Console.WriteLine(
                         $"Error: couldn't write file {pfmOutputValue}");
                 }
-
                 
                 // 6.convertire a PNG
                 Console.WriteLine("\nConverting and saving PNG image...");
