@@ -157,8 +157,8 @@ class Program
                     new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                 );
                 var skyMaterial = new Material(
-                    new UniformPigment(new Color(0*0.5f, 0*0.4f, 0*0.2f)),
-                    new DiffuseBRDF(new UniformPigment(new Color(1f, 1f, 1f)))
+                    new UniformPigment(new Color(0.5f, 0.5f, 0.3f)),
+                    new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                 );
                 var groundMaterial = new Material(
                     new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), new Color(0.1f, 0.2f, 0.5f)))
