@@ -33,8 +33,7 @@ class Program
     
     static async Task<int> Main(string[] args)
     {
-
-
+        
         var rootCommand = new RootCommand("Sample app for creating an image or converting PMF file to PNG.");
 
         var width = new Option<int>(
@@ -45,7 +44,7 @@ class Program
         var height = new Option<int>(
             name: "--height",
             description: "Height of the image to render.",
-            getDefaultValue: () => 480);
+            getDefaultValue: () => 360);
             
         var angleDeg = new Option<float>(
             name: "--angle-deg",
@@ -65,7 +64,7 @@ class Program
         var cameraType = new Option<string>(
             name: "--camera-type",
             description: "Type of camera to be used: 'orthogonal' or 'perspective'.",
-            getDefaultValue: () => "orthogonal");
+            getDefaultValue: () => "perspective");
             
         var algorithm = new Option<string>(
             name: "--algorithm",
@@ -108,7 +107,7 @@ class Program
         var samplePerPixel = new Option<int>(
             name: "--sample-per-pixel",
             description: "Number of sample per pixel (must be a perfect square).",
-            getDefaultValue: () => 1);
+            getDefaultValue: () => 4);
         
         //==============================================================================================================
         // Demo 
@@ -137,7 +136,6 @@ class Program
                 string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
                 ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
             { 
-                //Inserire controllo dei parametri di input letti da file
                 var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
                     
                 if (Math.Abs(Math.Pow(samplePerSide, 2.0f) - samplePerPixelValue) > 10E-5)
@@ -146,7 +144,7 @@ class Program
                     return;
                 }
                     
-                // 1.World initialization
+                // 1. World initialization
 
                 var world = new World();
                 
@@ -155,9 +153,8 @@ class Program
                 Console.WriteLine("Initializing materials...");
                 
                 var skyMaterial = new Material(
-                    //new UniformPigment(new Color(1.0f, 0.9f, 0.5f)),
-                    new UniformPigment(new Color(2*1f, 2*0.9f, 2*0.5f)),
-                    new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 1f)))
+                    new UniformPigment(new Color(2f, 1.8f, 1f)),
+                    new DiffuseBRDF(new UniformPigment(new Color(0f, 0f, 0f)))
                 );
                 var groundMaterial = new Material(
                     new DiffuseBRDF(new CheckeredPigment(new Color(0.3f, 0.5f, 0.1f), new Color(0.1f, 0.2f, 0.5f)))
@@ -165,31 +162,17 @@ class Program
                 var sphereMaterial = new Material(
                     new DiffuseBRDF(new UniformPigment(new Color(0.3f, 0.4f, 0.8f)))
                 );
+                var cylinderMaterial = new Material(
+                    new DiffuseBRDF(new UniformPigment(new Color(0.8f, 0.4f, 0.3f)))
+                );
                 var mirrorMaterial = new Material(
                     new SpecularBRDF(new UniformPigment(new Color(0.6f, 0.2f, 0.3f)))
                 );
                 
-           
                 //---------------------------
-                //example ImagePigment
+                // example scene
                 //---------------------------
-                /*
-                HdrImage appo = new HdrImage(1, 1);
-                HdrImage img;
-                using (Stream input = File.OpenRead(@"..\Media\imgs_pfm\pgen_rett1.pfm"))
-                {
-                   img = appo.ReadPFMFile(input);
-                }
 
-                var imageMaterial = new Material(new DiffuseBRDF(new ImagePigment(img)));
-                */ 
-                 
-
-                
-                //---------------------------
-                //example scene
-                //---------------------------
-                // shapes
                 Console.WriteLine("\nInitializing shapes...");
 
                 // sky
@@ -198,75 +181,27 @@ class Program
                 );
                 // ground
                 world.AddShape(
-                    new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)),groundMaterial)
+                    new XyPlane(Transformation.Scaling(new Vec(1f, 1f, 1f)), groundMaterial)
                 );
-                /*
-                //sphere in the middle
+                // sphere in the middle
                 world.AddShape(
-                    new Sphere(Transformation.Translation(new Vec(0f, 0f, 1f)),imageMaterial)
+                    new Sphere(Transformation.Translation(new Vec(0f, -0.5f, 1.5f)),sphereMaterial)
                 );
-                
-                
                 // sphere aside
                 world.AddShape(
                     new Sphere(Transformation.Translation(new Vec(1f, 2.5f, 0f)),mirrorMaterial)
                 );
-
-                
-                /*
-                //---------------------------
-                //cube with spheres
-                //---------------------------
-                // sphere in the middle
+                // cylinder aside
                 world.AddShape(
-                    new Sphere(Transformation.Traslation(new Vec(0f, -2.5f, 1f)),sphereMaterial)
+                    new Cylinder(Transformation.Translation(new Vec(0f, -0.5f, 0f)),cylinderMaterial,0f,0.5f, 6.29f, 1f)
                 );
-                
-                //   sphere in vertices
-                var scaling = Transformation.Scaling(new Vec(0.1f, 0.1f, 0.1f));
-                Transformation transformation;
-                
-                var col1 = new Color(0.5f, 0.5f, 0.5f);
-                var col2 = new Color(0.0f, 1.0f, 0.0f);
-                var emittedRad = new CheckeredPigment(col1, col2, 4);
-                var material = new Material(emittedRad, new DiffuseBRDF());
-
-                for (var x = -0.5f; x <= 0.5f; x++)
-                {
-                    for (var y = -0.5f; y <= 0.5f; y++)
-                    {
-                        for (var z = -0.5f; z <= 0.5f; z++)
-                        {
-                            transformation = Transformation.Traslation(new Vec(x, y, z));
-
-                            var sphere = new Sphere(transformation * scaling, material);
-                            world.AddShape(sphere);
-                        }
-                    }
-                }
-
-                //   sphere in faces
-                var red = new Color(1.0f, 0.0f, 0.0f);
-                var blue = new Color(0.0f, 0.0f, 1.0f);
-                var redEmittedRad = new UniformPigment(red);
-                var blueEmittedRad = new UniformPigment(blue);
-                var redMaterial = new Material(redEmittedRad, new DiffuseBRDF());
-                var blueMaterial = new Material(blueEmittedRad, new DiffuseBRDF());
-
-                transformation = Transformation.Translation(new Vec(0.0f, 0.0f, -0.5f));
-                world.AddShape(new Sphere(transformation * scaling, blueMaterial));
-
-                transformation = Transformation.Translation(new Vec(0.0f, 0.5f, 0.0f));
-                world.AddShape(new Sphere(transformation * scaling, redMaterial));
-                //---------------------------
-                */
-
+                // light source
                 world.AddLight(new PointLight(new Point(-30f, 0f, 20f), new Color(1.0f, 1.0f, 1.0f)));
                     
-                // 2.Camera initialization
+                // 2. Camera initialization
                 Console.WriteLine("\nInitializing camera...");
 
-                Transformation transformation = Transformation.Translation(new Vec(-3.0f, 1.0f, 1f));
+                Transformation transformation = Transformation.Translation(new Vec(-1.0f, 0f, 1f));
                 var rotation = Transformation.RotationZ(angleDegValue);
                 float aspectRatio = (float) widthValue / heightValue;
 
@@ -284,10 +219,7 @@ class Program
                     throw new Exception("Invalid camera option: use orthogonal, or perspective");
                 }
 
-                    
-                // 3.(ruotare l'osservatore)
-
-                // 4.Run raytracer
+                // 3. Run raytracer
                 Console.WriteLine("\nRunning raytracer...");
 
                 var image = new HdrImage(widthValue, heightValue);
@@ -324,7 +256,6 @@ class Program
                     Console.WriteLine("    Using pointlight tracer");
                     var renderer = new PointLightRenderer(world: world, backGroundColor: BLACK);
                     tracer.FireAllRays(renderer.Call);
-
                 }
                 else
                 {
@@ -333,7 +264,7 @@ class Program
                     return;
                 }
                     
-                // 5.salvare PFM 
+                // 4. Save PFM 
                 Console.WriteLine("\nSaving PFM image...");
                     
                 using FileStream fstream = File.OpenWrite(pfmOutputValue);
@@ -353,13 +284,13 @@ class Program
                         $"Error: couldn't write file {pfmOutputValue}");
                 }
                     
-                // 6.convertire a PNG
+                // 6. Convert to PNG
                 Console.WriteLine("\nConverting and saving PNG image...");
                     
                 image.NormalizeImage(luminosityFactorValue);
                 image.ClampImage();
 
-                // salvo in file PNG, a seconda delle opzioni
+                // save PNG file, depending on options
                 try
                 {
                     {
@@ -410,7 +341,7 @@ class Program
                 string pfmOutputValue, string pngOutputValue, string algorithmValue, int raysNumValue,
                 int maxDepthValue, ulong initStateValue, ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
             {
-                //Compute number of sample per side, which will be used for antialiasing
+                // Compute number of sample per side, which will be used for antialiasing
                 var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
                     
                 if (Math.Abs(Math.Pow(samplePerSide, 2.0f) - samplePerPixelValue) > 10E-5)
@@ -422,27 +353,24 @@ class Program
                 Console.WriteLine("=====================================");
                 Console.WriteLine("Initializing scene...");
 
-                //Read the scene from input file
+                // 1. Read the scene from input file
                 Stream sceneStream = new FileStream(scenefileValue, FileMode.Open);
                 Dictionary<string, float> dict = new Dictionary<string, float>();
             
                 Scene scene = new Scene();    
                 scene = ExpectParse.parse_scene(new InputStream(sceneStream), dict);
-
-                //Inserire controllo dei parametri di input letti da file
-
+                
                 // Camera rotation
                 if (angleDegValue != 0)
                     scene.Camera.SetTransf( Transformation.RotationZ(angleDegValue)*scene.Camera.GetTransf());
 
-                // 4.Run raytracer
+                // 2. Run raytracer
                 Console.WriteLine("\nRunning raytracer...");
 
                 var image = new HdrImage(widthValue, heightValue);
                 Console.WriteLine(
                     $"    Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
-              
-
+                
                 var tracer = new ImageTracer(image, scene.Camera, samplePerSide);
                 
                 if (algorithmValue == "onoff")
@@ -484,10 +412,9 @@ class Program
               
                 sceneStream.Close();
 
-                // 5.salvare PFM 
+                // 3. Save PFM 
                 Console.WriteLine("\nSaving PFM image...");
-
-
+                
                 using FileStream fstream = File.OpenWrite(pfmOutputValue);
 
                 try
@@ -505,13 +432,13 @@ class Program
                         $"Error: couldn't write file {pfmOutputValue}");
                 }
                 
-                // 6.convertire a PNG
+                // 4. Convert to PNG
                 Console.WriteLine("\nConverting and saving PNG image...");
                 
                 image.NormalizeImage(luminosityFactorValue);
                 image.ClampImage();
 
-                // salvo in file PNG, a seconda delle opzioni
+                // Save PNG file, depending on options
                 try
                 {
                     {
@@ -552,20 +479,28 @@ class Program
         pfm2png.SetHandler((float luminosityFactorValue, float gammaFactorValue, string pfmInputValue, string pngOutputValue) =>
             {
 
-                //Inserire parse dei parametri di input letti da file
                 HdrImage img = new HdrImage(0,0);
             
-                // leggo l'immagine HDR in formato PFM
+                // 1. Read HDR image and write to PFM file 
+                
+                Console.WriteLine($"Reading {pfmInputValue} ...");
+
                 using (var inpf = new FileStream(pfmInputValue, FileMode.Open, FileAccess.Read))
                 { img = img.ReadPFMFile(inpf); }
     
-                Console.WriteLine($" >> File {pfmInputValue} has been read from disk.");
+                Console.WriteLine($"    File {pfmInputValue} has been read from disk.");
     
-                // converto i dati in formato LDR
+                // 2. Convert to LDR
+                
+                Console.WriteLine("\nConverting to LDR format ...");
+
                 img.NormalizeImage(luminosityFactorValue);
                 img.ClampImage();
     
-                // salvo in file PNG, a seconda delle opzioni
+                // 3. Save to PNG file, depending on options
+                
+                Console.WriteLine("\nSaving as PNG ...");
+
                 try
                 {
                     string outf = pngOutputValue;
@@ -573,7 +508,7 @@ class Program
                         img.WriteLdrImage(outf, "PNG", gammaFactorValue);
                     }
     
-                    Console.WriteLine($" >> File {pngOutputValue} has been written to disk.");
+                    Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
                 }
                 catch
                 {
