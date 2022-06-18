@@ -844,8 +844,16 @@ namespace PGENLib
                 HdrImage image = new HdrImage(1, 1);
                 using (Stream imageFile = File.OpenRead(fileName))
                 {
-                    image = image.ReadPFMFile(imageFile);
-                    
+                    try
+                    {
+                        image = image.ReadPFMFile(imageFile);
+                    }
+                    catch (InvalidPfmFileFormat err)
+                    {
+                        Console.WriteLine($"Message: {err.Message}");
+                        Console.WriteLine($"Source: {err.Source}");
+                    }
+
                 }
 
                 result = new ImagePigment(image);

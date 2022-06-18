@@ -134,7 +134,10 @@ namespace PGENLib
         {
             //Check PF, Image Size and Endianness
             string magic = ReadLine(input);
-            Debug.Assert(magic == "PF");
+            if (magic != "PF")
+            {
+                throw new InvalidPfmFileFormat("Invalid magic in PFM file");
+            }
 
             string imgsize = ReadLine(input);
             int[] dim = ParseImgSize(imgsize);
@@ -232,9 +235,13 @@ namespace PGENLib
         public int[] ParseImgSize(string str)
         {
             int[] dim = new int[2];
+            string[] sub = str.Split();
+            if (sub.Length != 2)
+            {
+                throw new InvalidPfmFileFormat("Invalid image size specification");
+            }
             try
             {
-                string[] sub = str.Split();
                 dim[0] = int.Parse(sub[0]);
                 dim[1] = int.Parse(sub[1]);
             }
@@ -260,11 +267,13 @@ namespace PGENLib
             }
             catch (ArgumentNullException ex)
             {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine("Missing Endianness specification");
+                throw new InvalidPfmFileFormat("Invalid Endianness specification");
             }
 
-            Debug.Assert(endianness != 0);
+            if (endianness == 0)
+            {
+                throw new InvalidPfmFileFormat("Invalid Endianness specification");
+            }
             double normEnd = endianness / Math.Abs(endianness);
             return (int) normEnd;
         }

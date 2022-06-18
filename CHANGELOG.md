@@ -1,4 +1,7 @@
 # HEAD
+### 18-06-2022
+- Better handling of exeptions [#42](https://github.com/frasalt/PhotoGENius/pull/42)
+
 ### 17-06-2022
 - Fix bug in computation of sphere (u,v) coordinates in issue [#41](https://github.com/frasalt/PhotoGENius/issues/41)
 - Update readme [#26](https://github.com/frasalt/PhotoGENius/pull/26)
