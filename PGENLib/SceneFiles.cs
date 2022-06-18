@@ -882,6 +882,7 @@ namespace PGENLib
                 return new DiffuseBRDF(pigment);
             if (brdfKeyword == KeywordList.Specular)
                 return new SpecularBRDF(pigment);
+   
             else
             {
                 throw new Exception("This line should be unreachable");

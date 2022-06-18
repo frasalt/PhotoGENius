@@ -14,16 +14,18 @@
 #------------------------------------------------------------------------|
 #                                MATERIALS                               |
 #------------------------------------------------------------------------|
-# material "mat_name"("BRDF"("BRDF_type"), "emitted_radiance")           |
+# material "mat_name"("BRDF"("pigment"), "emitted_radiance")             |
 #                                                                        |
 # where:                                                                 |
 #   "mat_name" =    a name to identify this material                     |
 #   "BRDF" =        diffuse                                              |
 #                   specular                                             |
-#       "BRDF_type" =  uniform(<"r", "g", "b">)                          |
-#                      checkered(<"r", "g", "b">, <"r", "g", "b">)       |
+#       "pigment" =  uniform(<"r", "g", "b">)                            |
+#                    checkered(<"r", "g", "b">, <"r", "g", "b">)         |
+#                    image(imageFileName.pfm)                            |
 #             where:  "r", "g", "b" are color components intensities,    |
 #                     expressed by a floating point number in [0, +infty)|
+#                     and imageFileName.pfm is a string                  |
 #       "emitted_radiance" = uniform(<"r", "g", "b">)                    |
 #                            checkered(<"r", "g", "b">, <"r", "g", "b">) |
 #------------------------------------------------------------------------|
@@ -32,6 +34,7 @@ material ground_material(    diffuse(checkered(<0.3, 0.5, 0.1>, <0.1, 0.2, 0.5>,
 material sphere_material(    diffuse(uniform(<0.5, 0.5, 0.5>)),    uniform(<0, 0, 0>)    )
 material mirror_material(    specular(uniform(<1.5, 0.2, 0.2>)),   uniform(<0, 0, 0>)    )
 material cyl_material(       diffuse(uniform(<0.5, 0.7, 0>)),      uniform(<0, 0, 0>)    )
+material image_material(     diffuse(image("../Media/Readme_imgs/memorial.pfm")), uniform(<0, 0, 0>))
 
 
 #------------------------------------------------------------------------|
@@ -56,7 +59,7 @@ material cyl_material(       diffuse(uniform(<0.5, 0.7, 0>)),      uniform(<0, 0
 #------------------------------------------------------------------------|
 sphere (sky_material, translation([0, 0, 0.4]) * scaling([200, 200, 200]))
 plane (ground_material, identity)
-sphere (sphere_material, translation([10, 0, 1]))
+sphere (image_material, translation([10, 0, 1]))
 sphere (mirror_material, translation([0, 2, 0]))
 cylinder (cyl_material, translation([0, -2.5, 1]), 0, 3, 1, 6.29)
 
