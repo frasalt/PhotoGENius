@@ -140,8 +140,7 @@ namespace PGENLib
         Orthogonal = 17,
         Perspective = 18,
         Float = 19,
-        Pointlight = 20,
-        Cylinder = 21
+        Cylinder = 20
     }
 
     /// <summary>
@@ -199,7 +198,6 @@ namespace PGENLib
             { "orthogonal", KeywordList.Orthogonal },
             { "perspective", KeywordList.Perspective },
             { "float", KeywordList.Float },
-            { "pointlight", KeywordList.Pointlight }
 
         };
 
