@@ -22,7 +22,7 @@
 #                   specular                                             |
 #       "pigment" =  uniform(<"r", "g", "b">)                            |
 #                    checkered(<"r", "g", "b">, <"r", "g", "b">)         |
-#                    image(imageFileName.pfm)                            |
+#                    image("imageFileName.pfm")                          |
 #             where:  "r", "g", "b" are color components intensities,    |
 #                     expressed by a floating point number in [0, +infty)|
 #                     and imageFileName.pfm is a string                  |
