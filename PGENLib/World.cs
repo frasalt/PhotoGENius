@@ -1,7 +1,28 @@
+/*
+PhotoGENius : photorealistic images generation.
+Copyright (C) 2022  Lamorte Teresa, Salteri Francesca, Zanetti Martino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 namespace PGENLib
 {
     public struct World
-    {
+    { 
+        /// <summary>
+        /// Class that represents a world. It is the variable to which we add the shapes.
+        /// </summary>
 
         public List<Shape> Shapes;
         public List<PointLight> PointLights;
@@ -36,7 +57,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Add a ligth in the list of shapes present in the world
+        /// Add a ligth in the list of shapes present in the world.
         /// </summary>
         /// <param name="light">`PointLight` object to be added in the world</param>
         public void AddLight(PointLight light)
@@ -45,7 +66,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Determine whether a ray intersects any of the objects in this world
+        /// Determine whether a ray intersects any of the objects in this world.
         /// </summary>
         /// <param name="intRay"></param>
         /// <returns></returns>

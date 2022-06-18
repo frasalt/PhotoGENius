@@ -1,0 +1,9 @@
+material sky_material(       diffuse(uniform(<0, 0, 0>)),          uniform(<1, 1, 1>)    )
+material ground_material(    diffuse(checkered(<0.3, 0.5, 0.1>, <0.1, 0.2, 0.5>, 4)),    uniform(<0, 0, 0>)    )
+material mirror_material(    specular(uniform(<1.5, 0.2, 0.2>)),   uniform(<0, 0, 0>)    )
+ 
+sphere (sky_material, translation([0, 0, 0.4]) * scaling([200, 200, 200]))
+plane (ground_material, identity)
+sphere (mirror_material, translation([0,-1.3139999999999998, 1.2734040000000004]))
+ 
+camera(perspective, rotation_y(17)*translation([-5, 0, 2]), 1.0, 1.0)

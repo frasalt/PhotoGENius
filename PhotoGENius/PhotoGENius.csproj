@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+    
     <ItemGroup>
       <ProjectReference Include="..\PGENLib\PGENLib.csproj" />
     </ItemGroup>
@@ -8,13 +8,9 @@
       <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="imgs_pfm" />
-      <Folder Include="video" />
-      <Folder Include="imgs_pfm" />
-    </ItemGroup>
 
     <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>

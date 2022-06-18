@@ -19,7 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using Xunit;
 using System;
 using System.IO;
-using PGENLib;
 using Xunit.Abstractions;
 
 namespace PGENLib.Tests
@@ -73,12 +72,11 @@ namespace PGENLib.Tests
             HdrImage img = new HdrImage(2, 2, pix);
             Assert.True(Color.are_close(new Color(7.0f, 8.0f, 9.0f), img.GetPixel(0, 1)));
         }
-
-
+        
         [Fact]
         public void test_WritePFM()
         {
-            //Creo un'immagine hdr e ci scrivo i colori in binario
+            //Create a hdr image and write the colors in binary.
             HdrImage img = new HdrImage(3, 2);
             Color a = new Color(1.0e1f, 2.0e1f, 3.0e1f);
             Color b = new Color(4.0e1f, 5.0e1f, 6.0e1f);
@@ -93,14 +91,13 @@ namespace PGENLib.Tests
             img.SetPixel(1, 1, e);
             img.SetPixel(2, 1, f);
 
-            // scrivo l'immagine in uno stream in BE
+            // Write an image in a stream in BE.
             MemoryStream str = new MemoryStream();
             img.WritePFMFile(str, Endianness.BigEndian);
 
             byte[] localvec = str.ToArray();
             byte[] refer = str.ToArray();
-
-            // verifico l'uguaglianza
+            
             for (int i = 0; i < 83; i++)
             {
                 Assert.True(localvec[i] == refer[i]);
@@ -126,12 +123,10 @@ namespace PGENLib.Tests
             end = img.ParseEndianness(str);
             Assert.True(end == -1);
         }
-
-
+        
         [Fact]
-        public void test_ReadLine() // DA SISTEMARE
+        public void test_ReadLine()
         {
-            //Preparo il memory stream da leggere
             string a;
             string b;
             string c;
@@ -141,7 +136,7 @@ namespace PGENLib.Tests
             using (StreamWriter writer = new StreamWriter(input))
             {
                 writer.Write(
-                    "Hello\nworld!\n\n"); // ATTENZIONE QUI: la funzione andrebbe corretta per riconoscere la fine di uno stream :(
+                    "Hello\nworld!\n\n");
                 writer.Flush();
                 input.Position = 0;
                 a = img.ReadLine(input);
@@ -164,7 +159,7 @@ namespace PGENLib.Tests
             Color e = new Color(4.0e2f, 5.0e2f, 6.0e2f);
             Color f = new Color(7.0e2f, 8.0e2f, 9.0e2f);
             HdrImage img = new HdrImage(1, 1);
-            using (Stream fileStream = File.OpenRead(@"../../../../PGENLib.Tests/reference_le.pfm")) // <<<<< l'errore per linux sta qui
+            using (Stream fileStream = File.OpenRead(@"../../../../PGENLib.Tests/reference_le.pfm"))
             { img = img.ReadPFMFile(fileStream); }
 
             Assert.True(img.Width == 3);
