@@ -95,14 +95,7 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ```bash
 ./generate-video.sh
 ```
-
->>>> Add a nice video?
-<!---
-<p align="center">
-<img width="450" src=https://user-images.githubusercontent.com/59051647/126571722-28e2cfe1-0b22-4961-bc0a-b1d05eb507ec.png>
-<img src="https://user-images.githubusercontent.com/59051647/126542691-8f384c07-c567-4276-8116-9e497611da4f.gif" width="450" />
-</p>
---->
+![](Media/video/animation.mp4)
 
 
 ## Installation
