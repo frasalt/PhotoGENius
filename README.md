@@ -142,14 +142,9 @@ should warn the user if something is not working.
 ## Potentialities
 
 Some examples of what your creativity can lead to, using **PhotoGENius** in its full potential. 
+![](Media/imgs_png/cow.png)
+[here](https://en.wikipedia.org/wiki/Spherical_cow) the link to the joke that inspired us.
 
->>>> Add nice images and videos
-<!---
-<p align="center">
-       <img width="450" src=https://user-images.githubusercontent.com/59051647/126571722-28e2cfe1-0b22-4961-bc0a-b1d05eb507ec.png>
-       <img src="https://user-images.githubusercontent.com/59051647/126542691-8f384c07-c567-4276-8116-9e497611da4f.gif" width="450" /> 
-</p>
---->
 
 ## Documentation
 
