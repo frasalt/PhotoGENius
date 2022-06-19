@@ -75,7 +75,7 @@ Generate a demo image (copy and paste as above):
 ```bash
 dotnet run -- render    --file-name ../InputSceneFiles/DEFAULT_INPUT.txt    --png-output ../Media/Readme_imgs/my_first_image.png
 ```
-![](Media/Readme_imgs/my_first_image.png)
+![](Media/imgs_png/output.png)
 
 
 ### Generate a brief animation
