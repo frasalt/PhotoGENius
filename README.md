@@ -95,7 +95,7 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ```bash
 ./generate-video.sh
 ```
-![](Media/video/animation.mp4)
+![here](Media/video/animation.mp4)
 
 
 ## Installation
@@ -143,7 +143,7 @@ should warn the user if something is not working.
 
 Some examples of what your creativity can lead to, using **PhotoGENius** in its full potential. 
 ![](Media/imgs_png/cow.png)
-[here](https://en.wikipedia.org/wiki/Spherical_cow) the link to the joke that inspired us.
+[Here](https://en.wikipedia.org/wiki/Spherical_cow) the link to the joke that inspired us.
 
 
 ## Documentation
