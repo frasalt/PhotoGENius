@@ -95,7 +95,7 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ```bash
 ./generate-video.sh
 ```
-![here](Media/video/animation.mp4)
+The result is a video like the following: ![bouncing PhotoGENius' logo](Media/video/animation.mp4)
 
 
 ## Installation
