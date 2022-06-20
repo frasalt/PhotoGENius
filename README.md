@@ -101,11 +101,6 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ```
 The result is a video like the following: ![bouncing PhotoGENius' logo](Media/Readme_imgs/animation.gif)
 
-<!---
-<p align="center">
-   <img src="https://github.com/frasalt/PhotoGENius/Media/Readme_imgs/animation.gif" width="450" /> 
-</p>
---->
 
 ## Installation
 
@@ -156,8 +151,7 @@ Some examples of what your creativity can lead to, using **PhotoGENius** in its 
 ## Documentation
 
 The complete documentation of the library is available
-[here](PGENLib.Doc/PGENLib.xml)
-or [here(?)](https://frasalt.github.io/PhotoGENius/PGENLib.Doc/PGENLib.xml).
+[here](https://martinozanetti.github.io/html/hierarchy.html).
 
 If you find anything not clear in it, please let us know:
 any suggestion is appreciated and certainly useful for other users.
