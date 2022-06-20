@@ -42,7 +42,7 @@ dotnet run -- pfm2png --pfm-input [PFM_FILE_PATH] {options}
 ```
 Pay attention that if your computer is set on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
 
-- To 🌅 **create an image**, type
+- To 🌅 **create an image** (pfm/png/jpeg), type
 ```bash
 dotnet run -- render {options}
 ```
