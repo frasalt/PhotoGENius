@@ -18,8 +18,8 @@ Options:
   --height <height>                      Height of the image to render. [default: 480]
   --angle-deg <angle-deg>                Angle of view in degrees. [default: 0]
   --pfm-output <pfm-output>              Name of the PFM file to create. [default: output.pfm]
-  --png-output <png-output>              Name of the PNG file to create. [default: output.png]
-  --camera-type <camera-type>            Type of camera to be used: 'orthogonal' or 'perspective'. [default: orthogonal]
+  --output <output>                      Path of the PNG or JPEG file to create, with extension. [default: ../Media/imgs_png/output.png]
+  --camera-type <camera-type>            Type of camera to be used: 'orthogonal' or 'perspective'. [default: perspective]
   --algorithm <algorithm>                Type of renderer to be used: 'flat' for colorful image or 'onoff' for black and white one or 'pathtracing' or 'pointlight'   [default: pathtracing]
   --num-of-rays <num-of-rays>            Number of rays departing from each surface point (only applicable with --algorithm=pathtracing). [default: 10]
   --max-depth <max-depth>                Maximum allowed ray depth (only applicable with --algorithm=pathtracing). [default: 3]
@@ -28,6 +28,7 @@ Options:
   --lum-fac <lum-fac>                    Regulates luminosity of rendered image. [default: 1]
   --gamma-fac <gamma-fac>                Regulates gamma compression of rendered image. [default: 1.8]
   --sample-per-pixel <sample-per-pixel>  Number of sample per pixel (must be a perfect square). [default: 1]
+  --output-format                        Output file extension; can be PNG or JPEG. [default: PNG]
   -?, -h, --help                         Show help and usage information
 
 ,==========================================,
