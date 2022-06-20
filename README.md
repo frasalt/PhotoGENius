@@ -95,10 +95,13 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ```bash
 ./generate-video.sh
 ```
-The result is a video like the following: ![bouncing PhotoGENius' logo](Media/Readme_imgs/animation.pfm).
+The result is a video like the following: ![bouncing PhotoGENius' logo](Media/Readme_imgs/animation.gif)
+
+<!---
 <p align="center">
-       <img src="https://github.com/frasalt/PhotoGENius/Media/Readme_imgs/animation.gif" width="450" /> 
+   <img src="https://github.com/frasalt/PhotoGENius/Media/Readme_imgs/animation.gif" width="450" /> 
 </p>
+--->
 
 ## Installation
 
@@ -113,14 +116,14 @@ If you want to assemble animations, you need to install ffmpeg
 (note that *it's not mandatory* for running the raytracing code):
 - [FFmpeg](https://www.ffmpeg.org/) (version 4.4 or higher)
 
-=================== This paragraph is in progress =====================
 ### Download latest release
+
 You can download the latest stable release
-[here](https://github.com/frasalt/PhotoGENius/releases/tag/v0.3.0) (version 0.3.0)
+[here](https://github.com/frasalt/PhotoGENius/releases/tag/v1.0.0) (version 1.0.0)
 and then unpack it running in the command line (Linux):
 
 ```bash
-tar -xvf PhotoGENius-0.3.0.tar
+tar -xvf PhotoGENius-1.0.0.tar
 ```
 The command is ```tar xopf``` for MacOS.
 
@@ -131,8 +134,6 @@ You can also clone this repository through the command:
 ```bash
 git clone https://github.com/frasalt/PhotoGENius.git
 ```
-=================== ***************************** =====================
-
 
 ### Code testing
 
