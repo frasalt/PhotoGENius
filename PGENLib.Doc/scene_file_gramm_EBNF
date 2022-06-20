@@ -1,0 +1,48 @@
+scene ::= declaration*
+
+declaration ::= float_decl | plane_decl | sphere_decl | cylinder_decl | material_decl | camera_decl | pointlight_decl
+
+float_decl ::= "float" IDENTIFIER "(" number ")"
+
+plane_decl ::= "plane" "(" IDENTIFIER "," transformation ")"
+
+sphere_decl ::= "sphere" "(" IDENTIFIER "," transformation ")"
+
+cylinder_decl ::= "cylinder" "(" IDENTIFIER "," transformation "," number "," number "," number "," number ")"
+
+material_decl ::= "material" IDENTIFIER "(" brdf "," pigment ")"
+
+camera_decl ::= "camera" "(" camera_type "," transformation "," number "," number ")"
+
+pointlight_decl ::= "pointlight" "(" vector "," color "," number ")"
+
+camera_type ::= "perspective" | "orthogonal"
+
+brdf ::= diffuse_brdf | specular_brdf
+
+diffuse_brdf ::= "diffuse" "(" pigment ")"
+
+specular_brdf ::= "specular" "(" pigment ")"
+
+pigment ::= uniform_pigment | checkered_pigment | image_pigment
+
+uniform_pigment ::= "uniform" "(" color ")"
+
+checkered_pigment ::= "checkered" "(" color "," color "," number ")"
+
+image_pigment ::= "image" "(" LITERAL_STRING ")"
+
+color ::= "<" number "," number "," number ">"
+
+transformation ::= basic_transformation | basic_transformation "*" transformation
+
+basic_transformation ::= "identity" 
+    | "translation" "(" vector ")"
+    | "rotation_x" "(" number ")"
+    | "rotation_y" "(" number ")"
+    | "rotation_z" "(" number ")"
+    | "scaling" "(" vector ")"
+    
+number ::= LITERAL_NUMBER | IDENTIFIER
+
+vector ::= "[" number "," number "," number "]"
