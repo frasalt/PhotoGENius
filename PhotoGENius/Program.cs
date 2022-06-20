@@ -316,7 +316,7 @@ class Program
                     
             },
             width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
-            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel );
+            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel);
             
         //==============================================================================================================
         // Render 
@@ -326,6 +326,10 @@ class Program
             name: "--file-name",
             description: "Input file for scene description",
             getDefaultValue: () => "../InputSceneFiles/DEFAULT_INPUT.txt");
+        var format = new Option<string>(
+            name: "--output-format",
+            description: "Input output file extention; can be PNG or JPEG",
+            getDefaultValue: () => "PNG");
 
         var render = new Command("render", "Create an image.")
         {
@@ -342,13 +346,15 @@ class Program
             initSeq,
             luminosityFactor,
             gammaFactor,
-            samplePerPixel
+            samplePerPixel,
+            format
         };
         rootCommand.AddCommand(render);
             
         render.SetHandler((string scenefileValue, int widthValue, int heightValue, float angleDegValue,
                 string pfmOutputValue, string pngOutputValue, string algorithmValue, int raysNumValue,
-                int maxDepthValue, ulong initStateValue, ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
+                int maxDepthValue, ulong initStateValue, ulong initSeqValue, float luminosityFactorValue,
+                float gammaFactorValue, int samplePerPixelValue, string formatValue) =>
             {
                 // Compute number of sample per side, which will be used for antialiasing
                 var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
@@ -451,7 +457,7 @@ class Program
                 try
                 {
                     {
-                        image.WriteLdrImage(pngOutputValue, "PNG", gammaFactorValue);
+                        image.WriteLdrImage(pngOutputValue, formatValue, gammaFactorValue);
                     }
 
                     Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
@@ -459,7 +465,7 @@ class Program
                 catch
                 {
                     Console.WriteLine(
-                        $"Error: couldn't write file {pngOutputValue}");
+                        $"Error: couldn't write file {pngOutputValue}. May be: wrong path, inexisting directory, invalid format.");
                 }
             },
 

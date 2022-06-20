@@ -417,10 +417,27 @@ namespace PGENLib
                     img[x, y] = new Rgb24( Convert.ToByte(red), Convert.ToByte(green), Convert.ToByte(blue));
                 }
             }
-            
-            using (Stream output1 = File.OpenWrite(output))
+
+            try
             {
-                img.SaveAsPng(output1);
+                if (format == "PNG")
+                {
+                    using (Stream output1 = File.OpenWrite(output))
+                    {
+                        img.SaveAsPng(output1);
+                    }
+                }
+                else if (format == "JPEG")
+                {
+                    using (Stream output1 = File.OpenWrite(output))
+                    {
+                        img.SaveAsJpeg(output1);
+                    }
+                }
+            }
+            catch
+            {
+                throw new InvalidFormatException("Invalid output format: use PNG or JPEG");
             }
         }
     }

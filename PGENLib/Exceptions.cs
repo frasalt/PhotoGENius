@@ -42,6 +42,13 @@ namespace PGENLib
             Console.WriteLine(errMessage);
         }
     }
+    public class InvalidFormatException : FormatException
+    {
+        public InvalidFormatException(string errMessage)
+        {
+            Console.WriteLine(errMessage);
+        }
+    }
     public class RuntimeError : Exception
     {
         public RuntimeError(string errMessage)
