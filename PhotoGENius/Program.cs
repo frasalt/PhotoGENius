@@ -328,7 +328,7 @@ class Program
             getDefaultValue: () => "../InputSceneFiles/DEFAULT_INPUT.txt");
         var format = new Option<string>(
             name: "--output-format",
-            description: "Input output file extention; can be PNG or JPEG",
+            description: "Input output file extension; can be PNG or JPEG",
             getDefaultValue: () => "PNG");
 
         var render = new Command("render", "Create an image.")
