@@ -58,7 +58,8 @@ class Program
             
         var output = new Option<string>(
             name: "--output",
-            description: "Name of the file to create, with extension.",
+            description: "Path of the file to create, with extension [Suggestion: ../Media/imgs_png/output.png or" +
+                         "../Media/imgs_jpeg/output.jpeg ].",
             getDefaultValue: () => "../Media/imgs_png/output.png");
             
         var cameraType = new Option<string>(
@@ -231,8 +232,10 @@ class Program
                 }
                 else
                 {
-                    throw new Exception("Invalid camera option: use orthogonal, or perspective");
-                }
+                    Console.WriteLine("Invalid camera option: use orthogonal, or perspective");
+                    return;
+                } 
+                
 
                 // 3. Run raytracer
                 Console.WriteLine("\nRunning raytracer...");
@@ -375,8 +378,16 @@ class Program
                 Stream sceneStream = new FileStream(scenefileValue, FileMode.Open);
                 Dictionary<string, float> dict = new Dictionary<string, float>();
             
-                Scene scene = new Scene();    
-                scene = ExpectParse.parse_scene(new InputStream(sceneStream), dict);
+                Scene scene = new Scene();
+
+                try
+                {
+                    scene = ExpectParse.parse_scene(new InputStream(sceneStream), dict);
+                }
+                catch 
+                {
+                    Console.WriteLine($"Error: could not open {scenefileValue}. \n Try checking your filepath. \n");
+                }
                 
                 // Camera rotation
                 if (angleDegValue != 0)
@@ -384,7 +395,7 @@ class Program
 
                 // 2. Run raytracer
                 Console.WriteLine("\nRunning raytracer...");
-
+                
                 var image = new HdrImage(widthValue, heightValue);
                 Console.WriteLine(
                     $"    Generating a {widthValue}×{heightValue} image, with the camera tilted by {angleDegValue}°");
