@@ -73,7 +73,7 @@ dotnet run -- pfm2png    --lum-fac 0.01    --gamma-fac 2    --png-output ../Medi
 
 Generate a demo image (copy and paste as above):
 ```bash
-dotnet run -- render    --file-name ../InputSceneFiles/DEFAULT_INPUT.txt    --png-output ../Media/Readme_imgs/my_first_image.png
+dotnet run -- render    --file-name ../InputSceneFiles/DEFAULT_INPUT.txt    --output ../Media/Readme_imgs/my_first_image.png
 ```
 ![](Media/imgs_png/output.png)
 
@@ -95,8 +95,10 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ```bash
 ./generate-video.sh
 ```
-The result is a video like the following: ![bouncing PhotoGENius' logo](Media/video/animation.mp4).
-
+The result is a video like the following: ![bouncing PhotoGENius' logo](Media/Readme_imgs/animation.pfm).
+<p align="center">
+       <img src="https://github.com/frasalt/PhotoGENius/Media/Readme_imgs/animation.gif" width="450" /> 
+</p>
 
 ## Installation
 
