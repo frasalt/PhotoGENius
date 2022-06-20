@@ -1,4 +1,6 @@
 # HEAD
+## Version 2.0.0
+- **Breaking change**: possibility to save also jpeg output file [PhotoGENius-2.0.0](https://github.com/frasalt/PhotoGENius/releases/tag/v2.0.0).
 
 ## Version 1.0.0
 - First official release of PhotoGENius: [PhotoGENius-1.0.0](https://github.com/frasalt/PhotoGENius/releases/tag/v1.0.0).
