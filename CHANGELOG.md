@@ -1,4 +1,8 @@
 # HEAD
+
+## Version 1.0.0
+- First official release of PhotoGENius: [PhotoGENius-1.0.0](https://github.com/frasalt/PhotoGENius/releases/tag/v1.0.0).
+
 ### 18-06-2022
 - Better handling of exeptions [#42](https://github.com/frasalt/PhotoGENius/pull/42)
 
