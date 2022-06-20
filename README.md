@@ -79,7 +79,7 @@ Generate a demo image (copy and paste as above):
 ```bash
 dotnet run -- render    --file-name ../InputSceneFiles/DEFAULT_INPUT.txt    --output ../Media/Readme_imgs/my_first_image.png  --sample-per-pixel 9
 ```
-![](Media/imgs_png/output.png)
+![](Media/Readme_imgs/my_first_image.png)
 
 
 ### Generate a brief animation
