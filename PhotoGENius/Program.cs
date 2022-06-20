@@ -56,9 +56,9 @@ class Program
             description: "Name of the PFM file to create.",
             getDefaultValue: () => "../Media/imgs_pfm/output.pfm");
             
-        var pngOutput = new Option<string>(
-            name: "--png-output",
-            description: "Name of the PNG file to create.",
+        var output = new Option<string>(
+            name: "--output",
+            description: "Name of the file to create, with extension.",
             getDefaultValue: () => "../Media/imgs_png/output.png");
             
         var cameraType = new Option<string>(
@@ -109,6 +109,11 @@ class Program
             description: "Number of sample per pixel (must be a perfect square).",
             getDefaultValue: () => 4);
         
+        var format = new Option<string>(
+            name: "--output-format",
+            description: "Output file extension; can be PNG or JPEG",
+            getDefaultValue: () => "PNG");
+        
         //==============================================================================================================
         // Demo 
         //==============================================================================================================
@@ -119,7 +124,7 @@ class Program
             height,
             angleDeg,
             pfmOutput,
-            pngOutput,
+            output,
             cameraType,
             algorithm,
             raysNum,
@@ -128,13 +133,14 @@ class Program
             initSeq,
             luminosityFactor,
             gammaFactor,
-            samplePerPixel
+            samplePerPixel,
+            format
         };
             
         rootCommand.AddCommand(demo);
         demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
-                string pngOutputValue, string cameraTypeValue, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
-                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue) =>
+                string outputValue, string cameraTypeValue, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
+                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue, string formatValue) =>
             { 
                 var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
                     
@@ -293,30 +299,31 @@ class Program
                         $"Error: couldn't write file {pfmOutputValue}");
                 }
                     
-                // 6. Convert to PNG
-                Console.WriteLine("\nConverting and saving PNG image...");
+                // 6. Convert to LDR
+                Console.WriteLine("\nConverting and saving LDR image...");
                     
                 image.NormalizeImage(luminosityFactorValue);
                 image.ClampImage();
 
-                // save PNG file, depending on options
+                // Save LDR file, depending on options
                 try
                 {
                     {
-                        image.WriteLdrImage(pngOutputValue, "PNG", gammaFactorValue);
+                        image.WriteLdrImage(outputValue, formatValue, gammaFactorValue);
                     }
-
-                    Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
+                    
+                    Console.WriteLine($"    File {outputValue} has been written to disk.");
+                    
                 }
                 catch
                 {
                     Console.WriteLine(
-                        $"Error: couldn't write file {pngOutputValue}");
+                        $"Error: couldn't write file {outputValue}. May be: wrong path, non existent directory, invalid format.");
                 }
                     
             },
-            width, height, angleDeg, pfmOutput, pngOutput, cameraType, algorithm, raysNum, maxDepth, 
-            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel);
+            width, height, angleDeg, pfmOutput, output, cameraType, algorithm, raysNum, maxDepth, 
+            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel, format);
             
         //==============================================================================================================
         // Render 
@@ -326,11 +333,7 @@ class Program
             name: "--file-name",
             description: "Input file for scene description",
             getDefaultValue: () => "../InputSceneFiles/DEFAULT_INPUT.txt");
-        var format = new Option<string>(
-            name: "--output-format",
-            description: "Input output file extension; can be PNG or JPEG",
-            getDefaultValue: () => "PNG");
-
+        
         var render = new Command("render", "Create an image.")
         {
             scenefile,
@@ -338,7 +341,7 @@ class Program
             height,
             angleDeg,
             pfmOutput,
-            pngOutput,
+            output,
             algorithm,
             raysNum,
             maxDepth,
@@ -352,7 +355,7 @@ class Program
         rootCommand.AddCommand(render);
             
         render.SetHandler((string scenefileValue, int widthValue, int heightValue, float angleDegValue,
-                string pfmOutputValue, string pngOutputValue, string algorithmValue, int raysNumValue,
+                string pfmOutputValue, string outputValue, string algorithmValue, int raysNumValue,
                 int maxDepthValue, ulong initStateValue, ulong initSeqValue, float luminosityFactorValue,
                 float gammaFactorValue, int samplePerPixelValue, string formatValue) =>
             {
@@ -447,30 +450,31 @@ class Program
                         $"Error: couldn't write file {pfmOutputValue}");
                 }
                 
-                // 4. Convert to PNG
-                Console.WriteLine("\nConverting and saving PNG image...");
+                // 4. Convert to LDR
+                Console.WriteLine("\nConverting and saving LDR image...");
                 
                 image.NormalizeImage(luminosityFactorValue);
                 image.ClampImage();
 
-                // Save PNG file, depending on options
+                // Save LDR file, depending on options
                 try
                 {
                     {
-                        image.WriteLdrImage(pngOutputValue, formatValue, gammaFactorValue);
+                        image.WriteLdrImage(outputValue, formatValue, gammaFactorValue);
                     }
-
-                    Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
+                    
+                    Console.WriteLine($"    File {outputValue} has been written to disk.");
+                    
                 }
                 catch
                 {
                     Console.WriteLine(
-                        $"Error: couldn't write file {pngOutputValue}. May be: wrong path, inexisting directory, invalid format.");
+                        $"Error: couldn't write file {outputValue}. May be: wrong path, non existent directory, invalid format.");
                 }
             },
 
-            scenefile, width, height, angleDeg, pfmOutput, pngOutput, algorithm, raysNum, maxDepth, 
-            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel );
+            scenefile, width, height, angleDeg, pfmOutput, output, algorithm, raysNum, maxDepth, 
+            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel, format );
             
             
         //==============================================================================================================
@@ -481,6 +485,10 @@ class Program
             name: "--pfm-input",
             description: "PFM file to be converted.",
             getDefaultValue: () => "../Media/Readme_imgs/memorial.pfm");
+        var pngOutput = new Option<string>(
+            name: "--png-output",
+            description: "PNG output file name.",
+            getDefaultValue: () => "../Media/imgs_png/output.png");
             
         var pfm2png = new Command("pfm2png", "Convert a PFM file to a PNG")
         {
@@ -528,7 +536,7 @@ class Program
                 catch
                 {
                     Console.WriteLine(
-                        "Error: couldn't write file {0}.", pngOutputValue);
+                        $"Error: couldn't write file {pngOutputValue}. May be: wrong path, non existent directory, invalid format.");
                 }
             },
             luminosityFactor, gammaFactor, pfmInput, pngOutput);
