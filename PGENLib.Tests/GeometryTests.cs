@@ -47,7 +47,7 @@ namespace PGENLib.Tests
             Assert.True(Vec.are_close(new Vec(5.0f, 8.0f, 11.0f), a + b));
             Assert.True(Vec.are_close(new Vec(3.0f, 4.0f, 5.0f), b - a));
             Assert.True(Vec.are_close(new Vec(2.0f, 4.0f, 6.0f), a * 2));
-            Assert.True(Vec.are_close(new Vec(-1.0f, -2.0f, -3.0f), a.Neg()));
+            Assert.True(Vec.are_close(new Vec(-1.0f, -2.0f, -3.0f), -a));
             Assert.True(Vec.are_close(new Vec(-1.0f, -2.0f, -3.0f), -a));
             Assert.True(Vec.are_close(new Vec(-2.0f, 4.0f, -2.0f), Vec.CrossProduct(a,b)));
             Assert.True(Vec.are_close(new Vec(2.0f, -4.0f, 2.0f), Vec.CrossProduct(b,a)));
@@ -255,7 +255,7 @@ namespace PGENLib.Tests
                 Normal normal = new Normal();
                 normal = v.VecToNorm();
                 
-                Tuple T = new Tuple();
+                MyTuple T = new MyTuple();
                 T = Vec.CreateOnbFromZ(normal);
                 Assert.True(Vec.are_close(T.e3,normal.ToVec()));
                 Assert.True((float) Vec.DotProd(T.e1, T.e2)< 1E-5f);

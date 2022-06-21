@@ -53,6 +53,7 @@ namespace PGENLib
         public float Tmin;
         public float Tmax;
         public int Depth; 
+        
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -70,11 +71,11 @@ namespace PGENLib
         /// </summary>
         public Ray(Point origin, Vec dir)
         {
-            this.Origin = origin;
-            this.Dir = dir;
-            this.Tmin = 1e-5f;
-            this.Tmax = float.PositiveInfinity;
-            this.Depth = 0;
+            Origin = origin;
+            Dir = dir;
+            Tmin = 1e-5f;
+            Tmax = float.PositiveInfinity;
+            Depth = 0;
         }
         
         /// <summary>
@@ -88,16 +89,7 @@ namespace PGENLib
             Tmax = tmax;
             Depth = depth;
         }
-
-        public Point get_Origin()
-        {
-            return Origin;
-        }
-
-        public Vec get_Dir()
-        {
-            return Dir;
-        }
+        
         /// <summary>
         /// Check if two rays are similar enough to be considered equal.
         /// </summary>
@@ -110,15 +102,12 @@ namespace PGENLib
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public Point At(float t)
         {
-            return this.Origin + this.Dir * t;
+            return Origin + Dir * t;
         }
 
         /// <summary>
@@ -128,13 +117,7 @@ namespace PGENLib
         /// <returns></returns>
         public Ray Transform(Transformation tr)
         {
-            var newRay = new Ray(tr*Origin, tr*Dir)
-            {
-                Tmax = this.Tmax,
-                Tmin = this.Tmin,
-                Depth = this.Depth
-            };
-            return newRay; 
+            return new Ray(tr * Origin, tr * Dir, Tmin, Tmax, Depth);
         }
         
     }
@@ -153,12 +136,12 @@ namespace PGENLib
         Transformation GetTransf();
         void SetTransf(Transformation tr);
     }
-   /// <summary>
-   /// This struct implements an observer seeing the world through an orthogonal projection.
-   /// </summary>
+    
+    /// <summary>
+    /// This struct implements an observer seeing the world through an orthogonal projection.
+    /// </summary>
     public struct OrthogonalCamera : ICamera
     {
-
         
         /// <summary>
         /// The parameter `aspect_ratio` defines how larger than the height is the image. For fullscreen
@@ -172,6 +155,7 @@ namespace PGENLib
         {
             return Transf;
         }
+        
         public void SetTransf(Transformation tr)
         {
             Transf = tr;
@@ -190,9 +174,6 @@ namespace PGENLib
             Transf = tr;
         }
         
-
-        
-
        
         /// <summary>
         /// Shoot a ray through the camera's screen
