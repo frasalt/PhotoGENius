@@ -300,6 +300,7 @@ class Program
                 {
                     Console.WriteLine(
                         $"Error: couldn't write file {pfmOutputValue}");
+                    return;
                 }
                     
                 // 6. Convert to LDR
@@ -314,16 +315,20 @@ class Program
                     {
                         image.WriteLdrImage(outputValue, formatValue, gammaFactorValue);
                     }
-                    
+
                     Console.WriteLine($"    File {outputValue} has been written to disk.");
-                    
+
+                }
+                catch (InvalidFormatException err)
+                {
+                    Console.WriteLine(err.Message);
                 }
                 catch
                 {
                     Console.WriteLine(
                         $"Error: couldn't write file {outputValue}. May be: wrong path, non existent directory, invalid format.");
                 }
-                    
+
             },
             width, height, angleDeg, pfmOutput, output, cameraType, algorithm, raysNum, maxDepth, 
             initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel, format);
@@ -387,6 +392,7 @@ class Program
                 catch 
                 {
                     Console.WriteLine($"Error: could not open {scenefileValue}. \n Try checking your filepath. \n");
+                    return;
                 }
                 
                 // Camera rotation
@@ -459,6 +465,7 @@ class Program
                 {
                     Console.WriteLine(
                         $"Error: couldn't write file {pfmOutputValue}");
+                    return;
                 }
                 
                 // 4. Convert to LDR
@@ -476,6 +483,10 @@ class Program
                     
                     Console.WriteLine($"    File {outputValue} has been written to disk.");
                     
+                }
+                catch (InvalidFormatException err)
+                {
+                    Console.WriteLine(err.Message);
                 }
                 catch
                 {
@@ -519,9 +530,19 @@ class Program
                 
                 Console.WriteLine($"Reading {pfmInputValue} ...");
 
-                using (var inpf = new FileStream(pfmInputValue, FileMode.Open, FileAccess.Read))
-                { img = img.ReadPFMFile(inpf); }
-    
+                try
+                {
+                    using (var inpf = new FileStream(pfmInputValue, FileMode.Open, FileAccess.Read))
+                    {
+                        img = img.ReadPFMFile(inpf);
+                    }
+                }
+                catch (InvalidPfmFileFormat err)
+                {
+                    Console.WriteLine(err.Message);
+                    return;
+                }
+
                 Console.WriteLine($"    File {pfmInputValue} has been read from disk.");
     
                 // 2. Convert to LDR
@@ -543,6 +564,10 @@ class Program
                     }
     
                     Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
+                }
+                catch (InvalidFormatException err)
+                {
+                    Console.WriteLine(err.Message);
                 }
                 catch
                 {

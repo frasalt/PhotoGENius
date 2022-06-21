@@ -158,9 +158,9 @@ namespace PGENLib.Tests
                     for (int col = 0; col < _image.Width; col++)
                     {
                         mypixel = _image.GetPixel(col, row);
-                        Assert.True(Math.Abs(mypixel.GetR() - mycolor.GetR()) < 1E-5);
-                        Assert.True(Math.Abs(mypixel.GetG() - mycolor.GetG()) < 1E-5);
-                        Assert.True(Math.Abs(mypixel.GetB() - mycolor.GetB()) < 1E-5);
+                        Assert.True(Math.Abs(mypixel.r - mycolor.r) < 1E-5);
+                        Assert.True(Math.Abs(mypixel.g - mycolor.g) < 1E-5);
+                        Assert.True(Math.Abs(mypixel.b - mycolor.b) < 1E-5);
                     }
                 }
             }

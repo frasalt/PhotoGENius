@@ -94,13 +94,10 @@ namespace PGENLib
         /// <returns>Vec</returns>
         public static Vec operator +(Vec v, Vec w)
         {
-            var t = new Vec
-            {
-                x = v.x + w.x,
-                y = v.y + w.y,
-                z = v.z + w.z
-            };
-            return t;
+            v.x += w.x;
+            v.y += w.y;
+            v.z += w.z;
+            return v;
         }
 
         /// <summary>
@@ -111,13 +108,10 @@ namespace PGENLib
         /// <returns>Vec</returns>
         public static Vec operator -(Vec v, Vec w)
         {
-            var t = new Vec
-            {
-                x = v.x - w.x,
-                y = v.y - w.y,
-                z = v.z - w.z
-            };
-            return t;
+            v.x -= w.x;
+            v.y -= w.y;
+            v.z -= w.z;
+            return v;
         }
 
         /// <summary>
@@ -128,13 +122,7 @@ namespace PGENLib
         /// <returns>Vec</returns>
         public static Vec operator *(Vec v, float s)
         {
-            var t = new Vec
-            {
-                x = v.x * s,
-                y = v.y * s,
-                z = v.z * s
-            };
-            return t;
+            return new Vec(v.x * s, v.y * s, v.z * s);
         }
         
         /// <summary>
@@ -145,25 +133,10 @@ namespace PGENLib
         /// <returns>Vec</returns>
         public static Vec operator /(Vec v, float s)
         {
-            var t = new Vec
-            {
-                x = v.x / s,
-                y = v.y / s,
-                z = v.z / s
-            };
-            return t;
+
+            return new Vec(v.x / s, v.y / s, v.z / s);
         }
-        
-        /// <summary>
-        /// Return the reversed vector.
-        /// </summary>
-        /// <returns>Vec</returns>
-        public Vec Neg()
-        {
-            float s = -1;
-            return this*s;
-        }
-        
+
         /// <summary>
         /// Return the reversed vector.
         /// </summary>
@@ -194,13 +167,7 @@ namespace PGENLib
         /// <returns>Vec</returns>
         public static Vec CrossProduct(Vec v, Vec w)
         {
-            var t = new Vec
-            {
-                x = v.y*w.z - v.z*w.y,
-                y = v.z*w.x - v.x*w.z,
-                z = v.x*w.y - v.y*w.x
-            };
-            return t;
+            return new Vec(v.y * w.z - v.z * w.y, v.z * w.x - v.x * w.z, v.x * w.y - v.y * w.x);
         }
         
         /// <summary>
@@ -229,14 +196,7 @@ namespace PGENLib
         /// <returns>Vec</returns>
         public Vec NormalizeVec()
         {
-            var t = new Vec
-            {
-                x = this.x/Norm(this),
-                y = this.y/Norm(this),
-                z = this.z/Norm(this)
-            };
-            return t;
-            
+            return new Vec(x/Norm(this),y/Norm(this),z/Norm(this));
         }
         
         /// <summary>
@@ -245,13 +205,7 @@ namespace PGENLib
         /// <returns>Normal</returns>
         public Normal VecToNorm()
         {
-            var t = new Normal
-            {
-                x = this.x,
-                y = this.y,
-                z = this.z
-            };
-            return t;
+            return new Normal(x, y, z);
         }
         
         /// <summary>
@@ -259,7 +213,7 @@ namespace PGENLib
         /// </summary>
         /// <param name="e3"> normalized Normal, on the z axis</param>
         /// <returns> Tuple containing the three vectors of the basis, such that e3 = normal</returns>
-        public static Tuple CreateOnbFromZ(Normal e3)
+        public static MyTuple CreateOnbFromZ(Normal e3)
         {
             float sign;
             if (e3.z > 0.0)
@@ -273,7 +227,7 @@ namespace PGENLib
             Vec e1 = new Vec( 1.0f + sign * e3.x * e3.x * a,sign * b,-sign * e3.x);
             Vec e2 = new Vec(b, sign + e3.y * e3.y * a, -e3.y);
             Vec vecN = new Vec(e3.x, e3.y, e3.z);
-            Tuple T = new Tuple(e1, e2, vecN);
+            MyTuple T = new MyTuple(e1, e2, vecN);
             
             return T;
         }
@@ -292,37 +246,7 @@ namespace PGENLib
             float r = DotProd(v1Vec, v2Vec);
             return r;
         }
-        
-        /// <summary>
-        /// Normalize two vectors or normals and evaluate the dot product.
-        /// The result is the cosine of the angle between the two vectors/normals.
-        /// </summary>
-        /// <param name="v1">Normal</param>
-        /// <param name="v2">Normal</param>
-        /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
-        public static float NormalizeDot(Normal v1, Normal v2)
-        {
-            var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
-            var v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
-            float r = DotProd(v1Vec, v2Vec);
-            return r;
-        }
-        
-        /// <summary>
-        /// Normalize two vectors or normals and evaluate the dot product.
-        /// The result is the cosine of the angle between the two vectors/normals.
-        /// </summary>
-        /// <param name="v1">Normal</param>
-        /// <param name="v2">Vec</param>
-        /// <returns> a float representing the cosine of the angle between the two vecors/normals.</returns>
-        public static float NormalizeDot(Normal v1, Vec v2)
-        {
-            var v1Vec = new Vec(v1.x, v1.y, v1.z).NormalizeVec();
-            var v2Vec = new Vec(v2.x, v2.y, v2.z).NormalizeVec();
-            float r = DotProd(v1Vec, v2Vec);
-            return r;
-        }
-        
+
         /// <summary>
         /// Normalize two vectors or normals and evaluate the dot product.
         /// The result is the cosine of the angle between the two vectors/normals.
@@ -344,7 +268,7 @@ namespace PGENLib
     //==========================================================================================================
     
     
-    public struct Tuple
+    public struct MyTuple
     {
         public Vec e1;
         public Vec e2;
@@ -353,7 +277,7 @@ namespace PGENLib
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public Tuple()
+        public MyTuple()
         {
             e1.x = 0;
             e2.x = 0;
@@ -369,10 +293,10 @@ namespace PGENLib
         /// <summary>
         /// Constructor with float parameters.
         /// </summary>
-        /// <param name="e1">Vec</param>
-        /// <param name="e2">Vec</param>
-        /// <param name="e3">Vec</param>
-        public Tuple(Vec e1, Vec e2, Vec e3)
+        /// <param name="e1"></param>
+        /// <param name="e2"></param>
+        /// <param name="e3"></param>
+        public MyTuple(Vec e1, Vec e2, Vec e3)
         {
             this.e1 = e1;
             this.e2 = e2;
@@ -440,10 +364,7 @@ namespace PGENLib
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         
         /// <summary>
@@ -614,10 +535,8 @@ namespace PGENLib
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
+            
         }
         
         /// <summary>
@@ -751,24 +670,8 @@ namespace PGENLib
             bool consistency = Matrix4x4.Invert(m, out invm);
             
         }
-        
-        public Transformation(float a, float b, float c, float d,
-                              float e, float f, float g, float h, 
-                              float i, float l, float s, float n,
-                              float o, float p, float q, float r)
-        {
-            m = new Matrix4x4(a,b,c,d, 
-                              e,f,g,h,
-                              i,l,s,n,
-                              o,p,q,r);
-            bool consistency = Matrix4x4.Invert(m, out invm);
-        }
-        
-        /// <summary>
-        /// Constructor with parameters
-        /// </summary>
-        /// <param name="a">Matrix4x4</param>
-        /// <param name="inva">Matrix4x4</param>
+
+
         public Transformation(Matrix4x4 a, Matrix4x4 inva)
         {
             m = a;
@@ -805,11 +708,7 @@ namespace PGENLib
             {
                 return true; 
             }
-            else
-            {
-                return false;
-            }
-                                                          
+            return false;
         }
         
         /// <summary>
@@ -824,11 +723,7 @@ namespace PGENLib
             {
                 return true; 
             }
-            else
-            {
-                return false;
-            }
-                                                          
+            return false;
         }
         
         /// <summary>
@@ -846,8 +741,7 @@ namespace PGENLib
         /// <returns>Transformation</returns>
         public Transformation Inverse()
         {
-            Transformation tr = new Transformation(this.invm, this.m);
-            return tr;
+            return new Transformation(this.invm, this.m);
         }
 
         /// <summary>
@@ -858,8 +752,7 @@ namespace PGENLib
         /// <returns>Transformation</returns>
         public static Transformation operator *(Transformation a, Transformation b)
         {
-            Transformation tr = new Transformation(a.m*b.m, b.invm*a.invm);
-            return tr;
+            return new Transformation(a.m*b.m, b.invm*a.invm);
         }
         
         /// <summary>
@@ -878,10 +771,7 @@ namespace PGENLib
             {
                 return q;
             }
-            else
-            {
-                return q/w;
-            }
+            return q/w;
         }
         
         /// <summary>
@@ -892,10 +782,9 @@ namespace PGENLib
         /// <returns>a Vec</returns>
         public static Vec operator *(Transformation a, Vec v)
         {
-            Vec q = new Vec(v.x*a.m.M11 + v.y*a.m.M12 + v.z*a.m.M13, 
+            return new Vec(v.x*a.m.M11 + v.y*a.m.M12 + v.z*a.m.M13, 
                             v.x*a.m.M21 + v.y*a.m.M22 + v.z*a.m.M23, 
                             v.x*a.m.M31 + v.y*a.m.M32 + v.z*a.m.M33);
-            return q;
         }
         
         /// <summary>
@@ -906,10 +795,9 @@ namespace PGENLib
         /// <returns>Normal</returns>
         public static Normal operator *(Transformation a, Normal n)
         {
-            Normal q = new Normal(n.x*a.invm.M11 + n.y*a.invm.M21 + n.z*a.invm.M31, 
+            return new Normal(n.x*a.invm.M11 + n.y*a.invm.M21 + n.z*a.invm.M31, 
                                   n.x*a.invm.M12 + n.y*a.invm.M22 + n.z*a.invm.M32, 
                                   n.x*a.invm.M13 + n.y*a.invm.M23 + n.z*a.invm.M33);
-            return q;
         }
         
         /// <summary>
@@ -1026,18 +914,8 @@ namespace PGENLib
     /// </summary>
     public struct Vec2d
     {
-        internal float u;
-        internal float v;
-
-        /// <summary>
-        /// Empty constructor.
-        /// </summary>
-        public Vec2d()
-        {
-            u = 0;
-            v = 0;
-
-        }
+        public float u;
+        public float v;
 
         /// <summary>
         /// Constructor with float parameters.
@@ -1066,10 +944,7 @@ namespace PGENLib
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

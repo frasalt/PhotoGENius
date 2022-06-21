@@ -159,7 +159,7 @@ namespace PGENLib
         public int MaxDepth; 
         public int RussianRouletteLimit;
         
-        public PathTracer(World world, PCG pcg, int numbOfRays = 10, int maxDepth = 2, int russianRouletteLimit = 3,
+        public PathTracer(World world, PCG pcg, int numbOfRays = 10, int maxDepth = 4, int russianRouletteLimit = 3,
             Color backgroundColor = default) : base(world, backgroundColor)
         {
             Pcg = pcg;
@@ -273,15 +273,17 @@ namespace PGENLib
             
             var hitMaterial = hitRecord.Value.Material;
             var resultColor = AmbientColor;
+
             //Check the contribution of each light 
-            foreach (var curLight in World.PointLights)
+            foreach (var curLight in World.PointLights)// curLight = current light source
             {
                 if (World.IsPointVisible(curLight.Position, hitRecord.Value.WorldPoint))
                 {
                     var distanceVec = hitRecord.Value.WorldPoint - curLight.Position;
                     var distance = Vec.Norm(distanceVec);
                     var inDir = distanceVec * (1.0f / distance);
-                    var cosTheta = Math.Max(0.0f, Vec.NormalizeDot(-ray.Dir, hitRecord.Value.Normal));
+                    var cosTheta = Math.Max(0.0f, Vec.NormalizeDot(-inDir, hitRecord.Value.Normal));
+                    
                     float distanceFactor;
                     //Compute distance factor
                     if (curLight.LinearRadius > 0.0f)

@@ -304,9 +304,9 @@ namespace PGENLib
                 for (int x = 0; x < Width; x++)
                 {
                     Color color = GetPixel(x, y);
-                    WriteFloat(output, color.GetR(), endian);
-                    WriteFloat(output, color.GetG(), endian);
-                    WriteFloat(output, color.GetB(), endian);
+                    WriteFloat(output, color.r, endian);
+                    WriteFloat(output, color.g, endian);
+                    WriteFloat(output, color.b, endian);
                 }
             }
         }
@@ -388,9 +388,9 @@ namespace PGENLib
         {
             for (int i = 0; i < Pixels.Length; i++)
             {
-                Pixels[i].SetR(ClampFloat(Pixels[i].GetR()));
-                Pixels[i].SetG(ClampFloat(Pixels[i].GetG()));
-                Pixels[i].SetB(ClampFloat(Pixels[i].GetB()));
+                Pixels[i].r = ClampFloat(Pixels[i].r);
+                Pixels[i].g = ClampFloat(Pixels[i].g);
+                Pixels[i].b = ClampFloat(Pixels[i].b);
             }
         }
         

@@ -307,49 +307,6 @@ namespace PGENLib
         public float Zmin;
         public float Zmax;
         public float Phimax;
-        
-        
-        /// <summary>
-        /// Constructor without any parameter.
-        /// </summary>
-        public Cylinder(float zmin = 0.0f, float zmax = 2.0f, float r=1.0f)
-        {
-            Phimax = (float) (2*Math.PI);
-            Zmin = zmin;
-            Zmax = zmax;
-            Transf = new Transformation();
-            Material = new Material();
-        }
-        
-        /// <summary>
-        /// Constructor with parameters.
-        /// </summary>
-        public Cylinder(Material material, float zmin = 0.0f, float zmax = 2.0f, float r=1.0f)
-        {
-            Phimax = (float) (2*Math.PI);
-            Zmin = zmin;
-            Zmax = zmax;
-            Transf = new Transformation();
-            Material = material;
-        }
-        
-        /// <summary>
-        /// Constructor with parameters. 
-        /// </summary>
-        /// <param name="transf"></param>
-        /// <param name="material"></param>
-        /// <param name="zmin"></param>
-        /// <param name="zmax"></param>
-        /// <param name="r"></param>
-        public Cylinder(Transformation transf, Material material, float zmin = 0f, float zmax = 2f, float r = 1.0f)
-        {
-            Zmin = zmin;
-            Zmax = zmax;
-            Phimax = (float) (2*Math.PI);
-            R = r;
-            Transf = transf;
-            Material = material;
-        }
 
         /// <summary>
         /// Constructor with parameters. 

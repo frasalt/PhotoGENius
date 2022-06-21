@@ -277,10 +277,7 @@ namespace PGENLib
     public class SpecularBRDF : BRDF
     {
         public double TresholdAngleRad;
-        public SpecularBRDF(double tresholdAngleRad = Math.PI/1800.0)
-        {
-            TresholdAngleRad = tresholdAngleRad;
-        } 
+        
             
         public SpecularBRDF(Pigment pigment, double tresholdAngleRad = Math.PI/1800.0) : base(pigment)
         {

@@ -53,6 +53,7 @@ namespace PGENLib
         public float Tmin;
         public float Tmax;
         public int Depth; 
+        
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -70,11 +71,11 @@ namespace PGENLib
         /// </summary>
         public Ray(Point origin, Vec dir)
         {
-            this.Origin = origin;
-            this.Dir = dir;
-            this.Tmin = 1e-5f;
-            this.Tmax = float.PositiveInfinity;
-            this.Depth = 0;
+            Origin = origin;
+            Dir = dir;
+            Tmin = 1e-5f;
+            Tmax = float.PositiveInfinity;
+            Depth = 0;
         }
         
         /// <summary>
@@ -88,16 +89,7 @@ namespace PGENLib
             Tmax = tmax;
             Depth = depth;
         }
-
-        public Point get_Origin()
-        {
-            return Origin;
-        }
-
-        public Vec get_Dir()
-        {
-            return Dir;
-        }
+        
         /// <summary>
         /// Check if two rays are similar enough to be considered equal.
         /// </summary>
@@ -110,10 +102,7 @@ namespace PGENLib
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         /// <summary>
@@ -123,7 +112,7 @@ namespace PGENLib
         /// <returns>Point</returns>
         public Point At(float t)
         {
-            return this.Origin + this.Dir * t;
+            return Origin + Dir * t;
         }
 
         /// <summary>
@@ -133,13 +122,7 @@ namespace PGENLib
         /// <returns>Ray</returns>
         public Ray Transform(Transformation tr)
         {
-            var newRay = new Ray(tr*Origin, tr*Dir)
-            {
-                Tmax = this.Tmax,
-                Tmin = this.Tmin,
-                Depth = this.Depth
-            };
-            return newRay; 
+            return new Ray(tr * Origin, tr * Dir, Tmin, Tmax, Depth);
         }
         
     }
@@ -158,9 +141,10 @@ namespace PGENLib
         Transformation GetTransf();
         void SetTransf(Transformation tr);
     }
-   /// <summary>
-   /// This struct implements an observer seeing the world through an orthogonal projection.
-   /// </summary>
+    
+    /// <summary>
+    /// This struct implements an observer seeing the world through an orthogonal projection.
+    /// </summary>
     public struct OrthogonalCamera : ICamera
     {
         
@@ -180,10 +164,7 @@ namespace PGENLib
         {
             return Transf;
         }
-        /// <summary>
-        /// Set Transformation member. It's necessary because the interface ICamera does not have this member.
-        /// </summary>
-        /// <returns></returns>
+
         public void SetTransf(Transformation tr)
         {
             Transf = tr;
@@ -210,6 +191,7 @@ namespace PGENLib
             Transf = tr;
         }
         
+
         /// <summary>
         /// Shoot a ray through the camera's screen
         /// </summary>
@@ -271,19 +253,7 @@ namespace PGENLib
         {
             Transf = tr;
         }
-
         
-        public PerspectiveCamera()
-        {
-            ScreenDistance = 1.0f;
-            AspectRatio = 1.0f;
-            Transf = new Transformation();
-        }
-        
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="aspectRatio">float</param>
         public PerspectiveCamera(float aspectRatio) 
         {
             ScreenDistance = 1.0f;
@@ -373,22 +343,6 @@ namespace PGENLib
         public PCG Pcg;
         public int SamplePerSide;
         
-        /// <summary>
-        /// Constructor with parameters. If SamplePerSide is usefull to implement the antialiasing: if it's not zero,
-        /// stratified sampling will be applied to each pixel in the image, using the random number generator `pcg`. 
-        /// </summary>
-        /// <param name="image"></param>
-        /// <param name="camera"></param>
-        /// <param name="pcg"></param>
-        /// <param name="samplePerSide"></param>
-        public ImageTracer(HdrImage image, ICamera camera, PCG pcg, int samplePerSide = 1)
-        {
-            Image = image;
-            Camera = camera;
-            Pcg = pcg;
-            SamplePerSide = samplePerSide;
-            
-        }
         
         /// <summary>
         /// Constructor with parameters. If SamplePerSide is usefull to implement the antialiasing: if it's not zero,
@@ -431,13 +385,17 @@ namespace PGENLib
         /// <param name="func"></param>
         public void FireAllRays (Func<Ray,Color> func)
         {
+            // cycle over rows
             for(int row = 0; row< Image.Height; row ++)
             {
                 if(row%20 == 0) Console.WriteLine($"        Fill row {row}/{Image.Height}");
+                
+                // cycle over columns
                 for(int col = 0; col< Image.Width; col ++)
                 {
                     var cumColor = new Color(); //Black
                     
+                    // antialiasing
                     if (SamplePerSide > 0)
                     {
                         // Run stratified sampling over the pixel's surface.
