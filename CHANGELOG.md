@@ -2,7 +2,7 @@
 ## Version 2.0.1
 
 ### 21-06-2022
-- Documentation improved [#44](https://github.com/frasalt/PhotoGENius/pull/44)
+- Documentation improved [#44](https://github.com/frasalt/PhotoGENius/pull/44).
 – [Bug](https://github.com/frasalt/PhotoGENius/pull/43/commits/e0aeb3f513ea07ee5ba61d2aef0d4bf6802e1440) fixed in Pointlight Render 
 
 ## Version 2.0.0
