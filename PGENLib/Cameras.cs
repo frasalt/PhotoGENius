@@ -93,9 +93,9 @@ namespace PGENLib
         /// <summary>
         /// Check if two rays are similar enough to be considered equal.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a">Ray</param>
+        /// <param name="b">Ray</param>
+        /// <returns>bool</returns>
         public static bool are_close(Ray a, Ray b)
         {
             if (Point.are_close(a.Origin, b.Origin) & Vec.are_close(a.Dir, b.Dir))
@@ -105,6 +105,11 @@ namespace PGENLib
             return false;
         }
 
+        /// <summary>
+        /// Evaluate the Point x, reached by the ray at some distance from the origin.  
+        /// </summary>
+        /// <param name="t">distance of Point x from the origin measured in units of the length of `Vec.dir`. </param>
+        /// <returns>Point</returns>
         public Point At(float t)
         {
             return Origin + Dir * t;
@@ -113,8 +118,8 @@ namespace PGENLib
         /// <summary>
         /// This method returns a new ray whose origin and direction are the transformation of the original ray.
         /// </summary>
-        /// <param name="tr"></param>
-        /// <returns></returns>
+        /// <param name="tr">Transformation</param>
+        /// <returns>Ray</returns>
         public Ray Transform(Transformation tr)
         {
             return new Ray(tr * Origin, tr * Dir, Tmin, Tmax, Depth);
@@ -151,30 +156,42 @@ namespace PGENLib
         public float AspectRatio;
         public Transformation Transf;
 
+        /// <summary>
+        /// Return Transformation member. It's necessary because the interface ICamera does not have this member.
+        /// </summary>
+        /// <returns>Transformation</returns>
         public Transformation GetTransf()
         {
             return Transf;
         }
-        
+
         public void SetTransf(Transformation tr)
         {
             Transf = tr;
         }
 
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="aspectRatio"></param>
         public OrthogonalCamera(float aspectRatio = 1.0f)
         {
             AspectRatio = aspectRatio;
             Transf = new Transformation();
         }
         
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="aspectRatio">float</param>
+        /// <param name="tr">Transformation</param>
         public OrthogonalCamera(float aspectRatio, Transformation tr)
         {
             AspectRatio = aspectRatio;
             Transf = tr;
         }
         
-       
+
         /// <summary>
         /// Shoot a ray through the camera's screen
         /// </summary>
@@ -219,15 +236,23 @@ namespace PGENLib
         public float AspectRatio;
         public Transformation Transf;
         
+        /// <summary>
+        /// Return Transformation member. It's necessary because the interface ICamera does not have this member.
+        /// </summary>
+        /// <returns>Transformation</returns>
         public Transformation GetTransf()
         {
             return Transf;
         }
+        
+        /// <summary>
+        /// Set Transformation member. It's necessary because the interface ICamera does not have this member.
+        /// </summary>
+        /// <returns>Transformation</returns>
         public void SetTransf(Transformation tr)
         {
             Transf = tr;
         }
-
         
         public PerspectiveCamera(float aspectRatio) 
         {
@@ -235,12 +260,25 @@ namespace PGENLib
             AspectRatio = aspectRatio;
             Transf = new Transformation();
         }
+        
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="distance">float</param>
+        /// <param name="aspectRatio">float</param>
         public PerspectiveCamera(float distance, float aspectRatio)
         {
             ScreenDistance = distance;
             AspectRatio = aspectRatio;
             Transf = new Transformation();
         }
+        
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="distance">float</param>
+        /// <param name="aspectRatio">float</param>
+        /// <param name="tr">Transformation</param>
         public PerspectiveCamera(float distance, float aspectRatio, Transformation tr)
         {
             ScreenDistance = distance;
@@ -310,9 +348,9 @@ namespace PGENLib
         /// Constructor with parameters. If SamplePerSide is usefull to implement the antialiasing: if it's not zero,
         /// stratified sampling will be applied to each pixel in the image, using the random number generator `pcg`. 
         /// </summary>
-        /// <param name="image"></param>
-        /// <param name="camera"></param>
-        /// <param name="samplePerSide"></param>
+        /// <param name="image">HdrImage</param>
+        /// <param name="camera">ICamera</param>
+        /// <param name="samplePerSide">int</param>
         public ImageTracer(HdrImage image, ICamera camera, int samplePerSide = 1)
         {
             Image = image;

@@ -18,8 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace PGENLib
 {
-    // RGB Color
-    // The class has three floating-point members: 'r' = red, `g`= green, and `b`= blue.
+    
+    /// <summary>
+    /// RGB Color:The class has three floating-point members: 'r' = red, `g`= green, and `b`= blue.
+    /// </summary>
     public struct Color
     {
         public float r;
@@ -59,9 +61,9 @@ namespace PGENLib
         /// <summary>
         /// Returns the color sum (on the various components).
         /// </summary>
-        /// <param name="col1"></param>
-        /// <param name="col2"></param>
-        /// <returns>The color sum</returns>
+        /// <param name="col1">Color</param>
+        /// <param name="col2">Color</param>
+        /// <returns>Color</returns>
         public static Color operator +(Color col1, Color col2)
         {
             col1.r += col2.r;
@@ -75,7 +77,7 @@ namespace PGENLib
         /// </summary>
         /// <param name="col1"></param>
         /// <param name="col2"></param>
-        /// <returns>The color difference</returns>
+        /// <returns>Color</returns>
         public static Color operator -(Color col1, Color col2)
         {
             col1.r -= col2.r;
@@ -89,7 +91,7 @@ namespace PGENLib
         /// </summary>
         /// <param name="col1"></param>
         /// <param name="s"></param>
-        /// <returns></returns>
+        /// <returns>Color</returns>
         public static Color operator *(Color col1, float s)
         {
             col1.r *= s;
@@ -103,7 +105,7 @@ namespace PGENLib
         /// </summary>
         /// <param name="col1"></param>
         /// <param name="col2"></param>
-        /// <returns></returns>
+        /// <returns>Color</returns>
         public static Color operator *(Color col1, Color col2)
         {
             col1.r *= col2.r;
@@ -115,6 +117,9 @@ namespace PGENLib
         /// <summary>
         /// Check if two colors are similar enough to be considered equal.
         /// </summary>
+        /// <param name="p"></param>
+        /// <param name="q"></param>
+        /// <returns>True or False</returns>
         public static bool are_close(Color p, Color q)
         {
             double epsilon = 1E-5;
@@ -128,17 +133,25 @@ namespace PGENLib
         /// <summary>
         /// Calculate the luminosity of a color (Shirley and Morley formula).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>float</returns>
         public float Lum()
         {
             return (Math.Max((Math.Max(r, b)), g) + Math.Min((Math.Min(r, b)),g))/2f;
         }
 
+        /// <summary>
+        /// Returns Black Color
+        /// </summary>
+        /// <returns>Color</returns>
         public static Color Black()
         {
             return new Color();
         }
 
+        /// <summary>
+        /// Returns white Color.
+        /// </summary>
+        /// <returns>Color</returns>
         public static Color White()
         {
             return new Color(1.0f, 1.0f, 1.0f);

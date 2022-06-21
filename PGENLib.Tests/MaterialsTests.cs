@@ -141,16 +141,20 @@ namespace PGENLib.Tests{
             var pcg = new PCG();
             for (int i = 0; i < 5; i++)
             {
-                var world = new World();
                 var emittedRadiance = pcg.RandomFloat();
                 var reflectance = pcg.RandomFloat();
+                
                 var brdf = new DiffuseBRDF(new UniformPigment(Color.White() * reflectance));
                 var enclosureMaterial = new Material(new UniformPigment(Color.White() * emittedRadiance), brdf);
+                
+                var world = new World();
                 world.AddShape(new Sphere(enclosureMaterial));
+                
                 var pathTracer = new PathTracer(world, pcg, 1, 100, 101);
                 var ray = new Ray(new Point(0, 0, 0), new Vec(1, 0, 0));
+               
                 var color = pathTracer.Call(ray);
-                var expected = (float) emittedRadiance / (1.0 - reflectance);
+                var expected = (float) emittedRadiance / (1.0 - reflectance); //result of the geometric series
                 Assert.True(Math.Abs(color.r - expected) < 1E-03);
                 Assert.True(Math.Abs(color.g - expected) < 1E-03);
                 Assert.True(Math.Abs(color.b - expected) < 1E-03);

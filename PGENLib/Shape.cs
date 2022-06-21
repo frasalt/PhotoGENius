@@ -58,23 +58,40 @@ namespace PGENLib
     /// </summary>
     public class Sphere : Shape
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Sphere()
         {
             Transf = new Transformation();
             Material = new Material();
         }
+        
+        /// <summary>
+        /// Constructor with parameters.
+        /// </summary>
+        /// <param name="transf">Transformation</param>
+        /// <param name="material">Material</param>
         public Sphere(Transformation transf, Material material)
         {
             Transf = transf;
             Material = material;
         }
         
+        /// <summary>
+        /// Constructor with parameters.
+        /// </summary>
+        /// <param name="material">Material</param>
         public Sphere(Material material)
         {
             Transf = new Transformation();
             Material = material;
         }
 
+        /// <summary>
+        /// Constructor with parameter.
+        /// </summary>
+        /// <param name="transformation">Transformation</param>
         public Sphere(Transformation transformation)
         {
             Transf = transformation;
@@ -85,7 +102,7 @@ namespace PGENLib
         /// <summary>
         /// Compute the intersection between a ray and the shape.
         /// </summary>
-        /// <param name="ray"></param>
+        /// <param name="ray">Ray</param>
         /// <returns>Returns a HitRecord, or Null if the ray doesn't hit the sphere.</returns>
         public override HitRecord? RayIntersection(Ray ray)
         {
@@ -101,24 +118,25 @@ namespace PGENLib
             {
                 return null;
             }
+            //evaluate two equation solutions
             var sqrtDelta = (float) Math.Sqrt(delta);
-            var tmin = (-b - sqrtDelta) / (2.0f * a);
-            var tmax = (-b + sqrtDelta) / (2.0f * a);
+            var t1 = (-b - sqrtDelta) / (2.0f * a);
+            var t2 = (-b + sqrtDelta) / (2.0f * a);
             //Choose the correct solution
             float tFirstHit;
-            if (tmin > invRay.Tmin & tmin < invRay.Tmax)
+            if (t1 > invRay.Tmin & t1 < invRay.Tmax)
             {
-                tFirstHit = tmin;
+                tFirstHit = t1;
             }
-            else if (tmax > invRay.Tmin & tmax < invRay.Tmax)
+            else if (t2 > invRay.Tmin & t2 < invRay.Tmax)
             {
-                tFirstHit = tmax;
+                tFirstHit = t2;
             }
             else
             {
                 return null;
             }
-            //Calculate the hit point
+            //Calculate the hit point and return in the antitransformed space.
             var hitPoint = invRay.At(tFirstHit);
             var hit = new HitRecord(Transf*hitPoint, Transf*SphereNormal(hitPoint, ray.Dir),
                 SpherePointToUv(hitPoint), tFirstHit, ray, Material);
@@ -128,9 +146,8 @@ namespace PGENLib
         /// <summary>
         /// Determine whether a ray hits the shape or not
         /// </summary>
-        /// <param name="ray"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="ray">Ray</param>
+        /// <returns>bool</returns>
         public override bool QuickRayIntersection(Ray ray)
         {
             var invRay = ray.Transform(Transf.Inverse());
@@ -149,10 +166,10 @@ namespace PGENLib
             }
 
             var sqrtDelta = (float) Math.Sqrt(delta);
-            var tmin = (-b - sqrtDelta) / (2.0f * a);
-            var tmax = (-b + sqrtDelta) / (2.0f * a);
+            var t1 = (-b - sqrtDelta) / (2.0f * a);
+            var t2 = (-b + sqrtDelta) / (2.0f * a);
             
-            return ((tmin > invRay.Tmin && tmin < invRay.Tmax) || (tmax > invRay.Tmin && tmax < invRay.Tmax));
+            return ((t1 > invRay.Tmin && t1 < invRay.Tmax) || (t2 > invRay.Tmin && t2 < invRay.Tmax));
         }
         
         /// <summary>
@@ -180,7 +197,7 @@ namespace PGENLib
         /// <summary>
         /// Convert the 3D intersection point into a 2D point, of coordinates (u,v). 
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="point">Point</param>
         /// <returns>Vec2d</returns>
         public Vec2d SpherePointToUv(Point point)
         {
@@ -215,8 +232,8 @@ namespace PGENLib
         /// <summary>
         /// Constructor with parameters. 
         /// </summary>
-        /// <param name="transf"></param>
-        /// <param name="material"></param>
+        /// <param name="transf">Transformation</param>
+        /// <param name="material">Material</param>
         public XyPlane(Transformation transf, Material material)
         {
             Transf = transf;
@@ -227,15 +244,19 @@ namespace PGENLib
         /// Compute the intersection between a ray and the shape.
         /// Returns a HitRecord object, or Null if the ray doesn't hit the plane.
         /// </summary>
+        /// <param name="ray">Ray</param>
+        /// <returns>HitRecord?</returns>
         public override HitRecord? RayIntersection(Ray ray)
         {
             Ray invRay = ray.Transform(this.Transf.Inverse());
             var originVec = invRay.Origin.PointToVec();
-
+            
             if (Math.Abs(invRay.Dir.z) < 1E-5)
             {
+                //The vector is parallel to the plane
                 return null;
             }
+            //Compute solution
             var t = - originVec.z/invRay.Dir.z;
             if (t <= invRay.Tmin || t >= invRay.Tmax)
             {
@@ -247,7 +268,7 @@ namespace PGENLib
             {
                 planeNormal = planeNormal * -1.0f;
             } 
-            
+            //Compute the hit point 
             var surfacePoint = new Vec2d(hitPoint.x - (float)Math.Floor(hitPoint.x),  
                 hitPoint.y - (float)Math.Floor(hitPoint.y));
             var hit = new HitRecord(Transf*hitPoint, Transf*planeNormal,
@@ -290,12 +311,12 @@ namespace PGENLib
         /// <summary>
         /// Constructor with parameters. 
         /// </summary>
-        /// <param name="transf"></param>
-        /// <param name="material"></param>
-        /// <param name="zmin"></param>
-        /// <param name="zmax"></param>
-        /// <param name="phimax"></param>
-        /// <param name="r"></param>
+        /// <param name="transf">Transformation</param>
+        /// <param name="material">Material</param>
+        /// <param name="zmin">float</param>
+        /// <param name="zmax">float</param>
+        /// <param name="phimax">float</param>
+        /// <param name="r">float</param>
         public Cylinder(Transformation transf, Material material, float zmin, float zmax, float phimax, float r = 1.0f)
         {
             Zmin = zmin;
@@ -316,7 +337,6 @@ namespace PGENLib
             var originVec = invRay.Origin.PointToVec();
 
             //Calculate the coefficients for the intersection equation and solve the equation
-
             var a = invRay.Dir.x*invRay.Dir.x + invRay.Dir.y*invRay.Dir.y;
             var b = 2*(originVec.x * invRay.Dir.x + originVec.y * invRay.Dir.y);
             var c = originVec.x * originVec.x + originVec.y * originVec.y - R * R;
@@ -326,26 +346,26 @@ namespace PGENLib
             {
                 return null;
             }
-            
+            //Calculate two solutions
             var sqrtDelta = (float) Math.Sqrt(delta);
-            var tmin = (-b - sqrtDelta) / (2.0f * a);
-            var tmax = (-b + sqrtDelta) / (2.0f * a);
+            var t1 = (-b - sqrtDelta) / (2.0f * a);
+            var t2 = (-b + sqrtDelta) / (2.0f * a);
 
-            if (tmin > tmax)
+            if (t1 > t2)
             {
                 //Swap values
-                (tmin, tmax) = (tmax, tmin); 
+                (t1, t2) = (t2, t1); 
             }
             
             //Choose the correct solution
             float tFirstHit;
-            if (tmin > invRay.Tmin & tmin < invRay.Tmax)
+            if (t1 > invRay.Tmin & t1 < invRay.Tmax)
             {
-                tFirstHit = tmin;
+                tFirstHit = t1;
             }
-            else if (tmax > invRay.Tmin & tmax < invRay.Tmax)
+            else if (t2 > invRay.Tmin & t2 < invRay.Tmax)
             {
-                tFirstHit = tmax;
+                tFirstHit = t2;
             }
             else
             {
@@ -363,12 +383,12 @@ namespace PGENLib
             }
             if (hitPoint.z < Zmin || hitPoint.z > Zmax || phi > Phimax)
             {
-                if (Math.Abs(tFirstHit - tmax) < 1E-5)
+                if (Math.Abs(tFirstHit - t2) < 1E-5)
                 {
                     return null;
                 }
 
-                tFirstHit = tmax;
+                tFirstHit = t2;
                 if (tFirstHit > invRay.Tmax) return null;
 
                 hitPoint = invRay.At(tFirstHit);
@@ -383,7 +403,7 @@ namespace PGENLib
                     return null;
                 }
             }
-
+            
             var normal = new Normal(hitPoint.x, hitPoint.y, 0f);
             var hit = new HitRecord(Transf*hitPoint, Transf*normal,
                 new Vec2d(phi / Phimax, (hitPoint.z - Zmin) / (Zmax - Zmin)), tFirstHit, ray, Material);
@@ -393,8 +413,8 @@ namespace PGENLib
         /// <summary>
         /// Determine whether a ray hits the shape or not
         /// </summary>
-        /// <param name="ray"></param>
-        /// <returns></returns>
+        /// <param name="ray">Ray</param>
+        /// <returns>bool</returns>
         public override bool QuickRayIntersection(Ray ray)
         {
             Ray invRay = ray.Transform(Transf.Inverse());
@@ -410,31 +430,30 @@ namespace PGENLib
                 return false;
             }
             var sqrtDelta = (float) Math.Sqrt(delta);
-            var tmin = (-b - sqrtDelta) / (2.0f * a);
-            var tmax = (-b + sqrtDelta) / (2.0f * a);
-            if (tmin > tmax)
+            var t1 = (-b - sqrtDelta) / (2.0f * a);
+            var t2 = (-b + sqrtDelta) / (2.0f * a);
+            if (t1 > t2)
             {
                 //Swap values
-                (tmin, tmax) = (tmax, tmin); 
+                (t1, t2) = (t2, t1); 
             }
             
             //Choose the correct solution
             float tFirstHit;
             
-            if (tmin > invRay.Tmin & tmin < invRay.Tmax)
+            if (t1 > invRay.Tmin & t1 < invRay.Tmax)
             {
-                tFirstHit = tmin;
+                tFirstHit = t1;
             }
-            else if (tmax > invRay.Tmin & tmax < invRay.Tmax)
+            else if (t2 > invRay.Tmin & t2 < invRay.Tmax)
             {
-                tFirstHit = tmax;
+                tFirstHit = t2;
             }
             else
             {
                 return false;
             }
-
-        
+            
             //Evaluate the hitpoint
             var hitPoint = invRay.At(tFirstHit);
             //Compute phi
@@ -447,12 +466,12 @@ namespace PGENLib
             //Boundary conditions for z and phi
             if (hitPoint.z < Zmin || hitPoint.z > Zmax || phi > Phimax)
             {
-                if (Math.Abs(tFirstHit - tmax) < 1E-5)
+                if (Math.Abs(tFirstHit - t2) < 1E-5)
                 {
                     return false;
                 }
 
-                tFirstHit = tmax;
+                tFirstHit = t2;
                 if (tFirstHit > invRay.Tmax) return false;
 
                 hitPoint = invRay.At(tFirstHit);
