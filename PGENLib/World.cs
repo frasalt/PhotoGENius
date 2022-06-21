@@ -18,12 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace PGENLib
 {
+    /// <summary>
+    /// Class that represents a world. It is the class to which we add the shapes and lights.
+    /// </summary>
     public struct World
     { 
-        /// <summary>
-        /// Class that represents a world. It is the variable to which we add the shapes.
-        /// </summary>
-
+        
         public List<Shape> Shapes;
         public List<PointLight> PointLights;
 
@@ -66,14 +66,13 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Determine whether a ray intersects any of the objects in this world.
+        /// Determine whether a ray intersects any of the objects in this world and keep the first one.
         /// </summary>
         /// <param name="intRay"></param>
         /// <returns></returns>
         public HitRecord? RayIntersection(Ray intRay)
         {
             HitRecord? closest = null;
-            
             for (int i = 0; i < Shapes.Count; i++)
             {
                 HitRecord? intersection;
@@ -89,10 +88,11 @@ namespace PGENLib
         
         /// <summary>
         /// Checks wheater a point is visible.
+        /// This function is needed for the pointlight renderer.
         /// </summary>
-        /// <param name="point"></param>
-        /// <param name="observerPosition"></param>
-        /// <returns></returns>
+        /// <param name="point">Point</param>
+        /// <param name="observerPosition">Point</param>
+        /// <returns>bool</returns>
         public bool IsPointVisible(Point point, Point observerPosition)
         {
             var direction = point - observerPosition;
