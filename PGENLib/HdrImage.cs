@@ -128,8 +128,8 @@ namespace PGENLib
         ///  Function that reads a PFM file and writes the content to a new HDR image.
         /// </summary>
         /// <param name="input"> type `Stream`</param>
-        /// <returns>a ``HdrImage`` object containing the image. If an error occurs, raise a
-       /// ``InvalidPfmFileFormat`` exception.</returns>
+        /// <returns>a ``HdrImage`` object containing the image.</returns>
+        /// <exception cref="InvalidPfmFileFormat"> raise the exception if an error occures.</exception>
         public HdrImage ReadPFMFile(Stream input)
         {
             //Check PF, Image Size and Endianness
@@ -149,7 +149,7 @@ namespace PGENLib
             Endianness end = Endianness.BigEndian;
             if (endi == -1) end = Endianness.LittleEndian;
 
-            //Set pixel's color
+            //Set pixel's color bottom left to top right
             HdrImage myimg = new HdrImage(Width, Height);
             for (int y = Height - 1; y >= 0; y--)
             {
@@ -172,6 +172,7 @@ namespace PGENLib
         /// </summary>
         /// <param name="input"> type `Stream`</param>
         /// <returns>String containing the line of the input stream</returns>
+        /// <exception cref="InvalidPfmFileFormat"> </exception>
         public string ReadLine(Stream input)
         {
             string str = "";
@@ -280,7 +281,6 @@ namespace PGENLib
         
 
         //=========================== FUNCTIONS FOR WRITING TO FILE ====================================
-
         /// <summary>
         ///  Function that writes a PFM file from an HDR image.
         /// </summary>
@@ -298,7 +298,7 @@ namespace PGENLib
             var header = Encoding.ASCII.GetBytes($"PF\n{Width} {Height}\n{end}.0\n");
             output.Write(header);
             
-            //Convert an HDR image to LDR.
+            //Write colors on PFM file
             for (int y = Height - 1; y >= 0; y--)
             {
                 for (int x = 0; x < Width; x++)
@@ -336,10 +336,10 @@ namespace PGENLib
         //=========================== LUMINOSITY OF THE PIXELS ==============================================
         /// <summary>
         /// Returns the average brightness of the image.
-        /// The `delta` parameter is used to prevent  numerical problems for underilluminated pixels.
+        /// The `delta` parameter is used to prevent  numerical problems for dark pixels.
         /// </summary>
         /// <param name="delta"></param>
-        /// <returns></returns>
+        /// <returns>float</returns>
         public float AverageLum(double delta = 1e-10)
         {
 
@@ -358,7 +358,7 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Calculate the average brightness of an image according to the axRi / <l> formula.
+        /// Calculate the average brightness of an image according to the axRi/l formula.
         /// </summary>
         /// <param name="factor"></param>
         /// <param name="luminosity"></param>
