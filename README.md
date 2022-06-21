@@ -147,6 +147,10 @@ Some examples of what your creativity can lead to, using **PhotoGENius** in its 
 ![](Media/imgs_png/cow.png)
 [Here](https://en.wikipedia.org/wiki/Spherical_cow) the link to the joke that inspired us.
 
+Eye reflected in a sphere mirror:
+
+![](Media/imgs_png/eye.png)
+
 
 ## Documentation
 
