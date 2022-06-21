@@ -315,16 +315,20 @@ class Program
                     {
                         image.WriteLdrImage(outputValue, formatValue, gammaFactorValue);
                     }
-                    
+
                     Console.WriteLine($"    File {outputValue} has been written to disk.");
-                    
+
+                }
+                catch (InvalidFormatException err)
+                {
+                    Console.WriteLine(err.Message);
                 }
                 catch
                 {
                     Console.WriteLine(
                         $"Error: couldn't write file {outputValue}. May be: wrong path, non existent directory, invalid format.");
                 }
-                    
+
             },
             width, height, angleDeg, pfmOutput, output, cameraType, algorithm, raysNum, maxDepth, 
             initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel, format);
@@ -480,6 +484,10 @@ class Program
                     Console.WriteLine($"    File {outputValue} has been written to disk.");
                     
                 }
+                catch (InvalidFormatException err)
+                {
+                    Console.WriteLine(err.Message);
+                }
                 catch
                 {
                     Console.WriteLine(
@@ -556,6 +564,10 @@ class Program
                     }
     
                     Console.WriteLine($"    File {pngOutputValue} has been written to disk.");
+                }
+                catch (InvalidFormatException err)
+                {
+                    Console.WriteLine(err.Message);
                 }
                 catch
                 {
