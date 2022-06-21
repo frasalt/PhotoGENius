@@ -101,8 +101,18 @@ namespace PGENLib
     /// </summary>
     public class FlatRenderer : Renderer
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="world">World</param>
+        /// <param name="backGroundColor">Color</param>
         public FlatRenderer(World world, Color backGroundColor = default) : base(world, backGroundColor){}
 
+        /// <summary>
+        /// Estimate the radiance along a ray solving the rendering equation.
+        /// </summary>
+        /// <param name="ray">Ray</param>
+        /// <returns>Color</returns>
         public override Color Call(Ray ray)
         {
             var hit = World.RayIntersection(ray);
@@ -146,7 +156,7 @@ namespace PGENLib
     {
         public PCG Pcg;
         public int NumbOfRays;
-        public int MaxDepth;
+        public int MaxDepth; 
         public int RussianRouletteLimit;
         
         public PathTracer(World world, PCG pcg, int numbOfRays = 10, int maxDepth = 2, int russianRouletteLimit = 3,
@@ -158,6 +168,11 @@ namespace PGENLib
             RussianRouletteLimit = russianRouletteLimit;
         }
 
+        /// <summary>
+        /// Estimate the radiance along a ray solving the rendering equation.
+        /// </summary>
+        /// <param name="ray">Ray</param>
+        /// <returns>Color</returns>
         public override Color Call(Ray ray)
         {
             if (ray.Depth > MaxDepth)
@@ -222,26 +237,43 @@ namespace PGENLib
     {
         public Color AmbientColor;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="world">World</param>
+        /// <param name="backGroundColor">Color</param>
         public PointLightRenderer(World world, Color backGroundColor = default) : this(new Color(0f, 0f, 0f), world, backGroundColor)
         {
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="ambientColor">Color</param>
+        /// <param name="world">World</param>
+        /// <param name="backGroundColor">Color</param>
         public PointLightRenderer(Color ambientColor, World world, Color backGroundColor = default) : base(world, backGroundColor)
         {
             AmbientColor = ambientColor;
         }
         
-       
+        /// <summary>
+        /// Estimate the radiance along a ray solving the rendering equation.
+        /// </summary>
+        /// <param name="ray">Ray</param>
+        /// <returns>Color</returns>
         public override Color Call(Ray ray)
         {
             var hitRecord = World.RayIntersection(ray);
             if (hitRecord == null)
             {
+                //The ray didn't hit
                 return BackgroundColor;
             }
-
+            
             var hitMaterial = hitRecord.Value.Material;
             var resultColor = AmbientColor;
+            //Check the contribution of each light 
             foreach (var curLight in World.PointLights)
             {
                 if (World.IsPointVisible(curLight.Position, hitRecord.Value.WorldPoint))
@@ -251,6 +283,7 @@ namespace PGENLib
                     var inDir = distanceVec * (1.0f / distance);
                     var cosTheta = Math.Max(0.0f, Vec.NormalizeDot(-ray.Dir, hitRecord.Value.Normal));
                     float distanceFactor;
+                    //Compute distance factor
                     if (curLight.LinearRadius > 0.0f)
                     {
                         distanceFactor = (float) Math.Pow((curLight.LinearRadius / distance), 2.0f);
@@ -259,7 +292,7 @@ namespace PGENLib
                     {
                         distanceFactor = 1.0f;
                     }
-
+                    //Compute emitted radiance and brdf and combine them 
                     var emittedColor = hitMaterial.EmittedRadiance.GetColor(hitRecord.Value.SurfacePoint);
                     var brdfColor = hitMaterial.Brdf.Eval(
                         hitRecord.Value.Normal,
