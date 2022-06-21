@@ -82,7 +82,7 @@ namespace PGENLib.Tests{
             var world = new World();
             world.AddShape(sphere);
             var renderer = new OnOffRenderer(world);
-            tracer.FireAllRays(renderer.Call);
+            tracer.FireAllRays(renderer.Call, false);
 
             var p = image.GetPixel(0, 0);
             var black = Color.Black();
@@ -115,7 +115,7 @@ namespace PGENLib.Tests{
             var world = new World();
             world.AddShape(sphere);
             var renderer = new FlatRenderer(world);
-            tracer.FireAllRays(renderer.Call);
+            tracer.FireAllRays(renderer.Call, false);
             
             Assert.True(Color.are_close(image.GetPixel(1, 0), Color.Black()));
             Assert.True(Color.are_close(image.GetPixel(1, 0), Color.Black()));
