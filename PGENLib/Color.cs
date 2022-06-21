@@ -91,11 +91,10 @@ namespace PGENLib
         /// <returns>The color sum</returns>
         public static Color operator +(Color col1, Color col2)
         {
-            Color col3 = new Color();
-            col3.r = col1.r + col2.r;
-            col3.g = col1.g + col2.g;
-            col3.b = col1.b + col2.b;
-            return col3;
+            col1.r += col2.r;
+            col1.g += col2.g;
+            col1.b += col2.b;
+            return col1;
         }
 
         /// <summary>
@@ -106,11 +105,10 @@ namespace PGENLib
         /// <returns>The color difference</returns>
         public static Color operator -(Color col1, Color col2)
         {
-            Color col3 = new Color();
-            col3.r = col1.r - col2.r;
-            col3.g = col1.g - col2.g;
-            col3.b = col1.b - col2.b;
-            return col3;
+            col1.r -= col2.r;
+            col1.g -= col2.g;
+            col1.b -= col2.b;
+            return col1;
         }
 
         /// <summary>
