@@ -149,7 +149,7 @@ namespace PGENLib.Tests
             [Fact]
             public void test_image_coverage()
             {
-                _tracer.FireAllRays(lambda);
+                _tracer.FireAllRays(lambda, false);
                 
                 Color mycolor = new Color(1.0f, 2.0f, 3.0f);
                 Color mypixel;
@@ -190,7 +190,7 @@ namespace PGENLib.Tests
             var camera = new OrthogonalCamera();
             var tracer = new ImageTracer(smallImg, camera, 10);
             
-            tracer.FireAllRays(TraceRay);
+            tracer.FireAllRays(TraceRay, false);
 
             //Check that the number of rays that were fired is what we expect (10²)
             Assert.True(numOfRays==100);
