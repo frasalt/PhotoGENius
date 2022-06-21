@@ -383,12 +383,12 @@ namespace PGENLib
         /// parameter and must return a `Color` object, representing the color to assign to that pixel in the image.
         /// </summary>
         /// <param name="func"></param>
-        public void FireAllRays (Func<Ray,Color> func)
+        public void FireAllRays (Func<Ray,Color> func, bool verbosity)
         {
             // cycle over rows
             for(int row = 0; row< Image.Height; row ++)
             {
-                if(row%20 == 0) Console.WriteLine($"        Fill row {row}/{Image.Height}");
+                if(row%20 == 0 & verbosity) Console.WriteLine($"        Fill row {row}/{Image.Height}");
                 
                 // cycle over columns
                 for(int col = 0; col< Image.Width; col ++)
