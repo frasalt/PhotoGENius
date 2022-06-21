@@ -36,17 +36,17 @@ Extremely easy basic usage.
 
 Go to ```PhotoGENius/PhotoGENius``` directory.
 
-To 🔄 **convert file**, type
+- To 🔄 **convert file**, type
 ```bash
 dotnet run -- pfm2png --pfm-input [PFM_FILE_PATH] {options}
 ```
 Pay attention that if your computer is set on Italian language, you may need to write floating-point parameters with a comma instead of a dot (e.g. 1,3 instead of 1.3).
 
-To 🌅 **create an image**, type
+- To 🌅 **create an image** (pfm/png/jpeg), type
 ```bash
 dotnet run -- render {options}
 ```
-In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.pdf) in the [scene files directory](InputSceneFiles).
+In this case, the scene content is set in an *input txt file*, like [this self-explained one](InputSceneFiles/SELF_EXPLAINED.pdf) in the [scene files directory](InputSceneFiles). [Here](PGENLib.Doc/input_scene_grammar_EBNF.txt) you can also find our compiler grammar, in EBNF format. 
 
 Type ```-?``` as option to show further usage information.
 
@@ -61,21 +61,25 @@ Luminosity factor =10 and gamma compression =0.1 (copy and paste to command line
 ```bash
 dotnet run -- pfm2png    --lum-fac 10   --gamma-fac 0.1   --png-output ../Media/Readme_imgs/memorial1.png
  ```
-![](Media/Readme_imgs/memorial1.png)
+<p align="left">
+   <img src="https://github.com/frasalt/PhotoGENius/blob/master/Media/Readme_imgs/memorial1.png?raw=true" width="300" /> 
+</p>
 
 For a less saturated result: luminosity factor =0.01 and gamma compression =2 (copy and paste as above):
 ```bash
 dotnet run -- pfm2png    --lum-fac 0.01    --gamma-fac 2    --png-output ../Media/Readme_imgs/memorial2.png
  ```
-![](Media/Readme_imgs/memorial2.png)
+<p align="left">
+   <img src="https://github.com/frasalt/PhotoGENius/blob/master/Media/Readme_imgs/memorial2.png?raw=true" width="300" /> 
+</p>
 
 ### Photorealistic image generation
 
 Generate a demo image (copy and paste as above):
 ```bash
-dotnet run -- render    --file-name ../InputSceneFiles/DEFAULT_INPUT.txt    --png-output ../Media/Readme_imgs/my_first_image.png
+dotnet run -- render    --file-name ../InputSceneFiles/DEFAULT_INPUT.txt    --output ../Media/Readme_imgs/my_first_image.png  --sample-per-pixel 9
 ```
-![](Media/imgs_png/output.png)
+![](Media/Readme_imgs/my_first_image.png)
 
 
 ### Generate a brief animation
@@ -95,7 +99,7 @@ To **assemble video**, after installing [ffmpeg](https://www.ffmpeg.org/download
 ```bash
 ./generate-video.sh
 ```
-The result is a video like the following: ![bouncing PhotoGENius' logo](Media/video/animation.mp4).
+The result is a video like the following: ![bouncing PhotoGENius' logo](Media/Readme_imgs/animation.gif)
 
 
 ## Installation
@@ -111,14 +115,14 @@ If you want to assemble animations, you need to install ffmpeg
 (note that *it's not mandatory* for running the raytracing code):
 - [FFmpeg](https://www.ffmpeg.org/) (version 4.4 or higher)
 
-=================== This paragraph is in progress =====================
 ### Download latest release
+
 You can download the latest stable release
-[here](https://github.com/frasalt/PhotoGENius/releases/tag/v0.3.0) (version 0.3.0)
+[here](https://github.com/frasalt/PhotoGENius/releases/tag/v1.0.0) (version 1.0.0)
 and then unpack it running in the command line (Linux):
 
 ```bash
-tar -xvf PhotoGENius-0.3.0.tar
+tar -xvf PhotoGENius-1.0.0.tar
 ```
 The command is ```tar xopf``` for MacOS.
 
@@ -129,8 +133,6 @@ You can also clone this repository through the command:
 ```bash
 git clone https://github.com/frasalt/PhotoGENius.git
 ```
-=================== ***************************** =====================
-
 
 ### Code testing
 
@@ -149,8 +151,7 @@ Some examples of what your creativity can lead to, using **PhotoGENius** in its 
 ## Documentation
 
 The complete documentation of the library is available
-[here](PGENLib.Doc/PGENLib.xml)
-or [here(?)](https://frasalt.github.io/PhotoGENius/PGENLib.Doc/PGENLib.xml).
+[here](https://martinozanetti.github.io/html/hierarchy.html).
 
 If you find anything not clear in it, please let us know:
 any suggestion is appreciated and certainly useful for other users.
