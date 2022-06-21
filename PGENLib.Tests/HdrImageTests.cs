@@ -213,9 +213,9 @@ namespace PGENLib.Tests
             // Just check that the R/G/B values are within the expected boundaries
             for (int i = 0; i < img.Pixels.Length; i++)
             {
-                Assert.True((img.Pixels[i].GetR() >= 0) & (img.Pixels[i].GetR() <= 1));
-                Assert.True((img.Pixels[i].GetG() >= 0) & (img.Pixels[i].GetG() <= 1));
-                Assert.True((img.Pixels[i].GetB() >= 0) & (img.Pixels[i].GetB() <= 1));
+                Assert.True((img.Pixels[i].r >= 0) & (img.Pixels[i].r <= 1));
+                Assert.True((img.Pixels[i].g >= 0) & (img.Pixels[i].g <= 1));
+                Assert.True((img.Pixels[i].b >= 0) & (img.Pixels[i].b <= 1));
             }
         }
         

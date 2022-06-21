@@ -47,34 +47,7 @@ namespace PGENLib
         }
 
         //========================= METHODS =====================================================================
-
-        public void SetR(float x)
-        {
-            r = x;
-        }
-        public void SetG(float x)
-        {
-            g = x;
-        }public void SetB(float x)
-        {
-            b = x;
-        }
         
-        public float GetR()
-        {
-            return r;
-        }
-
-        public float GetG()
-        {
-            return g;
-        }
-
-        public float GetB()
-        {
-            return b;
-        }
-
         /// <summary>
         /// Returns the values of r, g, b as a string.
         /// </summary>
@@ -158,8 +131,7 @@ namespace PGENLib
         /// <returns></returns>
         public float Lum()
         {
-            float lum = Math.Max((Math.Max(r, b)), g) + Math.Min((Math.Min(r, b)),g);
-            return lum/2;
+            return (Math.Max((Math.Max(r, b)), g) + Math.Min((Math.Min(r, b)),g))/2f;
         }
 
         public static Color Black()

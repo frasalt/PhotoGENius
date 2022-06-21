@@ -27,45 +27,45 @@ namespace PGENLib.Tests
         public void test_GetR()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
-            Assert.True(Math.Abs(a.GetR() - 1.0f) < 1E-5);
+            Assert.True(Math.Abs(a.r - 1.0f) < 1E-5);
         }
         
         [Fact]
         public void test_GetG()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
-            Assert.True(Math.Abs(a.GetG() - 2.0f) < 1E-5);
+            Assert.True(Math.Abs(a.g - 2.0f) < 1E-5);
         }
         
         [Fact]
         public void test_GetB()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
-            Assert.True(Math.Abs(a.GetB() - 3.0f) < 1E-5);
+            Assert.True(Math.Abs(a.b - 3.0f) < 1E-5);
         }
         
         [Fact]
         public void test_SetR()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
-            a.SetR(4.0f);
-            Assert.True(Math.Abs(a.GetR() - 4.0f) < 1E-5);
+            a.r = 4.0f;
+            Assert.True(Math.Abs(a.r - 4.0f) < 1E-5);
         }
         
         [Fact]
         public void test_SetG()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
-            a.SetG(4.0f);
-            Assert.True(Math.Abs(a.GetG() - 4.0f) < 1E-5);
+            a.g = 4.0f;
+            Assert.True(Math.Abs(a.g - 4.0f) < 1E-5);
         }
         
         [Fact]
         public void test_SetB()
         {
             Color a = new Color(1.0f, 2.0f, 3.0f);
-            a.SetB(4.0f);
-            Assert.True(Math.Abs(a.GetB() - 4.0f) < 1E-5);
+            a.b = 4.0f;
+            Assert.True(Math.Abs(a.b - 4.0f) < 1E-5);
         }
         
         [Fact]
