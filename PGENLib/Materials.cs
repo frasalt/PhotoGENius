@@ -30,6 +30,10 @@ namespace PGENLib
     {
         protected Color Color;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="color">Color</param>
         protected Pigment(Color color = default) //Default(Color)=BLACK
         {
             Color = color;
@@ -55,8 +59,7 @@ namespace PGENLib
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="color"></param>
-
+        /// <param name="color">Color</param>
         public UniformPigment(Color color = default) : base(color)
         {
         }
@@ -99,6 +102,12 @@ namespace PGENLib
         public Color Col2; 
         public int NumStep;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="col1">Color</param>
+        /// <param name="col2">Color</param>
+        /// <param name="numStep">int</param>
         public CheckeredPigment(Color col1, Color col2, int numStep = 10)
         {
             Col1 = col1;
@@ -106,7 +115,11 @@ namespace PGENLib
             NumStep = numStep;
         }
          
-        
+        /// <summary>
+        /// Associates a chackered color to the whole surface.
+        /// </summary>
+        /// <param name="uv">Vec2d</param>
+        /// <returns>Color</returns>
         public override Color GetColor(Vec2d uv)
         {
             var intU = (int)Math.Floor(uv.u * NumStep); 
@@ -132,11 +145,21 @@ namespace PGENLib
     public class ImagePigment : Pigment
     {
         public HdrImage Image;
+        
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="image">HdrImage</param>
         public ImagePigment(HdrImage image)
         {
             Image = image;
         }
 
+        /// <summary>
+        /// Associates an image to the whole surface.
+        /// </summary>
+        /// <param name="uv">Vec2d</param>
+        /// <returns>Color</returns>
         public override Color GetColor(Vec2d uv)
         {
             int col = (int)(uv.u * Image.Width);
@@ -205,17 +228,35 @@ namespace PGENLib
     /// </summary>
     public class DiffuseBRDF : BRDF
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public DiffuseBRDF() {} //Uses the BRDF default constructor
             
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="pigment">Pigment</param>
         public DiffuseBRDF(Pigment pigment) : base(pigment){}
 
         public override Color Eval(Normal normal, Vec inDir, Vec outDir, Vec2d uv)
         {
             return Pigment.GetColor(uv) * (float) (1.0f / Math.PI);
         }
-            
+        
+        /// <summary>
+        /// Compute the scatter ray that leaves a surface after a hit. The direction is randomly distributed
+        /// with the Phong distribution.
+        /// </summary>
+        /// <param name="pcg"></param>
+        /// <param name="incomingDir"></param>
+        /// <param name="interactionPoint"></param>
+        /// <param name="normal"></param>
+        /// <param name="depth"></param>
+        /// <returns></returns>
         public override Ray ScatterRay(PCG pcg, Vec incomingDir, Point interactionPoint, Normal normal, int depth)
         {
+            //Cosine weighted distribution around z axis (Phong distribution)
             var onb = Vec.CreateOnbFromZ(normal);
             var cosThetaSq = pcg.RandomFloat();
             var cosTheta = (float)Math.Sqrt(cosThetaSq);
@@ -300,16 +341,29 @@ namespace PGENLib
     {
         public BRDF Brdf;
         public Pigment EmittedRadiance; 
+        
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Material()
         {
             Brdf = new DiffuseBRDF();
             EmittedRadiance = new UniformPigment(new Color(0.0f, 0.0f, 0.0f)); //BLACK
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="brdf"></param>
         public Material(BRDF brdf) : this(new UniformPigment(), brdf)
         {
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="emittedRadiance">Pigment</param>
+        /// <param name="brdf">BRDF</param>
         public Material(Pigment emittedRadiance, BRDF brdf)
         {
             EmittedRadiance = emittedRadiance;
