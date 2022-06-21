@@ -115,6 +115,11 @@ class Program
             description: "Output file extension; can be PNG or JPEG",
             getDefaultValue: () => "PNG");
         
+        var verbosity = new Option<bool>(
+            name: "--verbosity",
+            description: "Print image filling status; can be True or False",
+            getDefaultValue: () => true);
+        
         //==============================================================================================================
         // Demo 
         //==============================================================================================================
@@ -135,13 +140,14 @@ class Program
             luminosityFactor,
             gammaFactor,
             samplePerPixel,
-            format
+            format,
+            verbosity
         };
             
         rootCommand.AddCommand(demo);
         demo.SetHandler((int widthValue, int heightValue, float angleDegValue, string pfmOutputValue,
                 string outputValue, string cameraTypeValue, string algorithmValue, int raysNumValue, int maxDepthValue, ulong initStateValue,
-                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue, string formatValue) =>
+                ulong initSeqValue, float luminosityFactorValue, float gammaFactorValue, int samplePerPixelValue, string formatValue, bool verbosityValue) =>
             { 
                 var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
                     
@@ -250,13 +256,13 @@ class Program
                 {
                     Console.WriteLine("    Using on/off renderer");
                     var renderer = new OnOffRenderer(world);
-                    tracer.FireAllRays(renderer.Call);
+                    tracer.FireAllRays(renderer.Call, verbosityValue);
                 }
                 else if(algorithmValue == "flat")
                 {
                     Console.WriteLine("    Using flat renderer");
                     var renderer = new FlatRenderer(world);
-                    tracer.FireAllRays(renderer.Call);
+                    tracer.FireAllRays(renderer.Call, verbosityValue);
                 }
                 else if (algorithmValue == "pathtracing")
                 {
@@ -267,13 +273,13 @@ class Program
                         raysNumValue, 
                         maxDepthValue
                     );
-                    tracer.FireAllRays(renderer.Call);
+                    tracer.FireAllRays(renderer.Call, verbosityValue);
                 }
                 else if (algorithmValue == "pointlight")
                 {
                     Console.WriteLine("    Using pointlight tracer");
                     var renderer = new PointLightRenderer(world: world, backGroundColor: BLACK);
-                    tracer.FireAllRays(renderer.Call);
+                    tracer.FireAllRays(renderer.Call, verbosityValue);
                 }
                 else
                 {
@@ -331,7 +337,7 @@ class Program
 
             },
             width, height, angleDeg, pfmOutput, output, cameraType, algorithm, raysNum, maxDepth, 
-            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel, format);
+            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel, format, verbosity);
             
         //==============================================================================================================
         // Render 
@@ -358,14 +364,15 @@ class Program
             luminosityFactor,
             gammaFactor,
             samplePerPixel,
-            format
+            format,
+            verbosity
         };
         rootCommand.AddCommand(render);
             
         render.SetHandler((string scenefileValue, int widthValue, int heightValue, float angleDegValue,
                 string pfmOutputValue, string outputValue, string algorithmValue, int raysNumValue,
                 int maxDepthValue, ulong initStateValue, ulong initSeqValue, float luminosityFactorValue,
-                float gammaFactorValue, int samplePerPixelValue, string formatValue) =>
+                float gammaFactorValue, int samplePerPixelValue, string formatValue, bool verbosityValue) =>
             {
                 // Compute number of sample per side, which will be used for antialiasing
                 var samplePerSide = (int) Math.Sqrt(samplePerPixelValue);
@@ -412,13 +419,13 @@ class Program
                 {
                     Console.WriteLine("Using on/off renderer");
                     var renderer = new OnOffRenderer(scene.World);
-                    tracer.FireAllRays(renderer.Call);
+                    tracer.FireAllRays(renderer.Call, verbosityValue);
                 }
                 else if(algorithmValue == "flat")
                 {
                     Console.WriteLine("Using flat renderer");
                     var renderer = new FlatRenderer(scene.World);
-                    tracer.FireAllRays(renderer.Call);
+                    tracer.FireAllRays(renderer.Call, verbosityValue);
                 }
                 else if (algorithmValue == "pathtracing")
                 {
@@ -429,13 +436,13 @@ class Program
                         raysNumValue, 
                         maxDepthValue
                     );
-                    tracer.FireAllRays(renderer.Call);
+                    tracer.FireAllRays(renderer.Call, verbosityValue);
                 }
                 else if (algorithmValue == "pointlight")
                 {
                     Console.WriteLine("    Using pointlight tracer");
                     var renderer = new PointLightRenderer(world: scene.World, backGroundColor: BLACK);
-                    tracer.FireAllRays(renderer.Call);
+                    tracer.FireAllRays(renderer.Call, verbosityValue);
 
                 }
                 else
@@ -496,7 +503,7 @@ class Program
             },
 
             scenefile, width, height, angleDeg, pfmOutput, output, algorithm, raysNum, maxDepth, 
-            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel, format );
+            initState, initSeq, luminosityFactor, gammaFactor , samplePerPixel, format, verbosity);
             
             
         //==============================================================================================================
