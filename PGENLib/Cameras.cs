@@ -229,12 +229,6 @@ namespace PGENLib
         }
 
         
-        public PerspectiveCamera()
-        {
-            ScreenDistance = 1.0f;
-            AspectRatio = 1.0f;
-            Transf = new Transformation();
-        }
         public PerspectiveCamera(float aspectRatio) 
         {
             ScreenDistance = 1.0f;
@@ -311,22 +305,6 @@ namespace PGENLib
         public PCG Pcg;
         public int SamplePerSide;
         
-        /// <summary>
-        /// Constructor with parameters. If SamplePerSide is usefull to implement the antialiasing: if it's not zero,
-        /// stratified sampling will be applied to each pixel in the image, using the random number generator `pcg`. 
-        /// </summary>
-        /// <param name="image"></param>
-        /// <param name="camera"></param>
-        /// <param name="pcg"></param>
-        /// <param name="samplePerSide"></param>
-        public ImageTracer(HdrImage image, ICamera camera, PCG pcg, int samplePerSide = 1)
-        {
-            Image = image;
-            Camera = camera;
-            Pcg = pcg;
-            SamplePerSide = samplePerSide;
-            
-        }
         
         /// <summary>
         /// Constructor with parameters. If SamplePerSide is usefull to implement the antialiasing: if it's not zero,
@@ -369,13 +347,17 @@ namespace PGENLib
         /// <param name="func"></param>
         public void FireAllRays (Func<Ray,Color> func)
         {
+            // cycle over rows
             for(int row = 0; row< Image.Height; row ++)
             {
                 if(row%20 == 0) Console.WriteLine($"        Fill row {row}/{Image.Height}");
+                
+                // cycle over columns
                 for(int col = 0; col< Image.Width; col ++)
                 {
                     var cumColor = new Color(); //Black
                     
+                    // antialiasing
                     if (SamplePerSide > 0)
                     {
                         // Run stratified sampling over the pixel's surface.

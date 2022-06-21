@@ -37,17 +37,6 @@ namespace PGENLib
         }
 
         /// <summary>
-        /// Constructor with parameters
-        /// </summary>
-        /// <param name="shapes"></param>
-        /// <param name="pointLights"></param>
-        public World(List<Shape> shapes, List<PointLight> pointLights)
-        {
-            PointLights = pointLights;
-            Shapes = shapes;
-        }
-        
-        /// <summary>
         /// Add a shape in the list of shapes present in the world.
         /// </summary>
         /// <param name="sh">  `Shape` object to be added in the world</param>

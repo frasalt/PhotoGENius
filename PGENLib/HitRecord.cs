@@ -99,10 +99,7 @@ namespace PGENLib
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }
