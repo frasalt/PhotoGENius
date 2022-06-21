@@ -1,4 +1,8 @@
 # HEAD
+
+## Version 2.1.0
+- Add verbosity functionality [#45](https://github.com/frasalt/PhotoGENius/pull/45)
+
 ## Version 2.0.1
 
 ### 21-06-2022
