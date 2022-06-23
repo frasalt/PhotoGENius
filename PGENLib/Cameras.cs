@@ -309,6 +309,10 @@ namespace PGENLib
             return rayToFire.Transform(this.Transf);
         }
     }
+
+   //public struct StereoscopicCamera : ICamera
+   //{
+   //}
     
     //==============================================================================================================
     //ImageTracer
